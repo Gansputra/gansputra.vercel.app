@@ -31,7 +31,7 @@ export const Navbar = () => {
         <nav
             className={cn(
                 "fixed top-0 left-0 right-0 w-full z-[100] transition-all duration-300 px-6 py-4",
-                isScrolled ? "bg-black/80 backdrop-blur-md py-3 shadow-lg" : "bg-transparent"
+                isScrolled || isMobileMenuOpen ? "bg-[#0a0a0a] shadow-lg py-3" : "bg-transparent"
             )}
         >
             <div className="max-w-7xl mx-auto flex items-center justify-between">
@@ -70,27 +70,50 @@ export const Navbar = () => {
                 </button>
             </div>
 
-            {/* Mobile Menu */}
+            {/* Mobile Menu Overlay */}
             <AnimatePresence>
                 {isMobileMenuOpen && (
-                    <motion.div
-                        initial={{ opacity: 0, y: -20, height: 0 }}
-                        animate={{ opacity: 1, y: 0, height: "auto" }}
-                        exit={{ opacity: 0, y: -20, height: 0 }}
-                        transition={{ duration: 0.3, ease: "easeOut" }}
-                        className="md:hidden absolute top-full left-0 right-0 bg-black/95 backdrop-blur-xl border-t border-white/10 p-6 flex flex-col gap-6 shadow-2xl"
-                    >
-                        {navItems.map((item) => (
-                            <a
-                                key={item.name}
-                                href={item.href}
-                                onClick={() => setIsMobileMenuOpen(false)}
-                                className="text-lg font-medium text-white/70 hover:text-white"
-                            >
-                                {item.name}
-                            </a>
-                        ))}
-                    </motion.div>
+                    <>
+                        {/* Backdrop */}
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setIsMobileMenuOpen(false)}
+                            className="fixed inset-0 z-[140] bg-black/60 backdrop-blur-sm md:hidden"
+                        />
+
+                        {/* Sidebar Menu */}
+                        <motion.div
+                            initial={{ x: "100%" }}
+                            animate={{ x: 0 }}
+                            exit={{ x: "100%" }}
+                            transition={{ type: "tween", duration: 0.3 }}
+                            className="fixed top-0 right-0 bottom-0 w-[80%] max-w-sm z-[150] bg-[#0a0a0a] border-l border-white/10 p-8 flex flex-col md:hidden opacity-100"
+                        >
+                            <div className="flex justify-end mb-12">
+                                <button
+                                    className="text-white p-2 hover:bg-white/10 rounded-full transition-colors"
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                >
+                                    <X size={32} />
+                                </button>
+                            </div>
+
+                            <div className="flex flex-col gap-8">
+                                {navItems.map((item) => (
+                                    <a
+                                        key={item.name}
+                                        href={item.href}
+                                        onClick={() => setIsMobileMenuOpen(false)}
+                                        className="text-3xl font-bold text-white/70 hover:text-primary transition-all active:scale-95"
+                                    >
+                                        {item.name}
+                                    </a>
+                                ))}
+                            </div>
+                        </motion.div>
+                    </>
                 )}
             </AnimatePresence>
         </nav>
