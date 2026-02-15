@@ -1,12 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Modal } from "@/components/ui/Modal";
 import { amvData } from "@/data/amvData";
 import { Play, Music, Cpu, Calendar, Youtube } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { getVideoThumbnail } from "@/lib/getVideoThumbnail";
 
 export const AmvShowcase = () => {
@@ -34,27 +35,40 @@ export const AmvShowcase = () => {
     return (
         <section id="amvs" className="py-24 px-6 relative overflow-hidden">
             <div className="max-w-7xl mx-auto">
-                <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
-                    <div>
-                        <h2 className="text-4xl font-bold text-white mb-4">AMV Gallery</h2>
-                        <p className="text-white/50 max-w-lg">
+                <div className="flex flex-col md:flex-row justify-between items-center md:items-end mb-12 gap-8 text-center md:text-left">
+                    <div className="w-full md:w-auto">
+                        <h2 className="text-4xl font-bold text-white mb-4 text-3xl md:text-4xl">AMV Gallery</h2>
+                        <p className="text-white/50 max-w-lg mx-auto md:mx-0 text-sm md:text-base">
                             Cinematic edits synchronized with rhythm and soul. Explore my creative motion works.
                         </p>
                     </div>
 
-                    <div className="flex flex-wrap gap-2 md:max-w-[60%] justify-end">
-                        {categories.map(cat => (
-                            <button
-                                key={cat}
-                                onClick={() => setFilter(cat)}
-                                className={`px-4 py-2 rounded-full text-[10px] md:text-xs font-bold transition-all whitespace-nowrap ${filter === cat
-                                    ? "bg-primary text-black shadow-neon"
-                                    : "bg-white/5 text-white/50 hover:bg-white/10 hover:text-white"
-                                    }`}
-                            >
-                                {cat.toUpperCase()}
-                            </button>
-                        ))}
+                    {/* Modern Horizontal Category Filter */}
+                    <div className="w-full md:w-auto overflow-x-auto no-scrollbar -mx-6 px-6 md:mx-0 md:px-0">
+                        <div className="flex gap-2 min-w-max pb-2 justify-center md:justify-end">
+                            {categories.map(cat => (
+                                <button
+                                    key={cat}
+                                    onClick={() => setFilter(cat)}
+                                    className="relative px-6 py-2.5 rounded-full text-[10px] md:text-xs font-bold transition-all whitespace-nowrap group"
+                                >
+                                    {/* Animated Background Capsule */}
+                                    {filter === cat && (
+                                        <motion.div
+                                            layoutId="activeTab"
+                                            className="absolute inset-0 bg-primary rounded-full shadow-neon"
+                                            transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                                        />
+                                    )}
+                                    <span className={cn(
+                                        "relative z-10 uppercase tracking-widest transition-colors duration-300",
+                                        filter === cat ? "text-black" : "text-white/50 group-hover:text-white"
+                                    )}>
+                                        {cat}
+                                    </span>
+                                </button>
+                            ))}
+                        </div>
                     </div>
                 </div>
 
