@@ -30,10 +30,18 @@ export const HeroSection = () => {
                     </p>
 
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                        <Button size="lg" variant="secondary">
+                        <Button
+                            size="lg"
+                            variant="secondary"
+                            onClick={() => document.getElementById('projects')?.scrollIntoView()}
+                        >
                             View Projects
                         </Button>
-                        <Button size="lg" variant="outline">
+                        <Button
+                            size="lg"
+                            variant="outline"
+                            onClick={() => document.getElementById('about')?.scrollIntoView()}
+                        >
                             About Me
                         </Button>
                     </div>
