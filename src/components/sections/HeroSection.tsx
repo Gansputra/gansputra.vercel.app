@@ -3,7 +3,7 @@
 import React from "react";
 import { motion, Variants } from "framer-motion";
 import { Button } from "@/components/ui/Button";
-import { ChevronDown } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { useActiveSection } from "@/context/ActiveSectionContext";
 
 export const HeroSection = () => {
@@ -95,7 +95,7 @@ export const HeroSection = () => {
                         onClick={() => setActiveSection('about')}
                         className="backdrop-blur-md"
                     >
-                        Learn More
+                        About Me
                     </Button>
                 </motion.div>
             </motion.div>
@@ -106,10 +106,10 @@ export const HeroSection = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 1.5 }}
                 onClick={() => setActiveSection('amvs')}
-                className="absolute bottom-12 left-1/2 -translate-x-1/2 text-white/10 hover:text-primary transition-all group flex flex-col items-center gap-3"
+                className="absolute bottom-12 left-1/2 -translate-x-1/2 text-white/10 hover:text-primary transition-all group flex items-center gap-3"
             >
                 <span className="text-[9px] uppercase tracking-[0.4em] font-bold group-hover:tracking-[0.6em] transition-all duration-500">Discover</span>
-                <ChevronDown className="group-hover:translate-y-1 transition-transform duration-500" size={18} />
+                <ChevronRight className="group-hover:translate-x-1 transition-transform duration-500" size={18} />
             </motion.button>
         </div>
     );

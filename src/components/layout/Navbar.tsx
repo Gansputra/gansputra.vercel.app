@@ -107,28 +107,35 @@ export const Navbar = () => {
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 0.9, y: 20 }}
                             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                            className="fixed inset-x-4 top-24 bottom-10 z-[150] bg-[#111]/80 border border-white/10 p-10 rounded-[3rem] flex flex-col md:hidden shadow-3xl overflow-hidden backdrop-blur-3xl"
+                            className="fixed inset-x-6 top-24 bottom-12 z-[150] bg-black/60 border border-white/5 p-8 rounded-[2.5rem] flex flex-col md:hidden shadow-[0_0_50px_rgba(0,0,0,0.5)] overflow-hidden backdrop-blur-3xl justify-center"
                         >
-                            <div className="flex flex-col gap-4 justify-center h-full">
+                            <div className="flex flex-col gap-6 items-center">
                                 {navItems.map((item, i) => (
                                     <motion.button
                                         key={item.id}
-                                        initial={{ opacity: 0, x: -30 }}
-                                        animate={{ opacity: 1, x: 0 }}
-                                        transition={{ delay: i * 0.1 }}
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ delay: i * 0.08 }}
+                                        whileTap={{ scale: 0.95 }}
                                         onClick={() => handleNavClick(item.id)}
                                         className={cn(
-                                            "text-4xl font-black py-2 transition-all flex items-center justify-between group",
-                                            activeSection === item.id ? "text-primary px-4 bg-primary/5 rounded-2xl" : "text-white/20"
+                                            "text-2xl font-bold tracking-tight py-3 transition-all relative group",
+                                            activeSection === item.id ? "text-white" : "text-white/30"
                                         )}
                                     >
-                                        <div className="flex items-center gap-6">
-                                            <span className="text-[10px] font-mono opacity-40 group-hover:opacity-100">0{i + 1}</span>
-                                            {item.name}
-                                        </div>
+                                        <span className="relative z-10">{item.name}</span>
                                         {activeSection === item.id && (
-                                            <motion.div layoutId="mobileIndicator" className="w-2 h-2 bg-primary rounded-full shadow-glow" />
+                                            <motion.div
+                                                layoutId="mobileActiveGlow"
+                                                className="absolute -inset-x-6 inset-y-0 bg-primary/10 blur-xl rounded-full -z-10"
+                                                initial={{ opacity: 0 }}
+                                                animate={{ opacity: 1 }}
+                                            />
                                         )}
+                                        <div className={cn(
+                                            "absolute -bottom-1 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-primary transition-all duration-300 rounded-full",
+                                            activeSection === item.id ? "w-4" : "group-hover:w-8 opacity-50"
+                                        )} />
                                     </motion.button>
                                 ))}
                             </div>
