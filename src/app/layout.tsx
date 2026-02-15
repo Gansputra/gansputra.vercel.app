@@ -4,6 +4,7 @@ import "./globals.css";
 import { siteConfig } from "@/config/siteConfig";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { Providers } from "@/components/layout/Providers";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -60,13 +61,14 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth overflow-x-hidden">
       <body
-        className={`${inter.variable} ${outfit.variable} font-sans bg-[#0a0a0a] text-white antialiased selection:bg-primary selection:text-black overflow-x-hidden`}
+        className={`${inter.variable} ${outfit.variable} font-sans bg-[#0a0a0a] text-white antialiased selection:bg-primary selection:text-black overflow-hidden h-screen w-screen`}
       >
-        <Navbar />
-        <main className="min-h-screen overflow-x-hidden">
-          {children}
-        </main>
-        <Footer />
+        <Providers>
+          <Navbar />
+          <main className="h-full w-full">
+            {children}
+          </main>
+        </Providers>
       </body>
     </html>
   );

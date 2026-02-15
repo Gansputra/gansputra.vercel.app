@@ -5,68 +5,88 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { siteConfig } from "@/config/siteConfig";
+import { useActiveSection } from "@/context/ActiveSectionContext";
 
 const navItems = [
-    { name: "Home", href: "#hero" },
-    { name: "AMVs", href: "#amvs" },
-    { name: "GFX", href: "#gfx" },
-    { name: "Projects", href: "#projects" },
-    { name: "About", href: "#about" },
-    { name: "Contact", href: "#contact" },
+    { name: "Home", id: "hero" },
+    { name: "AMVs", id: "amvs" },
+    { name: "GFX", id: "gfx" },
+    { name: "Projects", id: "projects" },
+    { name: "About", id: "about" },
+    { name: "Contact", id: "contact" },
 ];
 
 export const Navbar = () => {
-    const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const { activeSection, setActiveSection } = useActiveSection();
 
-    useEffect(() => {
-        const handleScroll = () => {
-            setIsScrolled(window.scrollY > 50);
-        };
-        window.addEventListener("scroll", handleScroll);
-        return () => window.removeEventListener("scroll", handleScroll);
-    }, []);
+    const handleNavClick = (id: string) => {
+        setActiveSection(id);
+        setIsMobileMenuOpen(false);
+    };
 
     return (
         <nav
-            className={cn(
-                "fixed top-0 left-0 right-0 w-full z-[100] transition-all duration-300 px-6 py-4",
-                isScrolled || isMobileMenuOpen ? "bg-[#0a0a0a] shadow-lg py-3" : "bg-transparent"
-            )}
+            className="fixed top-0 left-0 right-0 w-full z-[100] transition-all duration-500 px-6 py-4"
         >
-            <div className="max-w-7xl mx-auto flex items-center justify-between">
-                <motion.a
-                    href="#"
+            <div className={cn(
+                "max-w-7xl mx-auto flex items-center justify-between px-6 py-3 rounded-full transition-all duration-500",
+                activeSection !== "hero" ? "bg-black/40 backdrop-blur-xl border border-white/10 shadow-2xl" : "bg-transparent"
+            )}>
+                <motion.button
+                    onClick={() => handleNavClick("hero")}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    className="text-2xl font-bold tracking-tighter text-white"
+                    className="text-2xl font-bold tracking-tighter text-white group"
                 >
                     {siteConfig.name.toUpperCase()}
-                    <span className="text-primary">.</span>
-                </motion.a>
+                    <span className="text-primary group-hover:animate-pulse">.</span>
+                </motion.button>
 
                 {/* Desktop Nav */}
-                <div className="hidden md:flex items-center gap-8">
+                <div className="hidden md:flex items-center gap-1">
                     {navItems.map((item, i) => (
-                        <motion.a
-                            key={item.name}
-                            href={item.href}
+                        <motion.button
+                            key={item.id}
+                            onClick={() => handleNavClick(item.id)}
                             initial={{ opacity: 0, y: -10 }}
                             animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: i * 0.1 }}
-                            className="text-sm font-medium text-white/70 hover:text-white transition-colors"
+                            transition={{ delay: i * 0.05 }}
+                            className={cn(
+                                "relative px-4 py-2 text-sm font-medium transition-all duration-300 rounded-full outline-none",
+                                activeSection === item.id ? "text-white" : "text-white/40 hover:text-white hover:bg-white/5"
+                            )}
                         >
-                            {item.name}
-                        </motion.a>
+                            <span className="relative z-10">{item.name}</span>
+                            {activeSection === item.id && (
+                                <motion.div
+                                    layoutId="navActive"
+                                    className="absolute inset-0 bg-primary/10 border border-primary/20 rounded-full"
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                                />
+                            )}
+                        </motion.button>
                     ))}
                 </div>
 
                 {/* Mobile Toggle */}
                 <button
-                    className="md:hidden text-white"
+                    className="md:hidden text-white p-2 hover:bg-white/5 rounded-full transition-all"
                     onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 >
-                    {isMobileMenuOpen ? <X /> : <Menu />}
+                    <AnimatePresence mode="wait">
+                        {isMobileMenuOpen ? (
+                            <motion.div key="close" initial={{ opacity: 0, rotate: -90 }} animate={{ opacity: 1, rotate: 0 }} exit={{ opacity: 0, rotate: 90 }}>
+                                <X size={24} />
+                            </motion.div>
+                        ) : (
+                            <motion.div key="menu" initial={{ opacity: 0, rotate: 90 }} animate={{ opacity: 1, rotate: 0 }} exit={{ opacity: 0, rotate: -90 }}>
+                                <Menu size={24} />
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
                 </button>
             </div>
 
@@ -74,42 +94,42 @@ export const Navbar = () => {
             <AnimatePresence>
                 {isMobileMenuOpen && (
                     <>
-                        {/* Backdrop */}
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             onClick={() => setIsMobileMenuOpen(false)}
-                            className="fixed inset-0 z-[140] bg-black/60 backdrop-blur-sm md:hidden"
+                            className="fixed inset-0 z-[140] bg-black/90 backdrop-blur-3xl md:hidden"
                         />
 
-                        {/* Sidebar Menu */}
                         <motion.div
-                            initial={{ x: "100%" }}
-                            animate={{ x: 0 }}
-                            exit={{ x: "100%" }}
-                            transition={{ type: "tween", duration: 0.3 }}
-                            className="fixed top-0 right-0 bottom-0 w-[80%] max-w-sm z-[150] bg-[#0a0a0a] border-l border-white/10 p-8 flex flex-col md:hidden opacity-100"
+                            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                            className="fixed inset-x-4 top-24 bottom-10 z-[150] bg-[#111]/80 border border-white/10 p-10 rounded-[3rem] flex flex-col md:hidden shadow-3xl overflow-hidden backdrop-blur-3xl"
                         >
-                            <div className="flex justify-end mb-12">
-                                <button
-                                    className="text-white p-2 hover:bg-white/10 rounded-full transition-colors"
-                                    onClick={() => setIsMobileMenuOpen(false)}
-                                >
-                                    <X size={32} />
-                                </button>
-                            </div>
-
-                            <div className="flex flex-col gap-8">
-                                {navItems.map((item) => (
-                                    <a
-                                        key={item.name}
-                                        href={item.href}
-                                        onClick={() => setIsMobileMenuOpen(false)}
-                                        className="text-3xl font-bold text-white/70 hover:text-primary transition-all active:scale-95"
+                            <div className="flex flex-col gap-4 justify-center h-full">
+                                {navItems.map((item, i) => (
+                                    <motion.button
+                                        key={item.id}
+                                        initial={{ opacity: 0, x: -30 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        transition={{ delay: i * 0.1 }}
+                                        onClick={() => handleNavClick(item.id)}
+                                        className={cn(
+                                            "text-4xl font-black py-2 transition-all flex items-center justify-between group",
+                                            activeSection === item.id ? "text-primary px-4 bg-primary/5 rounded-2xl" : "text-white/20"
+                                        )}
                                     >
-                                        {item.name}
-                                    </a>
+                                        <div className="flex items-center gap-6">
+                                            <span className="text-[10px] font-mono opacity-40 group-hover:opacity-100">0{i + 1}</span>
+                                            {item.name}
+                                        </div>
+                                        {activeSection === item.id && (
+                                            <motion.div layoutId="mobileIndicator" className="w-2 h-2 bg-primary rounded-full shadow-glow" />
+                                        )}
+                                    </motion.button>
                                 ))}
                             </div>
                         </motion.div>

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, Variants } from "framer-motion";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Modal } from "@/components/ui/Modal";
@@ -35,34 +35,63 @@ export const ProjectShowcase = () => {
         setCurrentIndex((prev) => (prev + 1) % images.length);
     };
 
-    // Reset index when modal closes or project changes
     useEffect(() => {
         if (!selectedProject) {
             setCurrentIndex(0);
         }
     }, [selectedProject]);
 
+    const containerVariants: Variants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.15
+            }
+        }
+    };
+
+    const cardVariants: Variants = {
+        hidden: { opacity: 0, scale: 0.95, y: 30 },
+        visible: {
+            opacity: 1,
+            scale: 1,
+            y: 0,
+            transition: { duration: 0.7, ease: "easeOut" }
+        }
+    };
+
     return (
-        <section id="projects" className="py-24 px-6 bg-[#050505] overflow-hidden">
+        <div className="py-24 px-6 bg-[#050505] overflow-hidden">
             <div className="max-w-7xl mx-auto">
-                <div className="mb-16 text-center md:text-left">
+                <motion.div
+                    initial={{ opacity: 0, y: -20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    className="mb-16 text-center md:text-left"
+                >
                     <h2 className="text-4xl font-bold text-white mb-4">Development Projects</h2>
                     <p className="text-white/50 max-w-lg">
                         Where code meets creativity. A selection of my professional and experimental engineering works.
                     </p>
-                </div>
+                </motion.div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    {projectData.map((project, i) => (
+                <motion.div
+                    variants={containerVariants}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, amount: 0.1 }}
+                    className="grid grid-cols-1 md:grid-cols-2 gap-8"
+                >
+                    {projectData.map((project) => (
                         <motion.div
                             key={project.id}
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8 }}
-                            viewport={{ once: true }}
+                            variants={cardVariants}
+                            whileHover={{ y: -5 }}
+                            transition={{ duration: 0.3 }}
                         >
                             <Card className="h-full flex flex-col justify-between group" glow>
-                                <div>
+                                <div className="flex flex-col h-full">
                                     <div className="flex justify-between items-start mb-6">
                                         <h3 className="text-2xl font-bold text-white group-hover:text-primary transition-colors">
                                             {project.title}
@@ -73,34 +102,34 @@ export const ProjectShowcase = () => {
                                                     href={project.repoLink}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
-                                                    className="text-white/40 hover:text-white transition-colors"
+                                                    className="text-white/40 hover:text-white transition-all transform hover:scale-110"
                                                 >
                                                     <Github size={20} />
                                                 </a>
                                             )}
                                             <button
                                                 onClick={() => setSelectedProject(project)}
-                                                className="text-white/40 hover:text-primary transition-colors cursor-pointer"
+                                                className="text-white/40 hover:text-primary transition-all transform hover:scale-110 cursor-pointer"
                                                 title="View Previews"
                                             >
                                                 <Eye size={20} />
                                             </button>
                                         </div>
                                     </div>
-                                    <p className="text-white/60 mb-8 leading-relaxed">
+                                    <p className="text-white/60 mb-8 leading-relaxed flex-grow">
                                         {project.description}
                                     </p>
-                                </div>
 
-                                <div className="flex flex-wrap gap-2">
-                                    {project.stack.map(tech => (
-                                        <Badge key={tech} variant="primary">{tech}</Badge>
-                                    ))}
+                                    <div className="flex flex-wrap gap-2 mt-auto">
+                                        {project.stack.map(tech => (
+                                            <Badge key={tech} variant="primary">{tech}</Badge>
+                                        ))}
+                                    </div>
                                 </div>
                             </Card>
                         </motion.div>
                     ))}
-                </div>
+                </motion.div>
             </div>
 
             {/* Project Preview Modal */}
@@ -137,19 +166,19 @@ export const ProjectShowcase = () => {
                                 <>
                                     <button
                                         onClick={handlePrev}
-                                        className="absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/40 text-white hover:bg-primary hover:text-black transition-all backdrop-blur-md"
+                                        className="absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/40 text-white hover:bg-primary hover:text-black transition-all backdrop-blur-md z-10"
                                     >
                                         <ChevronLeft size={24} />
                                     </button>
                                     <button
                                         onClick={handleNext}
-                                        className="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/40 text-white hover:bg-primary hover:text-black transition-all backdrop-blur-md"
+                                        className="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/40 text-white hover:bg-primary hover:text-black transition-all backdrop-blur-md z-10"
                                     >
                                         <ChevronRight size={24} />
                                     </button>
 
                                     {/* Dots */}
-                                    <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2">
+                                    <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-10">
                                         {images.map((_, idx) => (
                                             <button
                                                 key={idx}
@@ -167,6 +196,6 @@ export const ProjectShowcase = () => {
                     </div>
                 )}
             </Modal>
-        </section>
+        </div>
     );
 };

@@ -1,15 +1,15 @@
 "use client";
 
-import React from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence, Variants } from "framer-motion";
 import { User, Code, Palette, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export const AboutSection = () => {
     const skills = [
-        { icon: <Code />, title: "Fullstack Dev", desc: "Crafting scalable architectures with Next.js & Node." },
-        { icon: <Palette />, title: "Creative Design", desc: "Blending aesthetics with functional UX patterns." },
-        { icon: <Zap />, title: "High Performance", desc: "Optimizing for speed and smooth 60FPS motion." },
+        { icon: <Code size={20} />, title: "Fullstack Dev", desc: "Crafting scalable architectures with Next.js & Node." },
+        { icon: <Palette size={20} />, title: "Creative Design", desc: "Blending aesthetics with functional UX patterns." },
+        { icon: <Zap size={20} />, title: "High Performance", desc: "Optimizing for speed and smooth 60FPS motion." },
     ];
 
     const stats = [
@@ -18,70 +18,111 @@ export const AboutSection = () => {
         { label: "Design Projects", value: "3+", years: "2023 — 2026", color: "text-white" },
     ];
 
-    const [currentStat, setCurrentStat] = React.useState(0);
+    const [currentStat, setCurrentStat] = useState(0);
 
-    React.useEffect(() => {
+    useEffect(() => {
         const timer = setInterval(() => {
             setCurrentStat((prev) => (prev + 1) % stats.length);
-        }, 3000);
+        }, 4000);
         return () => clearInterval(timer);
     }, []);
 
+    const containerVariants: Variants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.2,
+                delayChildren: 0.1
+            }
+        }
+    };
+
+    const itemVariants: Variants = {
+        hidden: { opacity: 0, x: -20 },
+        visible: {
+            opacity: 1,
+            x: 0,
+            transition: { duration: 0.6, ease: "easeOut" }
+        }
+    };
+
     return (
-        <section id="about" className="py-24 px-6 overflow-hidden">
+        <div className="py-24 px-6 overflow-hidden">
             <div className="max-w-7xl mx-auto">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                     <motion.div
-                        initial={{ opacity: 0 }}
-                        whileInView={{ opacity: 1 }}
-                        transition={{ duration: 0.8 }}
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 1, ease: "easeOut" }}
                         viewport={{ once: true }}
                         className="relative group p-4"
                     >
                         {/* Static Outer Ring */}
-                        <div className="absolute inset-0 bg-gradient-to-tr from-primary via-transparent to-secondary rounded-full opacity-30 group-hover:opacity-60 blur-sm transition-opacity" />
+                        <div className="absolute inset-0 bg-gradient-to-tr from-primary via-transparent to-secondary rounded-full opacity-20 group-hover:opacity-40 blur-2xl transition-opacity duration-1000" />
 
-                        <div className="aspect-square rounded-full overflow-hidden glass-morphism p-2 flex items-center justify-center relative border border-white/10 z-10 backdrop-blur-2xl">
+                        <div className="aspect-square rounded-full overflow-hidden glass-morphism p-2 flex items-center justify-center relative border border-white/5 z-10 backdrop-blur-3xl shadow-2xl">
                             <div className="w-full h-full rounded-full flex items-center justify-center overflow-hidden relative bg-black/40">
-                                <img
+                                <motion.img
                                     src="/profile.png"
                                     alt="Profile"
-                                    className="w-full h-full object-cover md:grayscale md:group-hover:grayscale-0 transition-all duration-700 scale-110 group-hover:scale-100 relative z-10"
+                                    whileHover={{ scale: 1.05 }}
+                                    className="w-full h-full object-cover md:grayscale md:group-hover:grayscale-0 transition-all duration-1000 scale-110 relative z-10"
                                     onLoad={(e) => {
-                                        e.currentTarget.parentElement?.querySelector('.placeholder-bg')?.classList.add('opacity-0');
+                                        const target = e.currentTarget as HTMLImageElement;
+                                        target.parentElement?.querySelector('.placeholder-bg')?.classList.add('opacity-0');
                                     }}
                                 />
-                                <div className="placeholder-bg absolute inset-0 flex items-center justify-center bg-gradient-to-br from-primary/20 to-secondary/20 transition-opacity duration-500">
-                                    <User size={120} className="text-white/10 animate-pulse" />
+                                <div className="placeholder-bg absolute inset-0 flex items-center justify-center bg-gradient-to-br from-primary/10 to-secondary/10 transition-opacity duration-700">
+                                    <User size={120} className="text-white/5 animate-pulse" />
                                 </div>
                             </div>
                         </div>
 
+                        {/* Floating Tech Elements */}
+                        <motion.div
+                            animate={{ y: [0, -10, 0] }}
+                            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                            className="absolute -top-4 right-10 p-4 bg-black/80 backdrop-blur-xl rounded-2xl border border-white/10 shadow-neon z-20 hidden md:block"
+                        >
+                            <Code className="text-primary" size={24} />
+                        </motion.div>
+                        <motion.div
+                            animate={{ y: [0, 10, 0] }}
+                            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                            className="absolute -bottom-4 left-10 p-4 bg-black/80 backdrop-blur-xl rounded-2xl border border-white/10 shadow-neon z-20 hidden md:block"
+                        >
+                            <Palette className="text-secondary" size={24} />
+                        </motion.div>
                     </motion.div>
 
-                    <div>
-                        <h2 className="text-4xl font-bold text-white mb-6">Behind the Lens <br />& the Code</h2>
-                        <p className="text-white/60 text-lg mb-8 leading-relaxed">
+                    <motion.div
+                        variants={containerVariants}
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true, amount: 0.3 }}
+                    >
+                        <motion.h2 variants={itemVariants} className="text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight">
+                            Behind the Lens <br />& the Code
+                        </motion.h2>
+                        <motion.p variants={itemVariants} className="text-white/60 text-lg mb-8 leading-relaxed max-w-xl">
                             I'm gansputra, a multidisciplinary creative bridging the gap between
                             backend logic and cinematic visuals. My journey started with a passion
                             for storytelling through video editing, which evolved into a career
                             building complex web applications.
-                        </p>
+                        </motion.p>
 
-                        {/* Experience Stats - Full Width & Detailed */}
+                        {/* Experience Stats Carousel */}
                         <motion.div
-                            initial={{ opacity: 0, y: 10 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            className="mb-12 flex items-center gap-6 px-8 py-6 glass-morphism rounded-3xl border border-white/10 relative overflow-hidden group/stats"
+                            variants={itemVariants}
+                            className="mb-12 flex items-center gap-6 px-8 py-6 glass-morphism rounded-3xl border border-white/5 relative overflow-hidden group/stats shadow-xl"
                         >
-                            {/* Decorative Background Glow */}
                             <div className={cn(
-                                "absolute top-0 left-0 w-1 h-full transition-colors duration-500",
+                                "absolute top-0 left-0 w-1 h-full transition-colors duration-700",
                                 stats[currentStat].color.replace('text-', 'bg-')
                             )} />
 
-                            <div className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center text-primary group-hover/stats:scale-110 transition-transform">
+                            <div className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center text-primary group-hover/stats:scale-110 transition-transform duration-500">
                                 <Zap size={24} />
                             </div>
 
@@ -92,7 +133,7 @@ export const AboutSection = () => {
                                         initial={{ opacity: 0, x: 20 }}
                                         animate={{ opacity: 1, x: 0 }}
                                         exit={{ opacity: 0, x: -20 }}
-                                        transition={{ duration: 0.5 }}
+                                        transition={{ duration: 0.5, ease: "easeInOut" }}
                                         className="flex flex-col md:flex-row md:items-center justify-between gap-4"
                                     >
                                         <div className="flex items-center gap-4">
@@ -105,7 +146,7 @@ export const AboutSection = () => {
                                             </span>
                                         </div>
 
-                                        <div className="flex flex-col items-end">
+                                        <div className="flex flex-col md:items-end">
                                             <span className="text-white/40 text-[10px] font-bold uppercase tracking-[0.2em]">Timeline</span>
                                             <span className="text-white/80 font-mono text-sm">{stats[currentStat].years}</span>
                                         </div>
@@ -118,25 +159,23 @@ export const AboutSection = () => {
                             {skills.map((skill, i) => (
                                 <motion.div
                                     key={i}
-                                    initial={{ opacity: 0, y: 15 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: i * 0.2 }}
-                                    viewport={{ once: true }}
-                                    className="flex gap-4 p-4 rounded-2xl hover:bg-white/5 transition-colors group"
+                                    variants={itemVariants}
+                                    whileHover={{ x: 10 }}
+                                    className="flex gap-4 p-4 rounded-2xl transition-all duration-300 hover:bg-white/[0.03] group border border-transparent hover:border-white/5"
                                 >
-                                    <div className="p-3 bg-primary/10 rounded-xl text-primary group-hover:bg-primary group-hover:text-black transition-all">
+                                    <div className="p-3 bg-white/5 rounded-xl text-primary group-hover:bg-primary group-hover:text-black transition-all shadow-lg">
                                         {skill.icon}
                                     </div>
                                     <div>
-                                        <h4 className="font-bold text-white mb-1">{skill.title}</h4>
+                                        <h4 className="font-bold text-white mb-1 group-hover:text-primary transition-colors">{skill.title}</h4>
                                         <p className="text-sm text-white/50">{skill.desc}</p>
                                     </div>
                                 </motion.div>
                             ))}
                         </div>
-                    </div>
+                    </motion.div>
                 </div>
             </div>
-        </section >
+        </div>
     );
 };
