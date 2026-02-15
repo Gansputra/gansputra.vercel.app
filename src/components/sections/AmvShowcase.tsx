@@ -1,0 +1,169 @@
+"use client";
+
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { Card } from "@/components/ui/Card";
+import { Badge } from "@/components/ui/Badge";
+import { Modal } from "@/components/ui/Modal";
+import { amvData } from "@/data/amvData";
+import { Play, Music, Cpu, Calendar, Youtube } from "lucide-react";
+import { getVideoThumbnail } from "@/lib/getVideoThumbnail";
+
+export const AmvShowcase = () => {
+    const [filter, setFilter] = useState("All");
+    const [selectedVideo, setSelectedVideo] = useState<typeof amvData[0] | null>(null);
+
+    // Generate dynamic categories from tags in amvData
+    const categories = ["All", ...Array.from(new Set(amvData.flatMap(amv => amv.tags)))];
+
+    const filteredAmvs = filter === "All"
+        ? amvData
+        : amvData.filter(amv => amv.tags.includes(filter));
+
+    // Fungsi untuk konversi URL YouTube ke URL Embed
+    const getEmbedUrl = (url: string) => {
+        let videoId = "";
+        if (url.includes("youtu.be/")) {
+            videoId = url.split("youtu.be/")[1].split("?")[0];
+        } else if (url.includes("v=")) {
+            videoId = url.split("v=")[1].split("&")[0];
+        }
+        return `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+    };
+
+    return (
+        <section id="amvs" className="py-24 px-6 relative overflow-hidden">
+            <div className="max-w-7xl mx-auto">
+                <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+                    <div>
+                        <h2 className="text-4xl font-bold text-white mb-4">AMV Gallery</h2>
+                        <p className="text-white/50 max-w-lg">
+                            Cinematic edits synchronized with rhythm and soul. Explore my creative motion works.
+                        </p>
+                    </div>
+
+                    <div className="flex flex-wrap gap-2 md:max-w-[60%] justify-end">
+                        {categories.map(cat => (
+                            <button
+                                key={cat}
+                                onClick={() => setFilter(cat)}
+                                className={`px-4 py-2 rounded-full text-[10px] md:text-xs font-bold transition-all whitespace-nowrap ${filter === cat
+                                    ? "bg-primary text-black shadow-neon"
+                                    : "bg-white/5 text-white/50 hover:bg-white/10 hover:text-white"
+                                    }`}
+                            >
+                                {cat.toUpperCase()}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {filteredAmvs.map((amv, i) => (
+                        <motion.div
+                            key={amv.id}
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            whileInView={{ opacity: 1, scale: 1 }}
+                            transition={{ delay: i * 0.1 }}
+                            viewport={{ once: true }}
+                            onClick={() => setSelectedVideo(amv)}
+                        >
+                            <Card className="p-0 border-none bg-black/40 h-full flex flex-col" glow>
+                                <div className="relative group aspect-video bg-[#111] cursor-pointer overflow-hidden rounded-t-2xl">
+                                    {/* Thumbnail Image */}
+                                    <img
+                                        src={getVideoThumbnail(amv.videoUrl)}
+                                        alt={amv.title}
+                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 opacity-60 group-hover:opacity-100"
+                                    />
+
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-10" />
+                                    <div className="absolute inset-0 flex items-center justify-center z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                        <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center backdrop-blur-md border border-primary/50">
+                                            <Play className="text-primary fill-primary ml-1" />
+                                        </div>
+                                    </div>
+                                    <div className="absolute bottom-4 left-4 z-20">
+                                        <p className="text-xs text-primary font-bold uppercase tracking-widest">{amv.anime}</p>
+                                        <h3 className="text-xl font-bold text-white">{amv.title}</h3>
+                                    </div>
+                                </div>
+                                <div className="p-6 flex-grow">
+                                    <p className="text-sm text-white/60 mb-4 line-clamp-2">{amv.description}</p>
+
+                                    {/* Music & Software Info */}
+                                    <div className="flex flex-col gap-2 mb-4">
+                                        {amv.music && (
+                                            <div className="flex items-center gap-2 text-xs text-white/40">
+                                                <Music size={14} className="text-primary" />
+                                                <span className="truncate">{amv.music}</span>
+                                            </div>
+                                        )}
+                                        {amv.software && (
+                                            <div className="flex items-center gap-2 text-xs text-white/40">
+                                                <Cpu size={14} className="text-primary" />
+                                                <span className="truncate">{amv.software}</span>
+                                            </div>
+                                        )}
+                                        <div className="flex items-center gap-2 text-xs text-white/40">
+                                            <Calendar size={14} className="text-primary" />
+                                            <span>{amv.date}</span>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex flex-wrap gap-2">
+                                        {amv.tags.map(tag => (
+                                            <Badge key={tag}>{tag}</Badge>
+                                        ))}
+                                    </div>
+                                </div>
+                            </Card>
+                        </motion.div>
+                    ))}
+                </div>
+
+                {/* See More - YouTube Link */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.5 }}
+                    viewport={{ once: true }}
+                    className="mt-16 flex justify-center"
+                >
+                    <a
+                        href="https://youtube.com/@gexvexedit"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group relative flex items-center gap-3 px-8 py-4 bg-[#FF0000]/10 hover:bg-[#FF0000] border border-[#FF0000]/20 text-white rounded-full transition-all duration-500 shadow-lg hover:shadow-[#FF0000]/40"
+                    >
+                        <div className="bg-[#FF0000] p-2 rounded-full group-hover:bg-white group-hover:text-[#FF0000] transition-colors">
+                            <Youtube size={20} />
+                        </div>
+                        <span className="font-bold tracking-wider uppercase text-sm">See More on YouTube</span>
+                    </a>
+                </motion.div>
+            </div>
+
+            {/* Video Player Modal */}
+            <Modal
+                isOpen={!!selectedVideo}
+                onClose={() => setSelectedVideo(null)}
+                className="max-w-4xl p-0 bg-black overflow-hidden border-none"
+            >
+                {selectedVideo && (
+                    <div className="aspect-video w-full">
+                        <iframe
+                            width="100%"
+                            height="100%"
+                            src={getEmbedUrl(selectedVideo.videoUrl)}
+                            title={selectedVideo.title}
+                            frameBorder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowFullScreen
+                        ></iframe>
+                    </div>
+                )}
+            </Modal>
+        </section>
+    );
+};
