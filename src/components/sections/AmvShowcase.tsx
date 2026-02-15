@@ -74,7 +74,7 @@ export const AmvShowcase = () => {
                                     <img
                                         src={getVideoThumbnail(amv.videoUrl)}
                                         alt={amv.title}
-                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 opacity-60 group-hover:opacity-100"
+                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 md:opacity-60 group-hover:opacity-100"
                                     />
 
                                     <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-10" />

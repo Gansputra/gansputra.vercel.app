@@ -43,7 +43,7 @@ export const ProjectShowcase = () => {
     }, [selectedProject]);
 
     return (
-        <section id="projects" className="py-24 px-6 bg-[#050505]">
+        <section id="projects" className="py-24 px-6 bg-[#050505] overflow-hidden">
             <div className="max-w-7xl mx-auto">
                 <div className="mb-16 text-center md:text-left">
                     <h2 className="text-4xl font-bold text-white mb-4">Development Projects</h2>
@@ -56,8 +56,8 @@ export const ProjectShowcase = () => {
                     {projectData.map((project, i) => (
                         <motion.div
                             key={project.id}
-                            initial={{ opacity: 0, x: i % 2 === 0 ? -30 : 30 }}
-                            whileInView={{ opacity: 1, x: 0 }}
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.8 }}
                             viewport={{ once: true }}
                         >
@@ -122,9 +122,9 @@ export const ProjectShowcase = () => {
                                     key={currentIndex}
                                     src={images[currentIndex]}
                                     alt={`${selectedProject.title} preview ${currentIndex + 1}`}
-                                    initial={{ opacity: 0, x: 50 }}
+                                    initial={{ opacity: 0, x: 20 }}
                                     animate={{ opacity: 1, x: 0 }}
-                                    exit={{ opacity: 0, x: -50 }}
+                                    exit={{ opacity: 0, x: -20 }}
                                     transition={{ duration: 0.5 }}
                                     className="absolute inset-0 w-full h-full object-cover"
                                 />
@@ -155,8 +155,8 @@ export const ProjectShowcase = () => {
                                                 key={idx}
                                                 onClick={() => setCurrentIndex(idx)}
                                                 className={`w-2 h-2 rounded-full transition-all ${currentIndex === idx
-                                                        ? "bg-primary w-6"
-                                                        : "bg-white/40 hover:bg-white"
+                                                    ? "bg-primary w-6"
+                                                    : "bg-white/40 hover:bg-white"
                                                     }`}
                                             />
                                         ))}

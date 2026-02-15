@@ -30,7 +30,7 @@ export const Navbar = () => {
     return (
         <nav
             className={cn(
-                "fixed top-0 left-0 right-0 z-[100] transition-all duration-300 px-6 py-4",
+                "fixed top-0 left-0 right-0 w-full z-[100] transition-all duration-300 px-6 py-4",
                 isScrolled ? "bg-black/80 backdrop-blur-md py-3 shadow-lg" : "bg-transparent"
             )}
         >
@@ -74,10 +74,11 @@ export const Navbar = () => {
             <AnimatePresence>
                 {isMobileMenuOpen && (
                     <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
-                        exit={{ opacity: 0, height: 0 }}
-                        className="md:hidden absolute top-full left-0 right-0 bg-black border-t border-white/10 p-6 flex flex-col gap-4 overflow-hidden"
+                        initial={{ opacity: 0, y: -20, height: 0 }}
+                        animate={{ opacity: 1, y: 0, height: "auto" }}
+                        exit={{ opacity: 0, y: -20, height: 0 }}
+                        transition={{ duration: 0.3, ease: "easeOut" }}
+                        className="md:hidden absolute top-full left-0 right-0 bg-black/95 backdrop-blur-xl border-t border-white/10 p-6 flex flex-col gap-6 shadow-2xl"
                     >
                         {navItems.map((item) => (
                             <a

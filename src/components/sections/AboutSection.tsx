@@ -28,7 +28,7 @@ export const AboutSection = () => {
     }, []);
 
     return (
-        <section id="about" className="py-24 px-6">
+        <section id="about" className="py-24 px-6 overflow-hidden">
             <div className="max-w-7xl mx-auto">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                     <motion.div
@@ -46,7 +46,7 @@ export const AboutSection = () => {
                                 <img
                                     src="/profile.png"
                                     alt="Profile"
-                                    className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 scale-110 group-hover:scale-100 relative z-10"
+                                    className="w-full h-full object-cover md:grayscale md:group-hover:grayscale-0 transition-all duration-700 scale-110 group-hover:scale-100 relative z-10"
                                     onLoad={(e) => {
                                         e.currentTarget.parentElement?.querySelector('.placeholder-bg')?.classList.add('opacity-0');
                                     }}
@@ -95,8 +95,8 @@ export const AboutSection = () => {
                             {skills.map((skill, i) => (
                                 <motion.div
                                     key={i}
-                                    initial={{ opacity: 0, x: 20 }}
-                                    whileInView={{ opacity: 1, x: 0 }}
+                                    initial={{ opacity: 0, y: 15 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
                                     transition={{ delay: i * 0.2 }}
                                     viewport={{ once: true }}
                                     className="flex gap-4 p-4 rounded-2xl hover:bg-white/5 transition-colors group"
