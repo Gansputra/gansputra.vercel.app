@@ -7,9 +7,18 @@ interface CyberGridProps {
     children?: React.ReactNode;
     className?: string;
     containerClassName?: string;
+    particleCount?: number;
+    rangeY?: number;
+    baseHue?: number;
+    rangeHue?: number;
+    baseSpeed?: number;
+    rangeSpeed?: number;
+    baseRadius?: number;
+    rangeRadius?: number;
+    backgroundColor?: string;
 }
 
-export const Vortex = ({ children, className, containerClassName }: CyberGridProps) => {
+export const Vortex = ({ children, className, containerClassName, ...props }: CyberGridProps) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
     useEffect(() => {
