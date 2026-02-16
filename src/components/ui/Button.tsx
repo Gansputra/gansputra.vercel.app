@@ -3,16 +3,14 @@
 import { motion, HTMLMotionProps } from "framer-motion";
 import { cn } from "@/lib/utils";
 import React from "react";
-import { Magnetic } from "./Magnetic";
 
 interface ButtonProps extends HTMLMotionProps<"button"> {
     variant?: "primary" | "secondary" | "outline" | "glow" | "ghost";
     size?: "sm" | "md" | "lg";
-    isMagnetic?: boolean;
 }
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-    ({ className, variant = "primary", size = "md", isMagnetic = true, children, ...props }, ref) => {
+    ({ className, variant = "primary", size = "md", children, ...props }, ref) => {
         const variants = {
             primary: "bg-white text-black hover:bg-white/90",
             secondary: "bg-primary text-black hover:bg-primary/90 shadow-neon",
@@ -27,11 +25,11 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             lg: "px-8 py-4 text-lg font-bold",
         };
 
-        const content = (
+        return (
             <motion.button
                 ref={ref}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
                 className={cn(
                     "relative overflow-hidden rounded-full transition-colors duration-200 flex items-center justify-center gap-2",
                     variants[variant],
@@ -43,12 +41,6 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
                 {children}
             </motion.button>
         );
-
-        if (isMagnetic) {
-            return <Magnetic strength={0.2}>{content}</Magnetic>;
-        }
-
-        return content;
     }
 );
 

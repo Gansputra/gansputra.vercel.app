@@ -62,7 +62,7 @@ export const AboutSection = () => {
                         <div className="absolute inset-0 bg-gradient-to-tr from-primary via-transparent to-secondary rounded-full opacity-20 group-hover:opacity-40 blur-2xl transition-opacity duration-1000" />
 
                         <div className="aspect-square rounded-full overflow-hidden glass-morphism p-2 flex items-center justify-center relative border border-white/5 z-10 backdrop-blur-3xl shadow-2xl">
-                            <div className="w-full h-full rounded-full flex items-center justify-center overflow-hidden relative bg-black/40">
+                            <div className="w-full h-full rounded-full flex items-center justify-center overflow-hidden relative bg-black/80">
                                 <motion.img
                                     src="/profile.png"
                                     alt="Profile"
@@ -161,7 +161,7 @@ export const AboutSection = () => {
                                     key={i}
                                     variants={itemVariants}
                                     whileHover={{ x: 10 }}
-                                    className="flex gap-4 p-4 rounded-2xl transition-all duration-300 hover:bg-white/[0.03] group border border-transparent hover:border-white/5"
+                                    className="flex gap-4 p-4 rounded-2xl transition-all duration-300 hover:bg-black/60 group border border-transparent hover:border-white/10"
                                 >
                                     <div className="p-3 bg-white/5 rounded-xl text-primary group-hover:bg-primary group-hover:text-black transition-all shadow-lg">
                                         {skill.icon}

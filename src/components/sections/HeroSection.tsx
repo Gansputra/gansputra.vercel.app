@@ -5,7 +5,7 @@ import { motion, Variants } from "framer-motion";
 import { Button } from "@/components/ui/Button";
 import { ChevronRight } from "lucide-react";
 import { useActiveSection } from "@/context/ActiveSectionContext";
-import { Magnetic } from "@/components/ui/Magnetic";
+import { Button as MovingBorderButton } from "@/components/ui/moving-border";
 
 export const HeroSection = () => {
     const { setActiveSection } = useActiveSection();
@@ -31,25 +31,7 @@ export const HeroSection = () => {
     };
 
     return (
-        <div className="relative h-screen w-full flex flex-col items-center justify-center pt-20 overflow-hidden">
-            {/* Section-specific Background Glows */}
-            <motion.div
-                animate={{
-                    scale: [1, 1.2, 1],
-                    opacity: [0.1, 0.2, 0.1]
-                }}
-                transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary/20 rounded-full blur-[140px] -z-10"
-            />
-            <motion.div
-                animate={{
-                    scale: [1.2, 1, 1.2],
-                    opacity: [0.1, 0.2, 0.1]
-                }}
-                transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-secondary/20 rounded-full blur-[140px] -z-10"
-            />
-
+        <div className="h-screen w-full flex flex-col items-center justify-center pt-20 relative">
             <motion.div
                 className="relative z-10 text-center px-6 mt-12 md:mt-0"
                 variants={containerVariants}
@@ -90,31 +72,33 @@ export const HeroSection = () => {
                     >
                         <span className="relative z-10">Explore Work</span>
                     </Button>
-                    <Button
-                        size="lg"
-                        variant="outline"
+
+                    <MovingBorderButton
+                        borderRadius="3rem"
                         onClick={() => setActiveSection('about')}
-                        className="backdrop-blur-md"
+                        className="bg-black/60 text-white border-white/[0.1] font-bold"
+                        containerClassName="h-[52px] w-40"
+                        borderClassName="bg-[radial-gradient(#00bfcf_40%,#7c7df6_60%,transparent_100%)] opacity-30"
                     >
                         About Me
-                    </Button>
+                    </MovingBorderButton>
                 </motion.div>
             </motion.div>
 
             {/* Bottom transition reveal */}
             <div className="absolute bottom-12 left-1/2 -translate-x-1/2">
-                <Magnetic strength={0.2} range={100}>
-                    <motion.button
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 1.5 }}
-                        onClick={() => setActiveSection('amvs')}
-                        className="text-white/10 hover:text-primary transition-all group flex items-center gap-3 p-4"
-                    >
-                        <span className="text-[9px] uppercase tracking-[0.4em] font-bold group-hover:tracking-[0.6em] transition-all duration-500">Discover</span>
-                        <ChevronRight className="group-hover:translate-x-1 transition-transform duration-500" size={18} />
-                    </motion.button>
-                </Magnetic>
+                <motion.button
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    transition={{ delay: 1.5 }}
+                    onClick={() => setActiveSection('amvs')}
+                    className="text-white/10 hover:text-primary transition-all group flex items-center gap-3 p-4"
+                >
+                    <span className="text-[9px] uppercase tracking-[0.4em] font-bold group-hover:tracking-[0.6em] transition-all duration-500">Discover</span>
+                    <ChevronRight className="group-hover:translate-x-1 transition-transform duration-500" size={18} />
+                </motion.button>
             </div>
         </div>
     );

@@ -9,7 +9,7 @@ import { ProjectShowcase } from "@/components/sections/ProjectShowcase";
 import { AboutSection } from "@/components/sections/AboutSection";
 import { ContactSection } from "@/components/sections/ContactSection";
 
-import { ParticleBackground } from "@/components/ui/ParticleBackground";
+import { Vortex } from "@/components/ui/vortex";
 
 const sectionComponents: Record<string, React.ReactNode> = {
   hero: <HeroSection />,
@@ -25,7 +25,18 @@ export default function Home() {
 
   return (
     <div className="relative h-screen w-full overflow-hidden bg-[#050505]">
-      <ParticleBackground />
+      <div className="absolute inset-0 bg-gradient-to-br from-[#00bfcf]/10 to-[#7c7df6]/10" />
+
+      <div className="absolute inset-0 z-0">
+        <Vortex
+          backgroundColor="transparent"
+          rangeY={200}
+          particleCount={400}
+          baseHue={185}
+          rangeHue={55}
+          containerClassName="h-full w-full"
+        />
+      </div>
 
       <AnimatePresence mode="wait" initial={false}>
         <motion.div

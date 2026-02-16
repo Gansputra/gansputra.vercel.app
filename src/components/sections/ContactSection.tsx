@@ -119,7 +119,7 @@ export const ContactSection = () => {
                                                     type="text"
                                                     value={formData.name}
                                                     onChange={handleChange}
-                                                    className="w-full bg-white/[0.03] border border-white/5 rounded-2xl px-5 py-4 text-white focus:border-primary/50 focus:bg-white/5 outline-none transition-all"
+                                                    className="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 text-white focus:border-primary/50 focus:bg-black/60 outline-none transition-all placeholder:text-white/20"
                                                     placeholder="Your Name"
                                                 />
                                             </div>
@@ -131,7 +131,7 @@ export const ContactSection = () => {
                                                     type="email"
                                                     value={formData.email}
                                                     onChange={handleChange}
-                                                    className="w-full bg-white/[0.03] border border-white/5 rounded-2xl px-5 py-4 text-white focus:border-primary/50 focus:bg-white/5 outline-none transition-all"
+                                                    className="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 text-white focus:border-primary/50 focus:bg-black/60 outline-none transition-all placeholder:text-white/20"
                                                     placeholder="email@example.com"
                                                 />
                                             </div>
@@ -144,7 +144,7 @@ export const ContactSection = () => {
                                                 rows={4}
                                                 value={formData.message}
                                                 onChange={handleChange}
-                                                className="w-full bg-white/[0.03] border border-white/5 rounded-2xl px-5 py-4 text-white focus:border-primary/50 focus:bg-white/5 outline-none transition-all resize-none"
+                                                className="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 text-white focus:border-primary/50 focus:bg-black/60 outline-none transition-all resize-none placeholder:text-white/20"
                                                 placeholder="Tell me about your project..."
                                             />
                                         </div>

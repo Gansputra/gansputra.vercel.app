@@ -8,7 +8,6 @@ import { Modal } from "@/components/ui/Modal";
 import { projectData } from "@/data/projectData";
 import { ExternalLink, Github, Eye, ChevronLeft, ChevronRight, Terminal } from "lucide-react";
 import { Project } from "@/types/project";
-import { Magnetic } from "@/components/ui/Magnetic";
 import { cn } from "@/lib/utils";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 
@@ -50,7 +49,7 @@ const ProjectCard = ({ project, onPreview }: { project: Project, onPreview: (p: 
                                 exit={{ opacity: 0, scale: 0.9, y: 10 }}
                                 className="absolute top-4 right-16 z-20 pointer-events-none"
                             >
-                                <div className="bg-[#0f0f0f] border border-primary/30 rounded-lg p-3 shadow-2xl backdrop-blur-md min-w-[140px]">
+                                <div className="bg-[#0f0f0f]/95 border border-primary/30 rounded-lg p-3 shadow-2xl backdrop-blur-xl min-w-[140px]">
                                     <div className="flex items-center gap-2 mb-2 border-b border-primary/20 pb-1">
                                         <Terminal size={12} className="text-primary" />
                                         <span className="text-[10px] font-mono text-primary/70 uppercase">Process Log</span>
@@ -76,26 +75,26 @@ const ProjectCard = ({ project, onPreview }: { project: Project, onPreview: (p: 
                         </h3>
                         <div className="flex items-center gap-1">
                             {project.repoLink && (
-                                <Magnetic strength={isMobile ? 0 : 0.4}>
-                                    <a
-                                        href={project.repoLink}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="text-white/40 hover:text-white transition-all p-2 flex items-center justify-center"
-                                    >
-                                        <Github size={20} />
-                                    </a>
-                                </Magnetic>
-                            )}
-                            <Magnetic strength={isMobile ? 0 : 0.4}>
-                                <button
-                                    onClick={() => onPreview(project)}
-                                    className="text-white/40 hover:text-primary transition-all p-2 cursor-pointer flex items-center justify-center"
-                                    title="View Previews"
+                                <motion.a
+                                    whileHover={{ scale: 1.2 }}
+                                    whileTap={{ scale: 0.9 }}
+                                    href={project.repoLink}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-white/40 hover:text-white transition-all p-2 flex items-center justify-center"
                                 >
-                                    <Eye size={20} />
-                                </button>
-                            </Magnetic>
+                                    <Github size={20} />
+                                </motion.a>
+                            )}
+                            <motion.button
+                                whileHover={{ scale: 1.2 }}
+                                whileTap={{ scale: 0.9 }}
+                                onClick={() => onPreview(project)}
+                                className="text-white/40 hover:text-primary transition-all p-2 cursor-pointer flex items-center justify-center"
+                                title="View Previews"
+                            >
+                                <Eye size={20} />
+                            </motion.button>
                         </div>
                     </div>
 
@@ -215,7 +214,7 @@ export const ProjectShowcase = () => {
             <Modal
                 isOpen={!!selectedProject}
                 onClose={() => setSelectedProject(null)}
-                className="max-w-[90vw] md:max-w-6xl h-[80vh] bg-[#0a0a0a] border border-white/10 overflow-hidden shadow-[0_0_100px_rgba(0,0,0,0.8)] rounded-3xl p-0"
+                className="max-w-[90vw] md:max-w-6xl h-[80vh] bg-[#0a0a0a]/95 border border-white/10 overflow-hidden shadow-[0_0_100px_rgba(0,0,0,0.8)] rounded-3xl p-0"
             >
                 {selectedProject && (
                     <div className="relative w-full h-full group">
@@ -249,18 +248,16 @@ export const ProjectShowcase = () => {
                                         <h3 className="text-xl md:text-3xl lg:text-4xl font-black text-white tracking-tighter uppercase italic leading-tight truncate md:whitespace-normal md:overflow-visible">
                                             {selectedProject.title}
                                         </h3>
-                                        {selectedProject.repoLink && (
-                                            <Magnetic strength={0.2}>
-                                                <a
-                                                    href={selectedProject.repoLink}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="w-9 h-9 md:w-11 md:h-11 flex items-center justify-center bg-primary/10 hover:bg-primary border border-primary/20 text-primary hover:text-black rounded-full transition-all shrink-0 shadow-lg shadow-black/20"
-                                                >
-                                                    <Github size={18} />
-                                                </a>
-                                            </Magnetic>
-                                        )}
+                                        <motion.a
+                                            whileHover={{ scale: 1.1 }}
+                                            whileTap={{ scale: 0.9 }}
+                                            href={selectedProject.repoLink}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="w-9 h-9 md:w-11 md:h-11 flex items-center justify-center bg-primary/10 hover:bg-primary border border-primary/20 text-primary hover:text-black rounded-full transition-all shrink-0 shadow-lg shadow-black/20"
+                                        >
+                                            <Github size={18} />
+                                        </motion.a>
                                     </div>
                                     <p className="text-white/60 text-xs md:text-sm lg:text-base max-w-2xl line-clamp-2 md:line-clamp-none font-medium leading-relaxed">
                                         {selectedProject.description}

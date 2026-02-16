@@ -6,7 +6,7 @@ export const siteConfig = {
     ogImage: "https://gansputra.vercel.app/og.jpg",
     links: {
         github: "https://github.com/gansputra",
-        instagram: "https://instagram.com/gansputra",
+        instagram: "https://instagram.com/gans.putra_",
     },
     keywords: ["Next.js", "React", "Tailwind CSS", "TypeScript", "AMV", "Portfolio"],
 };

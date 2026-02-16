@@ -6,7 +6,6 @@ import { Card } from "@/components/ui/Card";
 import { Modal } from "@/components/ui/Modal";
 import { gfxData } from "@/data/gfxData";
 import { Maximize2, Palette } from "lucide-react";
-import { Magnetic } from "@/components/ui/Magnetic";
 import { cn } from "@/lib/utils";
 import { useMotionValue, useSpring, useTransform, animate } from "framer-motion";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
@@ -44,7 +43,7 @@ const GfxCard = ({ item, setSelectedImage }: { item: any, setSelectedImage: (img
             transition={{ duration: 0.3 }}
             className="relative"
         >
-            <Card className="p-0 border-none bg-white/[0.02] overflow-hidden group cursor-pointer h-full flex flex-col" glow>
+            <Card className="p-0 border-none bg-black/80 overflow-hidden group cursor-pointer h-full flex flex-col" glow>
                 {/* Image Container */}
                 <div className="relative aspect-[4/5] overflow-hidden bg-black">
                     {/* Base Image (Full color on mobile, dimmed on desktop) */}
@@ -119,19 +118,21 @@ const GfxCard = ({ item, setSelectedImage }: { item: any, setSelectedImage: (img
                                 : "bg-black/40 opacity-0 group-hover:opacity-100 backdrop-blur-[2px]"
                         )}
                     >
-                        <Magnetic strength={isMobile ? 0 : 0.3}>
-                            <div className={cn(
+                        <motion.div
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                            className={cn(
                                 "p-3 md:p-4 rounded-full bg-secondary/20 border border-secondary/50 text-secondary transition-all duration-500",
                                 !isMobile && "translate-y-4 group-hover:translate-y-0"
-                            )}>
-                                <Maximize2 size={isMobile ? 20 : 24} />
-                            </div>
-                        </Magnetic>
+                            )}
+                        >
+                            <Maximize2 size={isMobile ? 20 : 24} />
+                        </motion.div>
                     </div>
 
                     {/* Badge */}
                     <div className="absolute top-4 left-4 z-40">
-                        <span className="px-3 py-1 bg-black/60 backdrop-blur-md rounded-full text-[10px] font-bold text-secondary uppercase tracking-widest border border-secondary/30">
+                        <span className="px-3 py-1 bg-black/80 backdrop-blur-md rounded-full text-[10px] font-bold text-secondary uppercase tracking-widest border border-secondary/30">
                             {item.category}
                         </span>
                     </div>
@@ -205,29 +206,29 @@ export const GfxShowcase = () => {
                     viewport={{ once: true }}
                     className="mt-16 flex justify-center"
                 >
-                    <Magnetic strength={0.2} range={100}>
-                        <a
-                            href="https://pin.it/o8f9moE93"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="group relative flex items-center gap-3 px-8 py-4 bg-[#E60023]/10 hover:bg-[#E60023] border border-[#E60023]/20 text-white rounded-full transition-all duration-500 shadow-lg hover:shadow-[#E60023]/40 overflow-hidden"
-                        >
-                            <motion.div
-                                className="absolute inset-0 bg-white/10 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 skew-x-12"
-                            />
-                            <div className="bg-[#E60023] p-2 rounded-full group-hover:bg-white group-hover:text-[#E60023] transition-colors relative z-10">
-                                <svg
-                                    viewBox="0 0 24 24"
-                                    width="20"
-                                    height="20"
-                                    fill="currentColor"
-                                >
-                                    <path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.162-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.965 1.406-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738.098.119.112.224.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.261 7.929-7.261 4.162 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.631-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146 1.124.347 2.317.535 3.554.535 6.607 0 11.985-5.365 11.985-11.987C23.992 5.368 18.625 0 12.017 0z" />
-                                </svg>
-                            </div>
-                            <span className="font-bold tracking-wider uppercase text-sm relative z-10">See More on Pinterest</span>
-                        </a>
-                    </Magnetic>
+                    <motion.a
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        href="https://pin.it/o8f9moE93"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group relative flex items-center gap-3 px-8 py-4 bg-[#E60023]/10 hover:bg-[#E60023] border border-[#E60023]/20 text-white rounded-full transition-all duration-500 shadow-lg hover:shadow-[#E60023]/40 overflow-hidden"
+                    >
+                        <motion.div
+                            className="absolute inset-0 bg-white/10 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 skew-x-12"
+                        />
+                        <div className="bg-[#E60023] p-2 rounded-full group-hover:bg-white group-hover:text-[#E60023] transition-colors relative z-10">
+                            <svg
+                                viewBox="0 0 24 24"
+                                width="20"
+                                height="20"
+                                fill="currentColor"
+                            >
+                                <path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.162-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.965 1.406-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738.098.119.112.224.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.261 7.929-7.261 4.162 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.631-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146 1.124.347 2.317.535 3.554.535 6.607 0 11.985-5.365 11.985-11.987C23.992 5.368 18.625 0 12.017 0z" />
+                            </svg>
+                        </div>
+                        <span className="font-bold tracking-wider uppercase text-sm relative z-10">See More on Pinterest</span>
+                    </motion.a>
                 </motion.div>
             </div>
 
