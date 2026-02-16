@@ -5,6 +5,7 @@ import { motion, Variants } from "framer-motion";
 import { Button } from "@/components/ui/Button";
 import { ChevronRight } from "lucide-react";
 import { useActiveSection } from "@/context/ActiveSectionContext";
+import { Magnetic } from "@/components/ui/Magnetic";
 
 export const HeroSection = () => {
     const { setActiveSection } = useActiveSection();
@@ -101,16 +102,20 @@ export const HeroSection = () => {
             </motion.div>
 
             {/* Bottom transition reveal */}
-            <motion.button
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.5 }}
-                onClick={() => setActiveSection('amvs')}
-                className="absolute bottom-12 left-1/2 -translate-x-1/2 text-white/10 hover:text-primary transition-all group flex items-center gap-3"
-            >
-                <span className="text-[9px] uppercase tracking-[0.4em] font-bold group-hover:tracking-[0.6em] transition-all duration-500">Discover</span>
-                <ChevronRight className="group-hover:translate-x-1 transition-transform duration-500" size={18} />
-            </motion.button>
+            <div className="absolute bottom-12 left-1/2 -translate-x-1/2">
+                <Magnetic strength={0.2} range={100}>
+                    <motion.button
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 1.5 }}
+                        onClick={() => setActiveSection('amvs')}
+                        className="text-white/10 hover:text-primary transition-all group flex items-center gap-3 p-4"
+                    >
+                        <span className="text-[9px] uppercase tracking-[0.4em] font-bold group-hover:tracking-[0.6em] transition-all duration-500">Discover</span>
+                        <ChevronRight className="group-hover:translate-x-1 transition-transform duration-500" size={18} />
+                    </motion.button>
+                </Magnetic>
+            </div>
         </div>
     );
 };

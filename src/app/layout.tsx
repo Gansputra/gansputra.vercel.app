@@ -5,6 +5,8 @@ import { siteConfig } from "@/config/siteConfig";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Providers } from "@/components/layout/Providers";
+import { CustomCursor } from "@/components/ui/CustomCursor";
+import { MouseGlow } from "@/components/ui/MouseGlow";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -64,6 +66,8 @@ export default function RootLayout({
         className={`${inter.variable} ${outfit.variable} font-sans bg-[#0a0a0a] text-white antialiased selection:bg-primary selection:text-black overflow-hidden h-screen w-screen`}
       >
         <Providers>
+          <CustomCursor />
+          <MouseGlow />
           <Navbar />
           <main className="h-full w-full">
             {children}

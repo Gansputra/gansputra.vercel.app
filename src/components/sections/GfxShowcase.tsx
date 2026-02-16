@@ -6,6 +6,144 @@ import { Card } from "@/components/ui/Card";
 import { Modal } from "@/components/ui/Modal";
 import { gfxData } from "@/data/gfxData";
 import { Maximize2, Palette } from "lucide-react";
+import { Magnetic } from "@/components/ui/Magnetic";
+import { cn } from "@/lib/utils";
+import { useMotionValue, useSpring, useTransform, animate } from "framer-motion";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { useEffect, useRef } from "react";
+
+const GfxCard = ({ item, setSelectedImage }: { item: any, setSelectedImage: (img: string) => void }) => {
+    const isMobile = useMediaQuery("(max-width: 1024px)");
+    const mouseX = useMotionValue(0);
+    const mouseY = useMotionValue(0);
+
+    // Base motion value for spring
+    const opacityValue = useMotionValue(0);
+    const spotlightOpacity = useSpring(opacityValue, { stiffness: 300, damping: 30 });
+
+    const maskImage = useTransform(
+        [mouseX, mouseY],
+        ([x, y]) => `radial-gradient(200px circle at ${x}px ${y}px, black 0%, transparent 100%)`
+    );
+
+    const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        mouseX.set(e.clientX - rect.left);
+        mouseY.set(e.clientY - rect.top);
+    };
+
+    const handleMouseEnter = () => opacityValue.set(1);
+    const handleMouseLeave = () => opacityValue.set(0);
+
+    return (
+        <motion.div
+            onMouseMove={handleMouseMove}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+            whileHover={{ y: -5, scale: 1.02 }}
+            transition={{ duration: 0.3 }}
+            className="relative"
+        >
+            <Card className="p-0 border-none bg-white/[0.02] overflow-hidden group cursor-pointer h-full flex flex-col" glow>
+                {/* Image Container */}
+                <div className="relative aspect-[4/5] overflow-hidden bg-black">
+                    {/* Base Image (Full color on mobile, dimmed on desktop) */}
+                    <img
+                        src={item.image}
+                        alt={item.title}
+                        className={cn(
+                            "w-full h-full object-cover transition-all duration-700",
+                            isMobile ? "opacity-100 grayscale-0" : "opacity-30 grayscale"
+                        )}
+                    />
+
+                    {/* Spotlight Image (Desktop only) */}
+                    {!isMobile && (
+                        <motion.div
+                            className="absolute inset-0 z-10 pointer-events-none"
+                            style={{
+                                opacity: spotlightOpacity,
+                                WebkitMaskImage: maskImage,
+                                maskImage: maskImage,
+                            }}
+                        >
+                            <img
+                                src={item.image}
+                                alt={item.title}
+                                className="w-full h-full object-cover"
+                            />
+                        </motion.div>
+                    )}
+
+                    {/* Tech Scanner Line Wrapper (Desktop only) */}
+                    {!isMobile && (
+                        <motion.div
+                            className="absolute inset-0 z-20 pointer-events-none"
+                            style={{ opacity: spotlightOpacity }}
+                        >
+                            {/* Vertical Scanner Line */}
+                            <motion.div
+                                style={{ left: mouseX }}
+                                className="absolute top-0 bottom-0 w-[1px] bg-secondary/50 shadow-[0_0_15px_rgba(var(--secondary),0.5)]"
+                            />
+                            {/* Horizontal Scanner Line */}
+                            <motion.div
+                                style={{ top: mouseY }}
+                                className="absolute left-0 right-0 h-[1px] bg-secondary/50 shadow-[0_0_15px_rgba(var(--secondary),0.5)]"
+                            />
+                        </motion.div>
+                    )}
+
+                    {/* Metallic Shine Effect (Mobile only) */}
+                    {isMobile && (
+                        <motion.div
+                            initial={{ left: "-150%", skewX: -25 }}
+                            animate={{ left: "150%" }}
+                            transition={{
+                                repeat: Infinity,
+                                duration: 3,
+                                repeatDelay: Math.random() * 4 + 2,
+                                ease: "easeInOut"
+                            }}
+                            className="absolute top-[-50%] bottom-[-50%] w-32 bg-gradient-to-r from-transparent via-white/20 to-transparent z-25 pointer-events-none blur-sm"
+                        />
+                    )}
+
+                    {/* Overlay Action */}
+                    <div
+                        onClick={() => setSelectedImage(item.image)}
+                        className={cn(
+                            "absolute inset-0 z-30 flex items-center justify-center transition-all duration-300",
+                            isMobile
+                                ? "bg-black/10 opacity-100"
+                                : "bg-black/40 opacity-0 group-hover:opacity-100 backdrop-blur-[2px]"
+                        )}
+                    >
+                        <Magnetic strength={isMobile ? 0 : 0.3}>
+                            <div className={cn(
+                                "p-3 md:p-4 rounded-full bg-secondary/20 border border-secondary/50 text-secondary transition-all duration-500",
+                                !isMobile && "translate-y-4 group-hover:translate-y-0"
+                            )}>
+                                <Maximize2 size={isMobile ? 20 : 24} />
+                            </div>
+                        </Magnetic>
+                    </div>
+
+                    {/* Badge */}
+                    <div className="absolute top-4 left-4 z-40">
+                        <span className="px-3 py-1 bg-black/60 backdrop-blur-md rounded-full text-[10px] font-bold text-secondary uppercase tracking-widest border border-secondary/30">
+                            {item.category}
+                        </span>
+                    </div>
+                </div>
+
+                <div className="p-6">
+                    <h3 className="text-xl font-bold text-white group-hover:text-secondary transition-colors line-clamp-1 text-center">{item.title}</h3>
+                </div>
+            </Card>
+        </motion.div>
+    );
+};
 
 export const GfxShowcase = () => {
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -17,16 +155,6 @@ export const GfxShowcase = () => {
             transition: {
                 staggerChildren: 0.1
             }
-        }
-    };
-
-    const cardVariants: Variants = {
-        hidden: { opacity: 0, scale: 0.9, y: 30 },
-        visible: {
-            opacity: 1,
-            scale: 1,
-            y: 0,
-            transition: { duration: 0.6, ease: "easeOut" }
         }
     };
 
@@ -65,44 +193,7 @@ export const GfxShowcase = () => {
                     className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8 text-left"
                 >
                     {gfxData.map((item) => (
-                        <motion.div
-                            key={item.id}
-                            variants={cardVariants}
-                            whileHover={{ y: -5, scale: 1.02 }}
-                            transition={{ duration: 0.3 }}
-                        >
-                            <Card className="p-0 border-none bg-white/[0.02] overflow-hidden group cursor-pointer h-full flex flex-col" glow>
-                                {/* Image Container */}
-                                <div className="relative aspect-[4/5] overflow-hidden">
-                                    <img
-                                        src={item.image}
-                                        alt={item.title}
-                                        className="w-full h-full object-cover md:grayscale md:group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700"
-                                    />
-
-                                    {/* Overlay Action */}
-                                    <div
-                                        onClick={() => setSelectedImage(item.image)}
-                                        className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center backdrop-blur-sm"
-                                    >
-                                        <div className="p-3 md:p-4 rounded-full bg-secondary/20 border border-secondary/50 text-secondary translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                                            <Maximize2 size={window.innerWidth < 768 ? 18 : 24} />
-                                        </div>
-                                    </div>
-
-                                    {/* Badge */}
-                                    <div className="absolute top-2 left-2 md:top-4 md:left-4 z-20">
-                                        <span className="px-2 py-0.5 md:px-3 md:py-1 bg-black/60 backdrop-blur-md rounded-full text-[8px] md:text-[10px] font-bold text-secondary uppercase tracking-widest border border-secondary/30">
-                                            {item.category}
-                                        </span>
-                                    </div>
-                                </div>
-
-                                <div className="p-3 md:p-6">
-                                    <h3 className="text-sm md:text-xl font-bold text-white group-hover:text-secondary transition-colors line-clamp-1 text-center">{item.title}</h3>
-                                </div>
-                            </Card>
-                        </motion.div>
+                        <GfxCard key={item.id} item={item} setSelectedImage={setSelectedImage} />
                     ))}
                 </motion.div>
 
@@ -114,27 +205,29 @@ export const GfxShowcase = () => {
                     viewport={{ once: true }}
                     className="mt-16 flex justify-center"
                 >
-                    <a
-                        href="https://pin.it/o8f9moE93"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="group relative flex items-center gap-3 px-8 py-4 bg-[#E60023]/10 hover:bg-[#E60023] border border-[#E60023]/20 text-white rounded-full transition-all duration-500 shadow-lg hover:shadow-[#E60023]/40 overflow-hidden"
-                    >
-                        <motion.div
-                            className="absolute inset-0 bg-white/10 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 skew-x-12"
-                        />
-                        <div className="bg-[#E60023] p-2 rounded-full group-hover:bg-white group-hover:text-[#E60023] transition-colors relative z-10">
-                            <svg
-                                viewBox="0 0 24 24"
-                                width="20"
-                                height="20"
-                                fill="currentColor"
-                            >
-                                <path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.162-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.965 1.406-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738.098.119.112.224.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.261 7.929-7.261 4.162 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.631-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146 1.124.347 2.317.535 3.554.535 6.607 0 11.985-5.365 11.985-11.987C23.992 5.368 18.625 0 12.017 0z" />
-                            </svg>
-                        </div>
-                        <span className="font-bold tracking-wider uppercase text-sm relative z-10">See More on Pinterest</span>
-                    </a>
+                    <Magnetic strength={0.2} range={100}>
+                        <a
+                            href="https://pin.it/o8f9moE93"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="group relative flex items-center gap-3 px-8 py-4 bg-[#E60023]/10 hover:bg-[#E60023] border border-[#E60023]/20 text-white rounded-full transition-all duration-500 shadow-lg hover:shadow-[#E60023]/40 overflow-hidden"
+                        >
+                            <motion.div
+                                className="absolute inset-0 bg-white/10 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 skew-x-12"
+                            />
+                            <div className="bg-[#E60023] p-2 rounded-full group-hover:bg-white group-hover:text-[#E60023] transition-colors relative z-10">
+                                <svg
+                                    viewBox="0 0 24 24"
+                                    width="20"
+                                    height="20"
+                                    fill="currentColor"
+                                >
+                                    <path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.162-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.965 1.406-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738.098.119.112.224.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.261 7.929-7.261 4.162 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.631-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146 1.124.347 2.317.535 3.554.535 6.607 0 11.985-5.365 11.985-11.987C23.992 5.368 18.625 0 12.017 0z" />
+                                </svg>
+                            </div>
+                            <span className="font-bold tracking-wider uppercase text-sm relative z-10">See More on Pinterest</span>
+                        </a>
+                    </Magnetic>
                 </motion.div>
             </div>
 

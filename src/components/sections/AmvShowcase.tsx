@@ -9,6 +9,7 @@ import { amvData } from "@/data/amvData";
 import { Play, Music, Cpu, Calendar, Youtube } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getVideoThumbnail } from "@/lib/getVideoThumbnail";
+import { Magnetic } from "@/components/ui/Magnetic";
 
 export const AmvShowcase = () => {
     const [filter, setFilter] = useState("All");
@@ -182,20 +183,22 @@ export const AmvShowcase = () => {
                     viewport={{ once: true }}
                     className="mt-16 flex justify-center"
                 >
-                    <a
-                        href="https://youtube.com/@gexvexedit"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="group relative flex items-center gap-3 px-8 py-4 bg-[#FF0000]/10 hover:bg-[#FF0000] border border-[#FF0000]/20 text-white rounded-full transition-all duration-500 shadow-lg hover:shadow-[#FF0000]/40 overflow-hidden"
-                    >
-                        <motion.div
-                            className="absolute inset-0 bg-white/10 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 skew-x-12"
-                        />
-                        <div className="bg-[#FF0000] p-2 rounded-full group-hover:bg-white group-hover:text-[#FF0000] transition-colors relative z-10">
-                            <Youtube size={20} />
-                        </div>
-                        <span className="font-bold tracking-wider uppercase text-sm relative z-10">See More on YouTube</span>
-                    </a>
+                    <Magnetic strength={0.2} range={100}>
+                        <a
+                            href="https://youtube.com/@gexvexedit"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="group relative flex items-center gap-3 px-8 py-4 bg-[#FF0000]/10 hover:bg-[#FF0000] border border-[#FF0000]/20 text-white rounded-full transition-all duration-500 shadow-lg hover:shadow-[#FF0000]/40 overflow-hidden"
+                        >
+                            <motion.div
+                                className="absolute inset-0 bg-white/10 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 skew-x-12"
+                            />
+                            <div className="bg-[#FF0000] p-2 rounded-full group-hover:bg-white group-hover:text-[#FF0000] transition-colors relative z-10">
+                                <Youtube size={20} />
+                            </div>
+                            <span className="font-bold tracking-wider uppercase text-sm relative z-10">See More on YouTube</span>
+                        </a>
+                    </Magnetic>
                 </motion.div>
             </div>
 

@@ -79,7 +79,6 @@ export const ThreeLanyard = () => {
                     rotateY,
                     rotateX,
                     transformStyle: "preserve-3d",
-                    cursor: isPressed ? "grabbing" : "grab",
                     willChange: "transform",
                 }}
                 initial={{ opacity: 0, scale: 0.9, rotateY: 15 }}
@@ -88,7 +87,8 @@ export const ThreeLanyard = () => {
                     scale: isPressed ? 1.05 : 1,
                 }}
                 transition={{ duration: 0.6 }}
-                className="relative w-full max-w-[340px] aspect-[1/1.55] group outline-none"
+                className="relative w-full max-w-[340px] aspect-[1/1.55] group outline-none cursor-none"
+                data-cursor="hover"
             >
                 {/* --- 3D VOLUME LAYERS --- */}
                 {/* CRITICAL: backfaceVisibility must be "visible" (default) or omitted so thickness is seen from both sides */}

@@ -173,3 +173,9 @@
     scrollbar-width: none;
   }
 }
+
+/* Hide default cursor when custom cursor is active (High Priority) */
+html.custom-cursor-active,
+html.custom-cursor-active * {
+  cursor: none !important;
+}

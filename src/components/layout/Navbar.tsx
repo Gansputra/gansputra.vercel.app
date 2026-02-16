@@ -2,10 +2,11 @@
 
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Zap, ZapOff } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { siteConfig } from "@/config/siteConfig";
 import { useActiveSection } from "@/context/ActiveSectionContext";
+import { useSettings } from "@/context/SettingsContext";
 
 const navItems = [
     { name: "Home", id: "hero" },
@@ -19,6 +20,7 @@ const navItems = [
 export const Navbar = () => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const { activeSection, setActiveSection } = useActiveSection();
+    const { reducedMotion, toggleReducedMotion } = useSettings();
 
     const handleNavClick = (id: string) => {
         setActiveSection(id);
@@ -69,6 +71,15 @@ export const Navbar = () => {
                             )}
                         </motion.button>
                     ))}
+                    <motion.button
+                        onClick={toggleReducedMotion}
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="ml-2 p-2 rounded-full text-white/40 hover:text-primary hover:bg-white/5 transition-all"
+                        title={reducedMotion ? "Enable Motion" : "Reduce Motion"}
+                    >
+                        {reducedMotion ? <ZapOff size={18} /> : <Zap size={18} />}
+                    </motion.button>
                 </div>
 
                 {/* Mobile Toggle */}
@@ -138,6 +149,16 @@ export const Navbar = () => {
                                         )} />
                                     </motion.button>
                                 ))}
+                                <motion.button
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: navItems.length * 0.08 }}
+                                    onClick={toggleReducedMotion}
+                                    className="mt-4 flex items-center gap-3 px-6 py-3 rounded-full bg-white/5 text-white/60 hover:text-primary transition-all border border-white/10"
+                                >
+                                    {reducedMotion ? <ZapOff size={18} /> : <Zap size={18} />}
+                                    <span className="text-sm font-medium">{reducedMotion ? "Enable Motion" : "Reduce Motion"}</span>
+                                </motion.button>
                             </div>
                         </motion.div>
                     </>
