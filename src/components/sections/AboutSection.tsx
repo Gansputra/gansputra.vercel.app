@@ -106,7 +106,7 @@ export const AboutSection = () => {
                             Behind the Lens <br />& the Code
                         </motion.h2>
                         <motion.p variants={itemVariants} className="text-white/60 text-lg mb-8 leading-relaxed max-w-xl">
-                            I'm gansputra, a multidisciplinary creative bridging the gap between
+                            I'm Gansputra, a multidisciplinary creative bridging the gap between
                             backend logic and cinematic visuals. My journey started with a passion
                             for storytelling through video editing, which evolved into a career
                             building complex web applications.

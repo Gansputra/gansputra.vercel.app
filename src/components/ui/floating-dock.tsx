@@ -44,24 +44,31 @@ const FloatingDockMobile = ({
                 {open && (
                     <motion.div
                         layoutId="nav"
-                        className="absolute top-full mt-2 inset-x-0 flex flex-col gap-2"
+                        className="absolute left-full top-0 ml-4 flex flex-wrap gap-3 w-[65vw] max-w-[260px] p-2"
                     >
                         {items.map((item, idx) => (
                             <motion.div
                                 key={item.title}
-                                initial={{ opacity: 0, y: -10 }}
+                                initial={{ opacity: 0, scale: 0.5, x: -20 }}
                                 animate={{
                                     opacity: 1,
-                                    y: 0,
+                                    scale: 1,
+                                    x: 0,
                                 }}
                                 exit={{
                                     opacity: 0,
-                                    y: -10,
+                                    scale: 0.5,
+                                    x: -20,
                                     transition: {
-                                        delay: idx * 0.05,
+                                        delay: idx * 0.02,
                                     },
                                 }}
-                                transition={{ delay: idx * 0.05 }}
+                                transition={{
+                                    type: "spring",
+                                    stiffness: 260,
+                                    damping: 20,
+                                    delay: idx * 0.05
+                                }}
                             >
                                 <Link
                                     href={item.href}
@@ -74,11 +81,16 @@ const FloatingDockMobile = ({
                                     }}
                                     key={item.title}
                                     className={cn(
-                                        "h-10 w-10 rounded-full bg-black/40 backdrop-blur-md border border-white/10 flex items-center justify-center transition-colors",
-                                        item.active && "border-primary/50 bg-primary/10"
+                                        "h-12 w-12 rounded-2xl bg-black/60 backdrop-blur-xl border border-white/10 flex flex-col items-center justify-center transition-all active:scale-95 shadow-2xl",
+                                        item.active && "border-primary/50 bg-primary/20 shadow-[0_0_15px_rgba(0,191,207,0.2)]"
                                     )}
                                 >
-                                    <div className="h-4 w-4 text-white/70">{item.icon}</div>
+                                    <div className={cn("h-5 w-5 transition-colors", item.active ? "text-primary" : "text-white/70")}>
+                                        {item.icon}
+                                    </div>
+                                    <span className="text-[7px] uppercase tracking-tighter mt-1 text-white/40 font-bold">
+                                        {item.title.split(' ')[0]}
+                                    </span >
                                 </Link>
                             </motion.div>
                         ))}

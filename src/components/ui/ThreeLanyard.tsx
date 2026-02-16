@@ -121,7 +121,7 @@ export const ThreeLanyard = () => {
                     {/* CONTENT FRONT */}
                     <div style={{ transform: "translateZ(50px)" }} className="relative z-30 h-full flex flex-col items-center justify-center p-12 space-y-10 pointer-events-none">
                         <h3 className="text-5xl font-black text-white tracking-tighter leading-none text-center drop-shadow-2xl">
-                            GANSPUTRA
+                            Gansputra
                         </h3>
 
                         <div className="w-full max-w-[180px] h-[3px] bg-white/10 rounded-full relative overflow-hidden">

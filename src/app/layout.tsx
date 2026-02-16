@@ -55,6 +55,8 @@ export const metadata: Metadata = {
   },
 };
 
+import { InitialLoader } from "@/components/layout/InitialLoader";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -66,12 +68,14 @@ export default function RootLayout({
         className={`${inter.variable} ${outfit.variable} font-sans bg-[#0a0a0a] text-white antialiased selection:bg-primary selection:text-black overflow-hidden h-screen w-screen`}
       >
         <Providers>
-          <CustomCursor />
-          <MouseGlow />
-          <Navbar />
-          <main className="h-full w-full">
-            {children}
-          </main>
+          <InitialLoader>
+            <CustomCursor />
+            <MouseGlow />
+            <Navbar />
+            <main className="h-full w-full">
+              {children}
+            </main>
+          </InitialLoader>
         </Providers>
       </body>
     </html>
