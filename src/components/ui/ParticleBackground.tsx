@@ -33,10 +33,16 @@ export const ParticleBackground = () => {
 
     return (
         <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none bg-[#050505]">
-            {/* LAYER 1: Deep Slow Glows - Reduced Blur */}
+            {/* LAYER 1: Deep Slow Glows - Optimized with radial-gradient */}
             <ParallaxLayer x={springX} y={springY} factor={10}>
-                <div className="absolute top-[-10%] left-[-5%] w-[500px] h-[500px] bg-primary/5 blur-[80px] rounded-full" />
-                <div className="absolute bottom-[-10%] right-[-5%] w-[600px] h-[600px] bg-secondary/5 blur-[100px] rounded-full" />
+                <div
+                    style={{ background: "radial-gradient(circle, rgba(0,191,207,0.1) 0%, rgba(0,0,0,0) 70%)" }}
+                    className="absolute top-[-10%] left-[-5%] w-[600px] h-[600px] opacity-50"
+                />
+                <div
+                    style={{ background: "radial-gradient(circle, rgba(120,119,198,0.1) 0%, rgba(0,0,0,0) 70%)" }}
+                    className="absolute bottom-[-10%] right-[-5%] w-[700px] h-[700px] opacity-50"
+                />
             </ParallaxLayer>
 
             {/* LAYER 2: Floating Frames (Reduced Count) */}

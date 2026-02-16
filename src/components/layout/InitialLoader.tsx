@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { SplashScreen } from "@/components/ui/SplashScreen";
 
 export function InitialLoader({ children }: { children: React.ReactNode }) {
@@ -33,11 +33,20 @@ export function InitialLoader({ children }: { children: React.ReactNode }) {
     return (
         <>
             <AnimatePresence mode="wait">
-                {loading && <SplashScreen onComplete={handleComplete} />}
+                {loading && (
+                    <SplashScreen key="splash" onComplete={handleComplete} />
+                )}
             </AnimatePresence>
-            <div className={loading ? "hidden" : "block"}>
-                {children}
-            </div>
+            {!loading && (
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.5 }}
+                    className="h-full w-full"
+                >
+                    {children}
+                </motion.div>
+            )}
         </>
     );
 }
