@@ -31,7 +31,7 @@ export const GfxShowcase = () => {
     };
 
     return (
-        <div className="py-24 px-6 relative overflow-hidden bg-black/50">
+        <div className="py-24 px-6 relative overflow-hidden">
             {/* Background element */}
             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-secondary/5 rounded-full blur-[120px] -z-10" />
 
@@ -62,7 +62,7 @@ export const GfxShowcase = () => {
                     initial="hidden"
                     whileInView="visible"
                     viewport={{ once: true, amount: 0.1 }}
-                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 text-left"
+                    className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8 text-left"
                 >
                     {gfxData.map((item) => (
                         <motion.div
@@ -85,21 +85,21 @@ export const GfxShowcase = () => {
                                         onClick={() => setSelectedImage(item.image)}
                                         className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center backdrop-blur-sm"
                                     >
-                                        <div className="p-4 rounded-full bg-secondary/20 border border-secondary/50 text-secondary translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                                            <Maximize2 size={24} />
+                                        <div className="p-3 md:p-4 rounded-full bg-secondary/20 border border-secondary/50 text-secondary translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                                            <Maximize2 size={window.innerWidth < 768 ? 18 : 24} />
                                         </div>
                                     </div>
 
                                     {/* Badge */}
-                                    <div className="absolute top-4 left-4 z-20">
-                                        <span className="px-3 py-1 bg-black/60 backdrop-blur-md rounded-full text-[10px] font-bold text-secondary uppercase tracking-widest border border-secondary/30">
+                                    <div className="absolute top-2 left-2 md:top-4 md:left-4 z-20">
+                                        <span className="px-2 py-0.5 md:px-3 md:py-1 bg-black/60 backdrop-blur-md rounded-full text-[8px] md:text-[10px] font-bold text-secondary uppercase tracking-widest border border-secondary/30">
                                             {item.category}
                                         </span>
                                     </div>
                                 </div>
 
-                                <div className="p-6">
-                                    <h3 className="text-xl font-bold text-white group-hover:text-secondary transition-colors line-clamp-1 text-center">{item.title}</h3>
+                                <div className="p-3 md:p-6">
+                                    <h3 className="text-sm md:text-xl font-bold text-white group-hover:text-secondary transition-colors line-clamp-1 text-center">{item.title}</h3>
                                 </div>
                             </Card>
                         </motion.div>
@@ -145,17 +145,11 @@ export const GfxShowcase = () => {
                 className="max-w-4xl p-0 bg-transparent border-none shadow-none"
             >
                 {selectedImage && (
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        className="relative w-full h-full rounded-2xl overflow-hidden text-center"
-                    >
-                        <img
-                            src={selectedImage}
-                            alt="Full Preview"
-                            className="w-full h-auto max-h-[85vh] object-contain mx-auto"
-                        />
-                    </motion.div>
+                    <img
+                        src={selectedImage}
+                        alt="Full Preview"
+                        className="w-auto h-auto max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl transition-all"
+                    />
                 )}
             </Modal>
         </div>

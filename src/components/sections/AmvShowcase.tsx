@@ -94,75 +94,85 @@ export const AmvShowcase = () => {
                     </div>
                 </div>
 
-                <motion.div
-                    variants={containerVariants}
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, amount: 0.1 }}
-                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-                >
-                    {filteredAmvs.map((amv) => (
-                        <motion.div
-                            key={amv.id}
-                            variants={cardVariants}
-                            whileHover={{ y: -10 }}
-                            onClick={() => setSelectedVideo(amv)}
-                        >
-                            <Card className="p-0 border-none bg-black/40 h-full flex flex-col group/card" glow>
-                                <div className="relative group aspect-video bg-[#111] cursor-pointer overflow-hidden rounded-t-2xl">
-                                    <img
-                                        src={getVideoThumbnail(amv.videoUrl)}
-                                        alt={amv.title}
-                                        className="w-full h-full object-cover group-hover/card:scale-110 transition-transform duration-700 md:opacity-60 group-hover/card:opacity-100"
-                                    />
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <AnimatePresence mode="popLayout">
+                        {filteredAmvs.length > 0 ? (
+                            filteredAmvs.map((amv) => (
+                                <motion.div
+                                    key={amv.id}
+                                    layout
+                                    initial={{ opacity: 0, scale: 0.9 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    exit={{ opacity: 0, scale: 0.9 }}
+                                    transition={{ duration: 0.4 }}
+                                    whileHover={{ y: -10 }}
+                                    onClick={() => setSelectedVideo(amv)}
+                                >
+                                    <Card className="p-0 border-none bg-black/40 h-full flex flex-col group/card" glow>
+                                        <div className="relative group aspect-video bg-[#111] cursor-pointer overflow-hidden rounded-t-2xl">
+                                            <img
+                                                src={getVideoThumbnail(amv.videoUrl)}
+                                                alt={amv.title}
+                                                className="w-full h-full object-cover group-hover/card:scale-110 transition-transform duration-700 md:opacity-60 group-hover/card:opacity-100"
+                                            />
 
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-10" />
-                                    <div className="absolute inset-0 flex items-center justify-center z-20 opacity-0 group-hover/card:opacity-100 transition-opacity duration-300">
-                                        <motion.div
-                                            whileHover={{ scale: 1.1 }}
-                                            whileTap={{ scale: 0.9 }}
-                                            className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center backdrop-blur-md border border-primary/50"
-                                        >
-                                            <Play className="text-primary fill-primary ml-1" />
-                                        </motion.div>
-                                    </div>
-                                    <div className="absolute bottom-4 left-4 z-20">
-                                        <p className="text-xs text-primary font-bold uppercase tracking-widest">{amv.anime}</p>
-                                        <h3 className="text-xl font-bold text-white group-hover/card:text-primary transition-colors">{amv.title}</h3>
-                                    </div>
-                                </div>
-                                <div className="p-6 flex-grow">
-                                    <p className="text-sm text-white/60 mb-4 line-clamp-2">{amv.description}</p>
-
-                                    <div className="flex flex-col gap-2 mb-4">
-                                        {amv.music && (
-                                            <div className="flex items-center gap-2 text-xs text-white/40">
-                                                <Music size={14} className="text-primary" />
-                                                <span className="truncate">{amv.music}</span>
+                                            <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-10" />
+                                            <div className="absolute inset-0 flex items-center justify-center z-20 opacity-0 group-hover/card:opacity-100 transition-opacity duration-300">
+                                                <motion.div
+                                                    whileHover={{ scale: 1.1 }}
+                                                    whileTap={{ scale: 0.9 }}
+                                                    className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center backdrop-blur-md border border-primary/50"
+                                                >
+                                                    <Play className="text-primary fill-primary ml-1" />
+                                                </motion.div>
                                             </div>
-                                        )}
-                                        {amv.software && (
-                                            <div className="flex items-center gap-2 text-xs text-white/40">
-                                                <Cpu size={14} className="text-primary" />
-                                                <span className="truncate">{amv.software}</span>
+                                            <div className="absolute bottom-4 left-4 z-20">
+                                                <p className="text-xs text-primary font-bold uppercase tracking-widest">{amv.anime}</p>
+                                                <h3 className="text-xl font-bold text-white group-hover/card:text-primary transition-colors">{amv.title}</h3>
                                             </div>
-                                        )}
-                                        <div className="flex items-center gap-2 text-xs text-white/40">
-                                            <Calendar size={14} className="text-primary" />
-                                            <span>{amv.date}</span>
                                         </div>
-                                    </div>
+                                        <div className="p-6 flex-grow">
+                                            <p className="text-sm text-white/60 mb-4 line-clamp-2">{amv.description}</p>
 
-                                    <div className="flex flex-wrap gap-2">
-                                        {amv.tags.map(tag => (
-                                            <Badge key={tag}>{tag}</Badge>
-                                        ))}
-                                    </div>
-                                </div>
-                            </Card>
-                        </motion.div>
-                    ))}
-                </motion.div>
+                                            <div className="flex flex-col gap-2 mb-4">
+                                                {amv.music && (
+                                                    <div className="flex items-center gap-2 text-xs text-white/40">
+                                                        <Music size={14} className="text-primary" />
+                                                        <span className="truncate">{amv.music}</span>
+                                                    </div>
+                                                )}
+                                                {amv.software && (
+                                                    <div className="flex items-center gap-2 text-xs text-white/40">
+                                                        <Cpu size={14} className="text-primary" />
+                                                        <span className="truncate">{amv.software}</span>
+                                                    </div>
+                                                )}
+                                                <div className="flex items-center gap-2 text-xs text-white/40">
+                                                    <Calendar size={14} className="text-primary" />
+                                                    <span>{amv.date}</span>
+                                                </div>
+                                            </div>
+
+                                            <div className="flex flex-wrap gap-2">
+                                                {amv.tags.map(tag => (
+                                                    <Badge key={tag}>{tag}</Badge>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </Card>
+                                </motion.div>
+                            ))
+                        ) : (
+                            <motion.div
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                className="col-span-full py-20 text-center"
+                            >
+                                <p className="text-white/30 font-mono tracking-widest uppercase">No projects found in this category</p>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </div>
 
                 {/* See More - YouTube Link */}
                 <motion.div

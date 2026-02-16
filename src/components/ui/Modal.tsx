@@ -3,7 +3,8 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 
 interface ModalProps {
     isOpen: boolean;
@@ -14,39 +15,66 @@ interface ModalProps {
 }
 
 export const Modal = ({ isOpen, onClose, title, children, className }: ModalProps) => {
-    return (
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    useEffect(() => {
+        if (isOpen) {
+            document.body.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = "unset";
+        }
+        return () => {
+            document.body.style.overflow = "unset";
+        };
+    }, [isOpen]);
+
+    if (!mounted) return null;
+
+    return createPortal(
         <AnimatePresence>
             {isOpen && (
-                <>
+                <div className="fixed inset-0 z-[1000] overflow-y-auto no-scrollbar bg-black/95 backdrop-blur-xl flex justify-center py-10 px-4">
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         onClick={onClose}
-                        className="fixed inset-0 z-[150] bg-black/95 backdrop-blur-md"
+                        className="fixed inset-0 z-0 cursor-zoom-out"
                     />
-                    <div className="fixed inset-0 z-[160] flex items-center justify-center p-4 pointer-events-none">
-                        <motion.div
-                            initial={{ scale: 0.9, opacity: 0, y: 20 }}
-                            animate={{ scale: 1, opacity: 1, y: 0 }}
-                            exit={{ scale: 0.9, opacity: 0, y: 20 }}
-                            className={cn(
-                                "pointer-events-auto relative w-full max-w-4xl rounded-2xl bg-[#0a0a0a] border border-white/10 p-4 md:p-8 shadow-[0_0_50px_rgba(0,0,0,0.5)]",
-                                className
-                            )}
-                        >
+
+                    <motion.div
+                        initial={{ scale: 0.95, opacity: 0, y: 30 }}
+                        animate={{ scale: 1, opacity: 1, y: 0 }}
+                        exit={{ scale: 0.95, opacity: 0, y: 30 }}
+                        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                        className={cn(
+                            "relative z-10 w-full max-w-5xl pointer-events-auto self-center",
+                            className
+                        )}
+                    >
+                        {/* Integrated Close Button */}
+                        <div className="absolute -top-12 right-0 md:-right-12 md:top-0">
                             <button
                                 onClick={onClose}
-                                className="absolute right-4 top-4 z-50 rounded-full p-2 text-white/50 hover:bg-white/10 hover:text-white transition-colors"
+                                className="p-2 text-white/50 hover:text-white transition-all transform hover:scale-110"
                             >
-                                <X size={20} />
+                                <X size={28} />
                             </button>
-                            {title && <h3 className="mb-4 text-2xl font-bold text-white">{title}</h3>}
-                            <div className="relative">{children}</div>
-                        </motion.div>
-                    </div>
-                </>
+                        </div>
+
+                        {title && <h3 className="mb-6 text-2xl md:text-3xl font-bold text-white text-center tracking-tight leading-tight">{title}</h3>}
+
+                        <div className="flex items-center justify-center w-full">
+                            {children}
+                        </div>
+                    </motion.div>
+                </div>
             )}
-        </AnimatePresence>
+        </AnimatePresence>,
+        document.body
     );
 };

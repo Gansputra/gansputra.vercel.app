@@ -9,6 +9,8 @@ import { ProjectShowcase } from "@/components/sections/ProjectShowcase";
 import { AboutSection } from "@/components/sections/AboutSection";
 import { ContactSection } from "@/components/sections/ContactSection";
 
+import { ParticleBackground } from "@/components/ui/ParticleBackground";
+
 const sectionComponents: Record<string, React.ReactNode> = {
   hero: <HeroSection />,
   amvs: <AmvShowcase />,
@@ -23,8 +25,7 @@ export default function Home() {
 
   return (
     <div className="relative h-screen w-full overflow-hidden bg-[#050505]">
-      {/* Cinematic Noise Overlay */}
-      <div className="fixed inset-0 pointer-events-none z-50 opacity-[0.03] mix-blend-overlay bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
+      <ParticleBackground />
 
       <AnimatePresence mode="wait" initial={false}>
         <motion.div
@@ -40,12 +41,6 @@ export default function Home() {
           </div>
         </motion.div>
       </AnimatePresence>
-
-      {/* Background Decorative Elements */}
-      <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary/10 rounded-full blur-[120px] animate-pulse" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-secondary/10 rounded-full blur-[120px] animate-pulse transition-all duration-1000" />
-      </div>
     </div>
   );
 }
