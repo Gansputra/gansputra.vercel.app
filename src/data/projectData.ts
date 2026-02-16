@@ -17,7 +17,7 @@ export const projectData: Project[] = [
     },
     {
         id: "2",
-        title: "Instagram Downlaoder",
+        title: "Instagram Downloader",
         description: "A website for downloading instagram posts and reels",
         stack: ["python", "flask", "html", "tailwind css", "javascript"],
         previewImage: "/images/project/insta1.png",
