@@ -12,11 +12,11 @@ interface ButtonProps extends HTMLMotionProps<"button"> {
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ({ className, variant = "primary", size = "md", children, ...props }, ref) => {
         const variants = {
-            primary: "bg-white text-black hover:bg-white/90",
-            secondary: "bg-primary text-black hover:bg-primary/90 shadow-neon",
-            outline: "border border-white/20 bg-transparent hover:bg-white/10 text-white",
+            primary: "bg-foreground text-background hover:bg-foreground/90",
+            secondary: "bg-primary text-primary-foreground hover:bg-primary/90 shadow-neon",
+            outline: "border border-border bg-transparent hover:bg-accent hover:text-accent-foreground text-foreground",
             glow: "bg-transparent border border-primary/50 text-primary hover:bg-primary/10 shadow-glow",
-            ghost: "bg-transparent hover:bg-white/5 text-white/70 hover:text-white",
+            ghost: "bg-transparent hover:bg-accent/50 text-muted-foreground hover:text-foreground",
         };
 
         const sizes = {

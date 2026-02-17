@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
@@ -9,10 +9,18 @@ import { amvData } from "@/data/amvData";
 import { Play, Music, Cpu, Calendar, Youtube } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getVideoThumbnail } from "@/lib/getVideoThumbnail";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 export const AmvShowcase = () => {
+    const [mounted, setMounted] = useState(false);
+    const isMobileQuery = useMediaQuery("(max-width: 1024px)");
+    const isMobile = mounted && isMobileQuery;
     const [filter, setFilter] = useState("All");
     const [selectedVideo, setSelectedVideo] = useState<typeof amvData[0] | null>(null);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     const categories = ["All", ...Array.from(new Set(amvData.flatMap(amv => amv.tags)))];
 
@@ -60,8 +68,8 @@ export const AmvShowcase = () => {
                         viewport={{ once: true }}
                         className="w-full md:w-auto"
                     >
-                        <h2 className="text-4xl font-bold text-white mb-4 text-3xl md:text-4xl">AMV Gallery</h2>
-                        <p className="text-white/50 max-w-lg mx-auto md:mx-0 text-sm md:text-base">
+                        <h2 className="text-4xl font-bold text-foreground mb-4 text-3xl md:text-4xl">AMV Gallery</h2>
+                        <p className="text-muted-foreground max-w-lg mx-auto md:mx-0 text-sm md:text-base">
                             Cinematic edits synchronized with rhythm and soul. Explore my creative motion works.
                         </p>
                     </motion.div>
@@ -84,7 +92,7 @@ export const AmvShowcase = () => {
                                     )}
                                     <span className={cn(
                                         "relative z-10 uppercase tracking-widest transition-colors duration-300",
-                                        filter === cat ? "text-black" : "text-white/50 group-hover:text-white"
+                                        filter === cat ? "text-primary-foreground" : "text-muted-foreground group-hover:text-foreground"
                                     )}>
                                         {cat}
                                     </span>
@@ -108,15 +116,15 @@ export const AmvShowcase = () => {
                                     whileHover={{ y: -10 }}
                                     onClick={() => setSelectedVideo(amv)}
                                 >
-                                    <Card className="p-0 border-none bg-black/80 h-full flex flex-col group/card" glow>
-                                        <div className="relative group aspect-video bg-[#111] cursor-pointer overflow-hidden rounded-t-2xl">
+                                    <Card className="p-0 bg-card/80 h-full flex flex-col group/card" glow>
+                                        <div className="relative group aspect-video bg-muted cursor-pointer overflow-hidden rounded-t-2xl">
                                             <img
                                                 src={getVideoThumbnail(amv.videoUrl)}
                                                 alt={amv.title}
                                                 className="w-full h-full object-cover group-hover/card:scale-110 transition-transform duration-700 md:opacity-60 group-hover/card:opacity-100"
                                             />
 
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-10" />
+                                            <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent z-10" />
                                             <div className="absolute inset-0 flex items-center justify-center z-20 opacity-0 group-hover/card:opacity-100 transition-opacity duration-300">
                                                 <motion.div
                                                     whileHover={{ scale: 1.1 }}
@@ -128,28 +136,28 @@ export const AmvShowcase = () => {
                                             </div>
                                             <div className="absolute bottom-4 left-4 z-20">
                                                 <p className="text-xs text-primary font-bold uppercase tracking-widest">{amv.anime}</p>
-                                                <h3 className="text-xl font-bold text-white group-hover/card:text-primary transition-colors">{amv.title}</h3>
+                                                <h3 className="text-xl font-bold text-foreground group-hover/card:text-primary transition-colors">{amv.title}</h3>
                                             </div>
                                         </div>
                                         <div className="p-6 flex-grow">
-                                            <p className="text-sm text-white/60 mb-4 line-clamp-2">{amv.description}</p>
+                                            <p className="text-sm text-foreground/60 mb-4 line-clamp-2">{amv.description}</p>
 
                                             <div className="flex flex-col gap-2 mb-4">
                                                 {amv.music && (
-                                                    <div className="flex items-center gap-2 text-xs text-white/40">
+                                                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
                                                         <Music size={14} className="text-primary" />
                                                         <span className="truncate">{amv.music}</span>
                                                     </div>
                                                 )}
                                                 {amv.software && (
-                                                    <div className="flex items-center gap-2 text-xs text-white/40">
+                                                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
                                                         <Cpu size={14} className="text-primary" />
                                                         <span className="truncate">{amv.software}</span>
                                                     </div>
                                                 )}
-                                                <div className="flex items-center gap-2 text-xs text-white/40">
+                                                <div className="flex items-center gap-2 text-xs text-muted-foreground/40">
                                                     <Calendar size={14} className="text-primary" />
-                                                    <span>{amv.date}</span>
+                                                    <span>{amvData.find(a => a.id === amv.id)?.date}</span>
                                                 </div>
                                             </div>
 
@@ -168,7 +176,7 @@ export const AmvShowcase = () => {
                                 animate={{ opacity: 1 }}
                                 className="col-span-full py-20 text-center"
                             >
-                                <p className="text-white/30 font-mono tracking-widest uppercase">No projects found in this category</p>
+                                <p className="text-muted-foreground/30 font-mono tracking-widest uppercase">No projects found in this category</p>
                             </motion.div>
                         )}
                     </AnimatePresence>
@@ -188,15 +196,78 @@ export const AmvShowcase = () => {
                         href="https://youtube.com/@gexvexedit"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group relative flex items-center gap-3 px-8 py-4 bg-[#FF0000]/10 hover:bg-[#FF0000] border border-[#FF0000]/20 text-white rounded-full transition-all duration-500 shadow-lg hover:shadow-[#FF0000]/40 overflow-hidden"
+                        className={cn(
+                            "group relative flex items-center gap-3 px-8 py-4 border rounded-full transition-all duration-500 shadow-lg",
+                            "bg-[#FF0000] border-[#FF0000] text-white md:bg-[#FF0000]/10 md:border-[#FF0000]/20 md:text-foreground md:dark:text-white md:hover:bg-[#FF0000] md:hover:shadow-[#FF0000]/40"
+                        )}
                     >
-                        <motion.div
-                            className="absolute inset-0 bg-white/10 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 skew-x-12"
-                        />
-                        <div className="bg-[#FF0000] p-2 rounded-full group-hover:bg-white group-hover:text-[#FF0000] transition-colors relative z-10">
-                            <Youtube size={20} />
+                        {/* 1. Outer Glow (Must be outside overflow-hidden) */}
+                        <div className="md:hidden">
+                            <motion.div
+                                animate={{
+                                    opacity: [0.3, 0.6, 0.3],
+                                    scale: [0.95, 1.15, 0.95]
+                                }}
+                                transition={{
+                                    duration: 3,
+                                    repeat: Infinity,
+                                    ease: "easeInOut"
+                                }}
+                                style={{ willChange: "transform, opacity" }}
+                                className="absolute -inset-3 bg-[#FF0000] blur-2xl -z-10 rounded-full"
+                            />
                         </div>
-                        <span className="font-bold tracking-wider uppercase text-sm relative z-10">See More on YouTube</span>
+
+                        {/* 2. Inner Clipped Effects (Liquid & Shine) */}
+                        <div className="absolute inset-0 overflow-hidden rounded-full pointer-events-none">
+                            {/* Liquid Flow (Mobile Only) */}
+                            <motion.div
+                                animate={{
+                                    backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"]
+                                }}
+                                transition={{
+                                    duration: 4,
+                                    repeat: Infinity,
+                                    ease: "linear"
+                                }}
+                                style={{
+                                    background: "linear-gradient(270deg, #ff4c4c, #FF0000, #b20000)",
+                                    backgroundSize: "200% 200%",
+                                    willChange: "background-position"
+                                }}
+                                className="absolute inset-0 opacity-60 z-0 md:hidden"
+                            />
+
+                            {/* Glazing Shine Loop (Mobile) */}
+                            <motion.div
+                                initial={{ x: "-150%", skewX: -25 }}
+                                animate={{ x: "250%" }}
+                                transition={{
+                                    duration: 2,
+                                    repeat: Infinity,
+                                    repeatDelay: 1.5,
+                                    ease: "linear"
+                                }}
+                                style={{ willChange: "transform" }}
+                                className="absolute inset-y-0 w-1/2 bg-white/30 z-10 block md:hidden"
+                            />
+
+                            {/* Desktop Hover Shine */}
+                            <motion.div
+                                initial={{ x: "-150%", skewX: -25 }}
+                                whileHover={{ x: "250%" }}
+                                transition={{ duration: 0.7 }}
+                                style={{ willChange: "transform" }}
+                                className="absolute inset-y-0 w-1/2 bg-white/10 z-10 hidden md:block"
+                            />
+                        </div>
+
+                        <div className="relative z-20 flex items-center gap-3">
+                            <div className="bg-[#FF0000] p-2 rounded-full group-hover:bg-white group-hover:text-[#FF0000] transition-colors md:bg-transparent md:text-white">
+                                <Youtube size={20} />
+                            </div>
+                            <span className="font-bold tracking-wider uppercase text-sm">See More on YouTube</span>
+                        </div>
                     </motion.a>
                 </motion.div>
             </div>
@@ -205,7 +276,7 @@ export const AmvShowcase = () => {
             <Modal
                 isOpen={!!selectedVideo}
                 onClose={() => setSelectedVideo(null)}
-                className="max-w-4xl p-0 bg-black overflow-hidden border-none"
+                className="max-w-4xl p-0 bg-background overflow-hidden border-none"
             >
                 {selectedVideo && (
                     <div className="aspect-video w-full">

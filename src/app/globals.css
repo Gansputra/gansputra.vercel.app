@@ -33,28 +33,56 @@
 }
 
 :root {
-  --background: oklch(0.05 0 0);
+  --background: oklch(0.98 0 0);
+  --foreground: oklch(0.15 0 0);
+  --card: oklch(0.95 0 0);
+  --card-foreground: oklch(0.15 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.15 0 0);
+  --primary: oklch(0.6 0.18 200);
+  /* Slightly darker Cyan for light mode */
+  --primary-foreground: oklch(0.98 0 0);
+  --secondary: oklch(0.5 0.18 280);
+  /* Slightly darker Purple for light mode */
+  --secondary-foreground: oklch(0.98 0 0);
+  --muted: oklch(0.9 0 0);
+  --muted-foreground: oklch(0.4 0 0);
+  --accent: oklch(0.9 0 0);
+  --accent-foreground: oklch(0.15 0 0);
+  --destructive: oklch(0.5 0.2 20);
+  --destructive-foreground: oklch(0.98 0 0);
+  --border: oklch(0.85 0 0);
+  --input: oklch(0.85 0 0);
+  --ring: oklch(0.6 0.18 200);
+  --radius: 0.75rem;
+}
+
+[data-theme='dark'],
+.dark {
+  --background: oklch(0.02 0 0);
+  /* Deep black */
   --foreground: oklch(0.95 0 0);
-  --card: oklch(0.1 0 0);
+  --card: oklch(0.15 0 0);
+  /* Lifted for contrast */
   --card-foreground: oklch(0.95 0 0);
-  --popover: oklch(0.05 0 0);
+  --popover: oklch(0.08 0 0);
   --popover-foreground: oklch(0.95 0 0);
   --primary: oklch(0.7 0.2 200);
   /* Cyan Neon */
-  --primary-foreground: oklch(0.1 0 0);
+  --primary-foreground: oklch(0.05 0 0);
   --secondary: oklch(0.6 0.2 280);
   /* Purple Neon */
   --secondary-foreground: oklch(0.95 0 0);
-  --muted: oklch(0.2 0 0);
+  --muted: oklch(0.15 0 0);
   --muted-foreground: oklch(0.7 0 0);
-  --accent: oklch(0.2 0 0);
+  --accent: oklch(0.15 0 0);
   --accent-foreground: oklch(0.95 0 0);
   --destructive: oklch(0.6 0.2 20);
   --destructive-foreground: oklch(0.95 0 0);
-  --border: oklch(0.2 0 0);
+  --border: oklch(0.25 0 0);
+  /* More visible border */
   --input: oklch(0.2 0 0);
   --ring: oklch(0.7 0.2 200);
-  --radius: 0.75rem;
 }
 
 @keyframes glow-pulse {
@@ -125,10 +153,11 @@
 }
 
 .glass-morphism {
-  background: rgba(10, 10, 10, 0.85);
+  background: var(--card);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 24px -1px rgba(0, 0, 0, 0.3), 0 0 1px 0 rgba(255, 255, 255, 0.1) inset;
 }
 
 .neon-border {

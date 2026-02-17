@@ -3,15 +3,23 @@
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Play, Sparkles } from "lucide-react";
+import { useTheme } from "next-themes";
 
 interface SplashScreenProps {
     onComplete: () => void;
 }
 
 export const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
+    const [mounted, setMounted] = useState(false);
     const [counter, setCounter] = useState(0);
     const [isFinished, setIsFinished] = useState(false);
     const [isStarted, setIsStarted] = useState(false);
+    const { theme } = useTheme();
+    const isDark = mounted && theme === "dark";
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     useEffect(() => {
         if (!isStarted) return;
@@ -48,7 +56,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
     const handleStart = () => {
         setTimeout(() => {
             setIsStarted(true);
-        }, 1000);
+        }, 800);
     };
 
     return (
@@ -59,7 +67,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
                 y: -40,
                 transition: { duration: 0.8, ease: [0.76, 0, 0.24, 1] }
             }}
-            className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#050505] overflow-hidden select-none cursor-default"
+            className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-background overflow-hidden select-none cursor-default"
         >
             {/* Ambient Background - Optimized with radial-gradient instead of blur filter */}
             <motion.div
@@ -76,7 +84,11 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
                 }}
                 style={{
                     willChange: "transform, opacity",
-                    background: "radial-gradient(circle, rgba(0,191,207,0.15) 0%, rgba(0,0,0,0) 70%)"
+                    background: !mounted
+                        ? "radial-gradient(circle, rgba(0,191,207,0.1) 0%, rgba(5,5,5,0) 70%)"
+                        : isDark
+                            ? "radial-gradient(circle, rgba(0,191,207,0.15) 0%, rgba(5,5,5,0) 70%)"
+                            : "radial-gradient(circle, rgba(0,191,207,0.08) 0%, rgba(250,250,250,0) 70%)"
                 }}
                 className="absolute w-[800px] h-[800px] pointer-events-none"
             />
@@ -97,7 +109,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
                             className="flex items-center gap-2 mb-8"
                         >
                             <Sparkles className="w-4 h-4 text-primary" />
-                            <span className="text-white/40 font-outfit tracking-[0.4em] text-[10px] uppercase">Experience Initializing</span>
+                            <span className="text-foreground/40 font-outfit tracking-[0.4em] text-[10px] uppercase">Experience Initializing</span>
                         </motion.div>
 
                         <button
@@ -109,8 +121,8 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
                                 <div className="absolute inset-0 rounded-full border border-primary/20 scale-150 animate-ping group-hover:border-primary/50" />
                                 <div className="absolute inset-0 rounded-full border border-primary/10 scale-125 group-hover:scale-150 transition-transform duration-700" />
 
-                                <div className="relative w-22 h-22 flex items-center justify-center rounded-full bg-white/5 border border-white/10 group-hover:border-primary/50 group-hover:bg-primary/10 transition-all duration-500">
-                                    <Play className="w-7 h-7 text-white group-hover:text-primary fill-current transition-all duration-300" />
+                                <div className="relative w-22 h-22 flex items-center justify-center rounded-full bg-primary/5 border border-border group-hover:border-primary/50 group-hover:bg-primary/10 transition-all duration-500">
+                                    <Play className="w-7 h-7 text-foreground group-hover:text-primary fill-current transition-all duration-300" />
                                 </div>
                             </div>
 
@@ -119,7 +131,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
                                     initial={{ y: 20, opacity: 0 }}
                                     animate={{ y: 0, opacity: 1 }}
                                     transition={{ delay: 0.5 }}
-                                    className="text-white/60 font-outfit tracking-[0.2em] text-xs uppercase group-hover:text-primary transition-colors duration-300"
+                                    className="text-foreground/60 font-outfit tracking-[0.2em] text-xs uppercase group-hover:text-primary transition-colors duration-300"
                                 >
                                     Press to Play
                                 </motion.span>
@@ -150,7 +162,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
                                         }}
                                         transition={{ duration: 0.4 }}
                                         style={{ willChange: "transform, opacity" }}
-                                        className="text-4xl md:text-6xl font-black font-outfit tracking-[0.2em] text-white relative px-4 text-center"
+                                        className="text-4xl md:text-6xl font-black font-outfit tracking-[0.2em] text-foreground relative px-4 text-center"
                                     >
                                         <span className="relative z-10">
                                             {words[Math.min(Math.floor(counter / 25), words.length - 1)]}
@@ -183,7 +195,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
                                         animate={{ scale: 1, opacity: 1 }}
                                         transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
                                         style={{ willChange: "transform, opacity" }}
-                                        className="text-7xl md:text-9xl lg:text-[12rem] font-black font-outfit tracking-tighter text-white text-center leading-none"
+                                        className="text-7xl md:text-9xl lg:text-[12rem] font-black font-outfit tracking-tighter text-foreground text-center leading-none"
                                     >
                                         Portfolio
                                     </motion.div>
@@ -211,7 +223,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
                                             transition={{ duration: 1.5, repeat: Infinity }}
                                             className="w-1 h-1 rounded-full bg-primary"
                                         />
-                                        <span className="font-mono text-[9px] tracking-[0.3em] text-white/20 uppercase">
+                                        <span className="font-mono text-[9px] tracking-[0.3em] text-foreground/20 uppercase">
                                             Loading {counter}%
                                         </span>
                                     </div>
@@ -238,7 +250,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
                             willChange: "transform, opacity",
                             left: `${(i + 1) * 20}%`
                         }}
-                        className="absolute top-0 w-[1px] h-full bg-white"
+                        className="absolute top-0 w-[1px] h-full bg-foreground"
                     />
                 ))}
             </div>

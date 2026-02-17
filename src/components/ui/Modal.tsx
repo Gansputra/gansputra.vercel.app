@@ -37,7 +37,7 @@ export const Modal = ({ isOpen, onClose, title, children, className }: ModalProp
     return createPortal(
         <AnimatePresence>
             {isOpen && (
-                <div className="fixed inset-0 z-[1000] overflow-y-auto no-scrollbar bg-black/95 backdrop-blur-xl flex justify-center py-10 px-4">
+                <div className="fixed inset-0 z-[1000] overflow-y-auto no-scrollbar bg-background/95 backdrop-blur-xl flex justify-center py-10 px-4">
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
@@ -60,13 +60,13 @@ export const Modal = ({ isOpen, onClose, title, children, className }: ModalProp
                         <div className="absolute -top-12 right-0 md:-right-12 md:top-0">
                             <button
                                 onClick={onClose}
-                                className="p-2 text-white/50 hover:text-white transition-all transform hover:scale-110"
+                                className="p-2 text-foreground/50 hover:text-foreground transition-all transform hover:scale-110"
                             >
                                 <X size={28} />
                             </button>
                         </div>
 
-                        {title && <h3 className="mb-6 text-2xl md:text-3xl font-bold text-white text-center tracking-tight leading-tight">{title}</h3>}
+                        {title && <h3 className="mb-6 text-2xl md:text-3xl font-bold text-foreground text-center tracking-tight leading-tight">{title}</h3>}
 
                         <div className="flex flex-col items-center justify-center w-full h-full">
                             {children}

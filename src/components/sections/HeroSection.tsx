@@ -46,15 +46,15 @@ export const HeroSection = () => {
                 </motion.h2>
                 <motion.h1
                     variants={itemVariants}
-                    className="text-5xl md:text-9xl font-black text-white mb-8 tracking-tighter leading-[0.85] uppercase"
+                    className="text-5xl md:text-9xl font-black text-foreground mb-8 tracking-tighter leading-[0.85] uppercase"
                 >
                     CRAFTING <br />
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-white to-secondary animate-gradient-x">DIGITAL</span>
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-foreground to-secondary animate-gradient-x">DIGITAL</span>
                     <br /> REALITIES
                 </motion.h1>
                 <motion.p
                     variants={itemVariants}
-                    className="text-white/40 text-base md:text-xl max-w-2xl mx-auto mb-12 leading-relaxed font-light"
+                    className="text-foreground/40 text-base md:text-xl max-w-2xl mx-auto mb-12 leading-relaxed font-light"
                 >
                     Merging backend logic with cinematic visual storytelling
                     to create immersive web experiences.
@@ -76,7 +76,7 @@ export const HeroSection = () => {
                     <MovingBorderButton
                         borderRadius="3rem"
                         onClick={() => setActiveSection('about')}
-                        className="bg-black/60 text-white border-white/[0.1] font-bold"
+                        className="bg-card/60 text-foreground border-border font-bold"
                         containerClassName="h-[52px] w-40"
                         borderClassName="bg-[radial-gradient(#00bfcf_40%,#7c7df6_60%,transparent_100%)] opacity-30"
                     >
@@ -94,7 +94,7 @@ export const HeroSection = () => {
                     whileTap={{ scale: 0.9 }}
                     transition={{ delay: 1.5 }}
                     onClick={() => setActiveSection('amvs')}
-                    className="text-white/10 hover:text-primary transition-all group flex items-center gap-3 p-4"
+                    className="text-foreground/10 hover:text-primary transition-all group flex items-center gap-3 p-4"
                 >
                     <span className="text-[9px] uppercase tracking-[0.4em] font-bold group-hover:tracking-[0.6em] transition-all duration-500">Discover</span>
                     <ChevronRight className="group-hover:translate-x-1 transition-transform duration-500" size={18} />

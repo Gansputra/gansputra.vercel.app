@@ -24,8 +24,8 @@ export default function Home() {
   const { activeSection } = useActiveSection();
 
   return (
-    <div className="relative h-screen w-full overflow-hidden bg-[#050505]">
-      <div className="absolute inset-0 bg-gradient-to-br from-[#00bfcf]/10 to-[#7c7df6]/10" />
+    <div className="relative h-screen w-full overflow-hidden bg-background">
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-secondary/10 opacity-0 dark:opacity-100 transition-opacity duration-500" />
 
       <div className="absolute inset-0 z-0">
         <Vortex
@@ -34,6 +34,7 @@ export default function Home() {
           particleCount={400}
           baseHue={185}
           rangeHue={55}
+          showDust={true}
           containerClassName="h-full w-full"
         />
       </div>

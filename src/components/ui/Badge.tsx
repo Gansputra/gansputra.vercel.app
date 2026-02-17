@@ -11,8 +11,8 @@ interface BadgeProps {
 
 export const Badge = ({ children, className, variant = "outline" }: BadgeProps) => {
     const variants = {
-        outline: "border border-white/20 text-white/70",
-        filled: "bg-white/10 text-white",
+        outline: "border border-border text-muted-foreground",
+        filled: "bg-muted text-foreground",
         primary: "bg-primary/20 border border-primary/50 text-primary",
     };
 

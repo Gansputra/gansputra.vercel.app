@@ -1,12 +1,16 @@
 "use client";
 
-import React, { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { useTheme } from "next-themes";
+import { cn } from "@/lib/utils";
 
 export const ThreeLanyard = () => {
     const cardRef = useRef<HTMLDivElement>(null);
     const [isPressed, setIsPressed] = useState(false);
     const lastPos = useRef({ x: 0, y: 0 });
+    const { theme } = useTheme();
+    const isDark = theme === "dark";
 
     // Rotation values
     const x = useMotionValue(0);
@@ -98,10 +102,11 @@ export const ThreeLanyard = () => {
                         style={{
                             transform: `translateZ(${i - thicknessScale / 2}px)`,
                             borderRadius: borderRadius,
-                            background: i === 0 || i === thicknessScale - 1 ? "#222" : "#111",
-                            // removed backface-hidden here to ensure volume stays visible during rotation
+                            background: i === 0 || i === thicknessScale - 1
+                                ? (isDark ? "#222" : "#ddd")
+                                : (isDark ? "#111" : "#eee"),
                         }}
-                        className="absolute inset-0 border border-white/5 pointer-events-none"
+                        className="absolute inset-0 border border-border/5 pointer-events-none"
                     />
                 ))}
 
@@ -113,14 +118,17 @@ export const ThreeLanyard = () => {
                         backfaceVisibility: "hidden",
                         WebkitBackfaceVisibility: "hidden",
                     }}
-                    className="absolute inset-0 border-2 border-white/20 overflow-hidden bg-[#050505] transform-gpu"
+                    className="absolute inset-0 border-2 border-border/20 overflow-hidden bg-card transform-gpu"
                 >
-                    <div className="absolute inset-0 bg-white/[0.02] backdrop-blur-[20px] z-0" />
-                    <div className="absolute inset-0 bg-gradient-to-br from-primary/30 via-black to-primary/10 opacity-90" />
+                    <div className="absolute inset-0 bg-primary/5 backdrop-blur-[20px] z-0" />
+                    <div className={cn(
+                        "absolute inset-0 bg-gradient-to-br opacity-90",
+                        isDark ? "from-primary/30 via-black to-primary/10" : "from-primary/20 via-white to-primary/5"
+                    )} />
 
                     {/* CONTENT FRONT */}
                     <div style={{ transform: "translateZ(50px)" }} className="relative z-30 h-full flex flex-col items-center justify-center p-12 space-y-10 pointer-events-none">
-                        <h3 className="text-5xl font-black text-white tracking-tighter leading-none text-center drop-shadow-2xl">
+                        <h3 className="text-5xl font-black text-foreground tracking-tighter leading-none text-center drop-shadow-2xl">
                             Gansputra
                         </h3>
 
@@ -150,14 +158,14 @@ export const ThreeLanyard = () => {
                         backfaceVisibility: "hidden",
                         WebkitBackfaceVisibility: "hidden",
                     }}
-                    className="absolute inset-0 bg-[#0a0a0a] border-2 border-white/10 flex flex-col items-center justify-center overflow-hidden transform-gpu"
+                    className="absolute inset-0 bg-card border-2 border-border/10 flex flex-col items-center justify-center overflow-hidden transform-gpu"
                 >
                     <div className="absolute inset-0 bg-primary/5 opacity-40 z-0" />
 
                     <div style={{ transform: "translateZ(40px)" }} className="relative z-10 flex flex-col items-center pointer-events-none">
-                        <div className="text-2xl font-black text-white tracking-[0.6em] opacity-40 uppercase">HQ</div>
+                        <div className="text-2xl font-black text-foreground tracking-[0.6em] opacity-40 uppercase">HQ</div>
                         <div className="mt-4 h-[1px] w-20 bg-primary/30" />
-                        <div className="mt-4 text-[9px] font-mono text-white/20 tracking-[0.3em]">ENCRYPTED IDENT</div>
+                        <div className="mt-4 text-[9px] font-mono text-muted-foreground/20 tracking-[0.3em]">ENCRYPTED IDENT</div>
                     </div>
                 </div>
             </motion.div>

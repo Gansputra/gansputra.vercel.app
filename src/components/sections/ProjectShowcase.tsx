@@ -11,9 +11,15 @@ import { Project } from "@/types/project";
 import { cn } from "@/lib/utils";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 
-const ProjectCard = ({ project, onPreview }: { project: Project, onPreview: (p: Project) => void }) => {
+const ProjectCard = ({ project, onPreview, index }: { project: Project, onPreview: (p: Project) => void, index: number }) => {
+    const [mounted, setMounted] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
-    const isMobile = useMediaQuery("(max-width: 1024px)");
+    const isMobileQuery = useMediaQuery("(max-width: 1024px)");
+    const isMobile = mounted && isMobileQuery;
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     return (
         <motion.div
@@ -32,10 +38,10 @@ const ProjectCard = ({ project, onPreview }: { project: Project, onPreview: (p: 
                         transition={{
                             repeat: Infinity,
                             duration: 3,
-                            repeatDelay: Math.random() * 4 + 2,
+                            repeatDelay: (index % 5) + 2,
                             ease: "easeInOut"
                         }}
-                        className="absolute top-[-50%] bottom-[-50%] w-32 bg-gradient-to-r from-transparent via-white/10 to-transparent z-10 pointer-events-none blur-sm"
+                        className="absolute top-[-50%] bottom-[-50%] w-32 bg-gradient-to-r from-transparent via-primary/10 to-transparent z-10 pointer-events-none blur-sm"
                     />
                 )}
 
@@ -49,15 +55,15 @@ const ProjectCard = ({ project, onPreview }: { project: Project, onPreview: (p: 
                                 exit={{ opacity: 0, scale: 0.9, y: 10 }}
                                 className="absolute top-4 right-16 z-20 pointer-events-none"
                             >
-                                <div className="bg-[#0f0f0f]/95 border border-primary/30 rounded-lg p-3 shadow-2xl backdrop-blur-xl min-w-[140px]">
+                                <div className="bg-card/95 border border-primary/30 rounded-lg p-3 shadow-2xl backdrop-blur-xl min-w-[140px]">
                                     <div className="flex items-center gap-2 mb-2 border-b border-primary/20 pb-1">
                                         <Terminal size={12} className="text-primary" />
                                         <span className="text-[10px] font-mono text-primary/70 uppercase">Process Log</span>
                                     </div>
                                     <div className="space-y-1 font-mono text-[9px]">
-                                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }} className="text-white/40">{">"} initializing_stack</motion.div>
+                                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }} className="text-muted-foreground">{">"} initializing_stack</motion.div>
                                         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} className="text-primary/60">{">"} load: {project.stack[0]}</motion.div>
-                                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="text-white/40">{">"} status: <span className="text-green-500">READY</span></motion.div>
+                                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="text-muted-foreground">{">"} status: <span className="text-green-500">READY</span></motion.div>
                                     </div>
                                 </div>
                             </motion.div>
@@ -68,7 +74,7 @@ const ProjectCard = ({ project, onPreview }: { project: Project, onPreview: (p: 
                 <div className="flex flex-col h-full relative z-10">
                     <div className="flex justify-between items-center mb-6">
                         <h3 className={cn(
-                            "text-2xl font-bold text-white transition-all duration-500",
+                            "text-2xl font-bold text-foreground transition-all duration-500",
                             !isMobile && isHovered && "text-primary translate-x-1"
                         )}>
                             {project.title}
@@ -81,7 +87,7 @@ const ProjectCard = ({ project, onPreview }: { project: Project, onPreview: (p: 
                                     href={project.repoLink}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="text-white/40 hover:text-white transition-all p-2 flex items-center justify-center"
+                                    className="text-foreground/40 hover:text-foreground transition-all p-2 flex items-center justify-center"
                                 >
                                     <Github size={20} />
                                 </motion.a>
@@ -90,7 +96,7 @@ const ProjectCard = ({ project, onPreview }: { project: Project, onPreview: (p: 
                                 whileHover={{ scale: 1.2 }}
                                 whileTap={{ scale: 0.9 }}
                                 onClick={() => onPreview(project)}
-                                className="text-white/40 hover:text-primary transition-all p-2 cursor-pointer flex items-center justify-center"
+                                className="text-foreground/40 hover:text-primary transition-all p-2 cursor-pointer flex items-center justify-center"
                                 title="View Previews"
                             >
                                 <Eye size={20} />
@@ -99,7 +105,7 @@ const ProjectCard = ({ project, onPreview }: { project: Project, onPreview: (p: 
                     </div>
 
                     <div className="relative mb-8">
-                        <p className="text-white/60 leading-relaxed flex-grow min-h-[80px]">
+                        <p className="text-foreground/60 leading-relaxed flex-grow min-h-[80px]">
                             {!isMobile && isHovered ? (
                                 <motion.span
                                     initial={{ opacity: 0 }}
@@ -131,8 +137,15 @@ const ProjectCard = ({ project, onPreview }: { project: Project, onPreview: (p: 
 };
 
 export const ProjectShowcase = () => {
+    const [mounted, setMounted] = useState(false);
+    const isMobileQuery = useMediaQuery("(max-width: 1024px)");
+    const isMobile = mounted && isMobileQuery;
     const [selectedProject, setSelectedProject] = useState<Project | null>(null);
     const [currentIndex, setCurrentIndex] = useState(0);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     const images = selectedProject?.gallery && selectedProject.gallery.length > 0
         ? selectedProject.gallery
@@ -191,8 +204,8 @@ export const ProjectShowcase = () => {
                     viewport={{ once: true }}
                     className="mb-16 text-center md:text-left"
                 >
-                    <h2 className="text-4xl font-bold text-white mb-4">Development Projects</h2>
-                    <p className="text-white/50 max-w-lg">
+                    <h2 className="text-4xl font-bold text-foreground mb-4">Development Projects</h2>
+                    <p className="text-muted-foreground max-w-lg">
                         Where code meets creativity. A selection of my professional and experimental engineering works.
                     </p>
                 </motion.div>
@@ -204,9 +217,98 @@ export const ProjectShowcase = () => {
                     viewport={{ once: true, amount: 0.1 }}
                     className="grid grid-cols-1 md:grid-cols-2 gap-8"
                 >
-                    {projectData.map((project) => (
-                        <ProjectCard key={project.id} project={project} onPreview={setSelectedProject} />
+                    {projectData.map((project, index) => (
+                        <ProjectCard key={project.id} project={project} onPreview={setSelectedProject} index={index} />
                     ))}
+                </motion.div>
+
+                {/* See More - GitHub Link */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.5 }}
+                    viewport={{ once: true }}
+                    className="mt-16 flex justify-center"
+                >
+                    <motion.a
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        href="https://github.com/gansputra"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={cn(
+                            "group relative flex items-center gap-3 px-8 py-4 border rounded-full transition-all duration-500 shadow-lg overflow-hidden",
+                            "bg-primary border-primary text-primary-foreground md:bg-primary/10 md:border-primary/20 md:text-foreground md:dark:text-white md:hover:bg-primary md:hover:text-primary-foreground md:hover:shadow-primary/40"
+                        )}
+                    >
+                        {/* 1. Outer Glow (Must be outside overflow-hidden) */}
+                        <div className="md:hidden">
+                            <motion.div
+                                animate={{
+                                    opacity: [0.3, 0.6, 0.3],
+                                    scale: [0.95, 1.15, 0.95]
+                                }}
+                                transition={{
+                                    duration: 3,
+                                    repeat: Infinity,
+                                    ease: "easeInOut"
+                                }}
+                                style={{ willChange: "transform, opacity" }}
+                                className="absolute -inset-3 bg-primary blur-2xl -z-10 rounded-full"
+                            />
+                        </div>
+
+                        {/* 2. Inner Clipped Effects (Liquid & Shine) */}
+                        <div className="absolute inset-0 overflow-hidden rounded-full pointer-events-none">
+                            {/* Liquid Flow (Mobile Only) */}
+                            <motion.div
+                                animate={{
+                                    backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"]
+                                }}
+                                transition={{
+                                    duration: 4,
+                                    repeat: Infinity,
+                                    ease: "linear"
+                                }}
+                                style={{
+                                    background: "linear-gradient(270deg, var(--primary), #00f2ff, #008fa3)",
+                                    backgroundSize: "200% 200%",
+                                    willChange: "background-position"
+                                }}
+                                className="absolute inset-0 opacity-60 z-0 md:hidden"
+                            />
+
+                            {/* Glazing Shine Loop (Mobile) */}
+                            <motion.div
+                                initial={{ x: "-150%", skewX: -25 }}
+                                animate={{ x: "250%" }}
+                                transition={{
+                                    duration: 2,
+                                    repeat: Infinity,
+                                    repeatDelay: 1.5,
+                                    ease: "linear"
+                                }}
+                                style={{ willChange: "transform" }}
+                                className="absolute inset-y-0 w-1/2 bg-white/30 z-10 block md:hidden"
+                            />
+
+                            {/* Desktop Hover Shine */}
+                            <motion.div
+                                initial={{ x: "-150%", skewX: -25 }}
+                                whileHover={{ x: "250%" }}
+                                transition={{ duration: 0.7 }}
+                                style={{ willChange: "transform" }}
+                                className="absolute inset-y-0 w-1/2 bg-white/10 z-10 hidden md:block"
+                            />
+                        </div>
+
+                        <div className="relative z-20 flex items-center gap-3">
+                            <div className="bg-primary p-2 rounded-full group-hover:bg-white group-hover:text-primary transition-colors md:bg-transparent md:text-primary-foreground">
+                                <Github size={20} />
+                            </div>
+                            <span className="font-bold tracking-wider uppercase text-sm">See More on GitHub</span>
+                        </div>
+                    </motion.a>
                 </motion.div>
             </div>
 
@@ -214,7 +316,7 @@ export const ProjectShowcase = () => {
             <Modal
                 isOpen={!!selectedProject}
                 onClose={() => setSelectedProject(null)}
-                className="max-w-[90vw] md:max-w-6xl h-[80vh] bg-[#0a0a0a]/95 border border-white/10 overflow-hidden shadow-[0_0_100px_rgba(0,0,0,0.8)] rounded-3xl p-0"
+                className="max-w-[90vw] md:max-w-6xl h-[80vh] bg-background/95 border border-border overflow-hidden shadow-[0_0_100px_rgba(0,0,0,0.8)] rounded-3xl p-0"
             >
                 {selectedProject && (
                     <div className="relative w-full h-full group">
@@ -234,18 +336,18 @@ export const ProjectShowcase = () => {
                             </AnimatePresence>
 
                             {/* Modern Gradient Overlays for Readability */}
-                            <div className="absolute inset-x-0 top-0 h-48 bg-gradient-to-b from-black/80 via-black/40 to-transparent z-10" />
-                            <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/60 to-transparent z-10" />
+                            <div className="absolute inset-x-0 top-0 h-48 bg-gradient-to-b from-background/80 via-background/40 to-transparent z-10" />
+                            <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-background/60 to-transparent z-10" />
                         </div>
 
                         {/* Floating Glass Info Header */}
                         <motion.div
                             className="absolute top-4 left-4 right-4 md:top-8 md:left-10 md:right-10 z-20"
                         >
-                            <div className="glass-morphism border border-white/10 p-5 md:p-8 rounded-[1.5rem] md:rounded-[2.5rem] flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 md:gap-8 backdrop-blur-3xl bg-black/60 shadow-2xl">
+                            <div className="glass-morphism border border-border p-5 md:p-8 rounded-[1.5rem] md:rounded-[2.5rem] flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 md:gap-8 backdrop-blur-3xl bg-card shadow-2xl">
                                 <div className="flex-1 min-w-0">
                                     <div className="flex items-center gap-3 md:gap-5 mb-2">
-                                        <h3 className="text-xl md:text-3xl lg:text-4xl font-black text-white tracking-tighter uppercase italic leading-tight truncate md:whitespace-normal md:overflow-visible">
+                                        <h3 className="text-xl md:text-3xl lg:text-4xl font-black text-foreground tracking-tighter uppercase italic leading-tight truncate md:whitespace-normal md:overflow-visible">
                                             {selectedProject.title}
                                         </h3>
                                         <motion.a
@@ -259,7 +361,7 @@ export const ProjectShowcase = () => {
                                             <Github size={18} />
                                         </motion.a>
                                     </div>
-                                    <p className="text-white/60 text-xs md:text-sm lg:text-base max-w-2xl line-clamp-2 md:line-clamp-none font-medium leading-relaxed">
+                                    <p className="text-foreground/60 text-xs md:text-sm lg:text-base max-w-2xl line-clamp-2 md:line-clamp-none font-medium leading-relaxed">
                                         {selectedProject.description}
                                     </p>
                                 </div>
@@ -291,12 +393,12 @@ export const ProjectShowcase = () => {
                                 </button>
 
                                 {/* Dot Indicators at Bottom */}
-                                <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3 z-30 px-6 py-3 bg-black/40 backdrop-blur-md rounded-full border border-white/5">
+                                <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3 z-30 px-6 py-3 bg-card/40 backdrop-blur-md rounded-full border border-border">
                                     {images.map((_, idx) => (
                                         <button
                                             key={idx}
                                             onClick={(e) => { e.stopPropagation(); setCurrentIndex(idx); }}
-                                            className={`h-1.5 rounded-full transition-all duration-500 ${currentIndex === idx ? "bg-primary w-8 shadow-[0_0_10px_rgba(var(--primary),0.8)]" : "bg-white/20 w-3 hover:bg-white/40"
+                                            className={`h-1.5 rounded-full transition-all duration-500 ${currentIndex === idx ? "bg-primary w-8 shadow-[0_0_10px_rgba(var(--primary),0.8)]" : "bg-foreground/20 w-3 hover:bg-foreground/40"
                                                 }`}
                                         />
                                     ))}

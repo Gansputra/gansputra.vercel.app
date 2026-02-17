@@ -22,7 +22,7 @@ export const Card = ({ children, className, glow = false }: CardProps) => {
                     className
                 )}
             >
-                <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 <div className="relative z-10">{children}</div>
             </motion.div>
         </HoverTilt>

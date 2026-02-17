@@ -15,7 +15,7 @@ export const AboutSection = () => {
     const stats = [
         { label: "Editing Experience", value: "3+", years: "2023 — 2026", color: "text-primary" },
         { label: "Coding Journey", value: "1+", years: "2025 — 2026", color: "text-secondary" },
-        { label: "Design Projects", value: "3+", years: "2023 — 2026", color: "text-white" },
+        { label: "Design Projects", value: "3+", years: "2023 — 2026", color: "text-foreground" },
     ];
 
     const [currentStat, setCurrentStat] = useState(0);
@@ -61,8 +61,8 @@ export const AboutSection = () => {
                         {/* Static Outer Ring */}
                         <div className="absolute inset-0 bg-gradient-to-tr from-primary via-transparent to-secondary rounded-full opacity-20 group-hover:opacity-40 blur-2xl transition-opacity duration-1000" />
 
-                        <div className="aspect-square rounded-full overflow-hidden glass-morphism p-2 flex items-center justify-center relative border border-white/5 z-10 backdrop-blur-3xl shadow-2xl">
-                            <div className="w-full h-full rounded-full flex items-center justify-center overflow-hidden relative bg-black/80">
+                        <div className="aspect-square rounded-full overflow-hidden glass-morphism p-2 flex items-center justify-center relative border border-border z-10 backdrop-blur-3xl shadow-2xl">
+                            <div className="w-full h-full rounded-full flex items-center justify-center overflow-hidden relative bg-card/80">
                                 <motion.img
                                     src="/profile.png"
                                     alt="Profile"
@@ -74,7 +74,7 @@ export const AboutSection = () => {
                                     }}
                                 />
                                 <div className="placeholder-bg absolute inset-0 flex items-center justify-center bg-gradient-to-br from-primary/10 to-secondary/10 transition-opacity duration-700">
-                                    <User size={120} className="text-white/5 animate-pulse" />
+                                    <User size={120} className="text-foreground/5 animate-pulse" />
                                 </div>
                             </div>
                         </div>
@@ -83,14 +83,14 @@ export const AboutSection = () => {
                         <motion.div
                             animate={{ y: [0, -10, 0] }}
                             transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                            className="absolute -top-4 right-10 p-4 bg-black/80 backdrop-blur-xl rounded-2xl border border-white/10 shadow-neon z-20 hidden md:block"
+                            className="absolute -top-4 right-10 p-4 bg-card/80 backdrop-blur-xl rounded-2xl border border-border shadow-neon z-20 hidden md:block"
                         >
                             <Code className="text-primary" size={24} />
                         </motion.div>
                         <motion.div
                             animate={{ y: [0, 10, 0] }}
                             transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                            className="absolute -bottom-4 left-10 p-4 bg-black/80 backdrop-blur-xl rounded-2xl border border-white/10 shadow-neon z-20 hidden md:block"
+                            className="absolute -bottom-4 left-10 p-4 bg-card/80 backdrop-blur-xl rounded-2xl border border-border shadow-neon z-20 hidden md:block"
                         >
                             <Palette className="text-secondary" size={24} />
                         </motion.div>
@@ -102,10 +102,10 @@ export const AboutSection = () => {
                         whileInView="visible"
                         viewport={{ once: true, amount: 0.3 }}
                     >
-                        <motion.h2 variants={itemVariants} className="text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight">
+                        <motion.h2 variants={itemVariants} className="text-4xl md:text-5xl font-bold text-foreground mb-6 tracking-tight">
                             Behind the Lens <br />& the Code
                         </motion.h2>
-                        <motion.p variants={itemVariants} className="text-white/60 text-lg mb-8 leading-relaxed max-w-xl">
+                        <motion.p variants={itemVariants} className="text-foreground/60 text-lg mb-8 leading-relaxed max-w-xl">
                             I'm Gansputra, a multidisciplinary creative bridging the gap between
                             backend logic and cinematic visuals. My journey started with a passion
                             for storytelling through video editing, which evolved into a career
@@ -115,14 +115,14 @@ export const AboutSection = () => {
                         {/* Experience Stats Carousel */}
                         <motion.div
                             variants={itemVariants}
-                            className="mb-12 flex items-center gap-6 px-8 py-6 glass-morphism rounded-3xl border border-white/5 relative overflow-hidden group/stats shadow-xl"
+                            className="mb-12 flex items-center gap-6 px-8 py-6 glass-morphism rounded-3xl border border-border relative overflow-hidden group/stats shadow-xl"
                         >
                             <div className={cn(
                                 "absolute top-0 left-0 w-1 h-full transition-colors duration-700",
                                 stats[currentStat].color.replace('text-', 'bg-')
                             )} />
 
-                            <div className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center text-primary group-hover/stats:scale-110 transition-transform duration-500">
+                            <div className="w-14 h-14 rounded-2xl bg-muted flex items-center justify-center text-primary group-hover/stats:scale-110 transition-transform duration-500">
                                 <Zap size={24} />
                             </div>
 
@@ -140,15 +140,15 @@ export const AboutSection = () => {
                                             <span className={cn("text-4xl font-black tracking-tighter", stats[currentStat].color)}>
                                                 {stats[currentStat].value}
                                             </span>
-                                            <div className="h-8 w-[1px] bg-white/10 hidden md:block" />
-                                            <span className="text-white font-bold uppercase tracking-widest text-xs leading-tight">
+                                            <div className="h-8 w-[1px] bg-border hidden md:block" />
+                                            <span className="text-foreground font-bold uppercase tracking-widest text-xs leading-tight">
                                                 {stats[currentStat].label}
                                             </span>
                                         </div>
 
                                         <div className="flex flex-col md:items-end">
-                                            <span className="text-white/40 text-[10px] font-bold uppercase tracking-[0.2em]">Timeline</span>
-                                            <span className="text-white/80 font-mono text-sm">{stats[currentStat].years}</span>
+                                            <span className="text-foreground/40 text-[10px] font-bold uppercase tracking-[0.2em]">Timeline</span>
+                                            <span className="text-foreground/80 font-mono text-sm">{stats[currentStat].years}</span>
                                         </div>
                                     </motion.div>
                                 </AnimatePresence>
@@ -161,14 +161,14 @@ export const AboutSection = () => {
                                     key={i}
                                     variants={itemVariants}
                                     whileHover={{ x: 10 }}
-                                    className="flex gap-4 p-4 rounded-2xl transition-all duration-300 hover:bg-black/60 group border border-transparent hover:border-white/10"
+                                    className="flex gap-4 p-4 rounded-2xl transition-all duration-300 hover:bg-card/60 group border border-transparent hover:border-border"
                                 >
-                                    <div className="p-3 bg-white/5 rounded-xl text-primary group-hover:bg-primary group-hover:text-black transition-all shadow-lg">
+                                    <div className="p-3 bg-muted rounded-xl text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all shadow-lg">
                                         {skill.icon}
                                     </div>
                                     <div>
-                                        <h4 className="font-bold text-white mb-1 group-hover:text-primary transition-colors">{skill.title}</h4>
-                                        <p className="text-sm text-white/50">{skill.desc}</p>
+                                        <h4 className="font-bold text-foreground mb-1 group-hover:text-primary transition-colors">{skill.title}</h4>
+                                        <p className="text-sm text-muted-foreground">{skill.desc}</p>
                                     </div>
                                 </motion.div>
                             ))}

@@ -71,13 +71,13 @@ export const ContactSection = () => {
                         viewport={{ once: true }}
                     >
                         <div className="mb-12">
-                            <h2 className="text-5xl font-bold text-white mb-4 tracking-tighter uppercase">Let's Collaborate</h2>
-                            <p className="text-white/40 text-lg max-w-md">
+                            <h2 className="text-5xl font-bold text-foreground mb-4 tracking-tighter uppercase">Let's Collaborate</h2>
+                            <p className="text-foreground/40 text-lg max-w-md">
                                 Have a project in mind or just want to say hi? My inbox is always open.
                             </p>
                         </div>
 
-                        <div className="glass-morphism p-8 md:p-10 rounded-[2.5rem] relative overflow-hidden group border border-white/5 shadow-2xl">
+                        <div className="glass-morphism p-8 md:p-10 rounded-[2.5rem] relative overflow-hidden group border border-border shadow-2xl">
                             <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl group-hover:bg-primary/10 transition-colors" />
 
                             <AnimatePresence mode="wait">
@@ -98,8 +98,8 @@ export const ContactSection = () => {
                                             <CheckCircle size={48} className="text-primary" />
                                         </motion.div>
                                         <div className="space-y-2">
-                                            <h3 className="text-3xl font-bold text-white uppercase tracking-tighter">Message Sent!</h3>
-                                            <p className="text-white/50">Thank you, I will get back to you as soon as possible.</p>
+                                            <h3 className="text-3xl font-bold text-foreground uppercase tracking-tighter">Message Sent!</h3>
+                                            <p className="text-foreground/50">Thank you, I will get back to you as soon as possible.</p>
                                         </div>
                                     </motion.div>
                                 ) : (
@@ -112,39 +112,39 @@ export const ContactSection = () => {
                                     >
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                             <div className="space-y-2">
-                                                <label className="text-xs font-bold uppercase tracking-widest text-white/30 ml-2">Name</label>
+                                                <label className="text-xs font-bold uppercase tracking-widest text-foreground/30 ml-2">Name</label>
                                                 <input
                                                     required
                                                     name="name"
                                                     type="text"
                                                     value={formData.name}
                                                     onChange={handleChange}
-                                                    className="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 text-white focus:border-primary/50 focus:bg-black/60 outline-none transition-all placeholder:text-white/20"
+                                                    className="w-full bg-card border border-border rounded-2xl px-5 py-4 text-foreground focus:border-primary/50 focus:bg-card/80 outline-none transition-all placeholder:text-foreground/20"
                                                     placeholder="Your Name"
                                                 />
                                             </div>
                                             <div className="space-y-2">
-                                                <label className="text-xs font-bold uppercase tracking-widest text-white/30 ml-2">Email</label>
+                                                <label className="text-xs font-bold uppercase tracking-widest text-foreground/30 ml-2">Email</label>
                                                 <input
                                                     required
                                                     name="email"
                                                     type="email"
                                                     value={formData.email}
                                                     onChange={handleChange}
-                                                    className="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 text-white focus:border-primary/50 focus:bg-black/60 outline-none transition-all placeholder:text-white/20"
+                                                    className="w-full bg-card border border-border rounded-2xl px-5 py-4 text-foreground focus:border-primary/50 focus:bg-card/80 outline-none transition-all placeholder:text-foreground/20"
                                                     placeholder="email@example.com"
                                                 />
                                             </div>
                                         </div>
                                         <div className="space-y-2">
-                                            <label className="text-xs font-bold uppercase tracking-widest text-white/30 ml-2">Message</label>
+                                            <label className="text-xs font-bold uppercase tracking-widest text-foreground/30 ml-2">Message</label>
                                             <textarea
                                                 required
                                                 name="message"
                                                 rows={4}
                                                 value={formData.message}
                                                 onChange={handleChange}
-                                                className="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 text-white focus:border-primary/50 focus:bg-black/60 outline-none transition-all resize-none placeholder:text-white/20"
+                                                className="w-full bg-card border border-border rounded-2xl px-5 py-4 text-foreground focus:border-primary/50 focus:bg-card/80 outline-none transition-all resize-none placeholder:text-foreground/20"
                                                 placeholder="Tell me about your project..."
                                             />
                                         </div>

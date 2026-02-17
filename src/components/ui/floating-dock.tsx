@@ -81,14 +81,14 @@ const FloatingDockMobile = ({
                                     }}
                                     key={item.title}
                                     className={cn(
-                                        "h-12 w-12 rounded-2xl bg-black/60 backdrop-blur-xl border border-white/10 flex flex-col items-center justify-center transition-all active:scale-95 shadow-2xl",
+                                        "h-12 w-12 rounded-2xl bg-card border border-border flex flex-col items-center justify-center transition-all active:scale-95 shadow-2xl",
                                         item.active && "border-primary/50 bg-primary/20 shadow-[0_0_15px_rgba(0,191,207,0.2)]"
                                     )}
                                 >
-                                    <div className={cn("h-5 w-5 transition-colors", item.active ? "text-primary" : "text-white/70")}>
+                                    <div className={cn("h-5 w-5 transition-colors", item.active ? "text-primary" : "text-foreground/70")}>
                                         {item.icon}
                                     </div>
-                                    <span className="text-[7px] uppercase tracking-tighter mt-1 text-white/40 font-bold">
+                                    <span className="text-[7px] uppercase tracking-tighter mt-1 text-foreground/40 font-bold">
                                         {item.title.split(' ')[0]}
                                     </span >
                                 </Link>
@@ -99,7 +99,7 @@ const FloatingDockMobile = ({
             </AnimatePresence>
             <button
                 onClick={() => setOpen(!open)}
-                className="h-12 w-12 rounded-full bg-black/40 backdrop-blur-md border border-white/10 flex items-center justify-center text-white/70"
+                className="h-12 w-12 rounded-full bg-card border border-border flex items-center justify-center text-foreground/70 shadow-lg dark:shadow-[0_0_15px_rgba(0,191,207,0.1)]"
             >
                 <AnimatePresence mode="wait">
                     {open ? (
@@ -130,7 +130,7 @@ const FloatingDockDesktop = ({
             onMouseMove={(e) => mouseY.set(e.pageY)}
             onMouseLeave={() => mouseY.set(Infinity)}
             className={cn(
-                "hidden md:flex w-16 flex-col gap-4 items-center rounded-2xl bg-black/40 backdrop-blur-md border border-white/10 px-3 py-4",
+                "hidden md:flex w-16 flex-col gap-4 items-center rounded-2xl bg-card border border-border px-3 py-4 shadow-xl dark:shadow-[0_0_20px_rgba(0,191,207,0.15)]",
                 className
             )}
         >
@@ -213,7 +213,7 @@ function IconContainer({
                     "aspect-square rounded-full flex items-center justify-center relative border transition-colors",
                     active
                         ? "border-primary/50 bg-primary/20"
-                        : "bg-white/10 border-white/10 hover:border-primary/50"
+                        : "bg-card/50 border-border hover:border-primary/50"
                 )}
             >
                 <AnimatePresence>
@@ -222,7 +222,7 @@ function IconContainer({
                             initial={{ opacity: 0, x: 10, y: "-50%" }}
                             animate={{ opacity: 1, x: 0, y: "-50%" }}
                             exit={{ opacity: 0, x: 2, y: "-50%" }}
-                            className="px-2 py-0.5 whitespace-pre rounded-md bg-black/80 border border-white/10 text-white absolute left-full ml-4 top-1/2 w-fit text-xs"
+                            className="px-2 py-0.5 whitespace-pre rounded-md bg-popover border border-border text-popover-foreground absolute left-full ml-4 top-1/2 w-fit text-xs"
                         >
                             {title}
                         </motion.div>
