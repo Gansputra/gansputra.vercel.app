@@ -46,17 +46,17 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
         if (isFinished) {
             const timeout = setTimeout(() => {
                 onComplete();
-            }, 2500); // Give time to admire the final logo
+            }, 2000); // Give time to admire the final logo
             return () => clearTimeout(timeout);
         }
     }, [isFinished, onComplete]);
 
-    const words = ["CREATIVE", "DEVELOPER", "EDITOR", "Gansputra"];
+    const words = ["CREATIVE", "DEVELOPER", "EDITOR", "PORTFOLIO"];
 
     const handleStart = () => {
         setTimeout(() => {
             setIsStarted(true);
-        }, 800);
+        }, 500);
     };
 
     return (
@@ -150,7 +150,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
                             <AnimatePresence mode="wait">
                                 {!isFinished ? (
                                     <motion.div
-                                        key={Math.floor(counter / 25)}
+                                        key={Math.min(Math.floor(counter / 25), words.length - 1)}
                                         initial={{ opacity: 0 }}
                                         animate={{
                                             opacity: [0, 1, 0.8, 1],
@@ -197,7 +197,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
                                         style={{ willChange: "transform, opacity" }}
                                         className="text-7xl md:text-9xl lg:text-[12rem] font-black font-outfit tracking-tighter text-foreground text-center leading-none"
                                     >
-                                        Portfolio
+                                        Gansputra
                                     </motion.div>
                                 )}
                             </AnimatePresence>

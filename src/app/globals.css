@@ -225,3 +225,113 @@ html.custom-cursor-active,
 html.custom-cursor-active * {
   cursor: none !important;
 }
+
+/* View Transitions API Animations */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.6s;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+::view-transition-old(root) {
+  animation-name: fade-out, scale-down;
+}
+
+::view-transition-new(root) {
+  animation-name: fade-in, scale-up;
+}
+
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scale-down {
+  from {
+    transform: scale(1);
+  }
+
+  to {
+    transform: scale(0.98);
+  }
+}
+
+@keyframes scale-up {
+  from {
+    transform: scale(1.02);
+  }
+
+  to {
+    transform: scale(1);
+  }
+}
+
+/* View Transitions API Animations */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.6s;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+::view-transition-old(root) {
+  animation-name: fade-out, scale-down;
+}
+
+::view-transition-new(root) {
+  animation-name: fade-in, scale-up;
+}
+
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scale-down {
+  from {
+    transform: scale(1);
+  }
+
+  to {
+    transform: scale(0.98);
+  }
+}
+
+@keyframes scale-up {
+  from {
+    transform: scale(1.02);
+  }
+
+  to {
+    transform: scale(1);
+  }
+}

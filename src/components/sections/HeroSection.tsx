@@ -1,14 +1,25 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { motion, Variants } from "framer-motion";
 import { Button } from "@/components/ui/Button";
 import { ChevronRight } from "lucide-react";
 import { useActiveSection } from "@/context/ActiveSectionContext";
 import { Button as MovingBorderButton } from "@/components/ui/moving-border";
+import { cn } from "@/lib/utils";
+
+import { useTheme } from "next-themes";
 
 export const HeroSection = () => {
+    const { theme } = useTheme();
+    const [mounted, setMounted] = useState(false);
     const { setActiveSection } = useActiveSection();
+
+    React.useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    const isDark = mounted && theme === "dark";
 
     const containerVariants: Variants = {
         hidden: { opacity: 0 },
@@ -76,9 +87,15 @@ export const HeroSection = () => {
                     <MovingBorderButton
                         borderRadius="3rem"
                         onClick={() => setActiveSection('about')}
-                        className="bg-card/60 text-foreground border-border font-bold"
-                        containerClassName="h-[52px] w-40"
-                        borderClassName="bg-[radial-gradient(#00bfcf_40%,#7c7df6_60%,transparent_100%)] opacity-30"
+                        className="bg-card/70 text-foreground border-border font-bold group/about"
+                        containerClassName={cn(
+                            "h-[52px] w-40 transition-all duration-500",
+                            isDark ? "shadow-glow hover:shadow-neon" : "shadow-sm"
+                        )}
+                        borderClassName={cn(
+                            "bg-[radial-gradient(var(--primary)_40%,var(--secondary)_60%,transparent_100%)] h-24 w-24",
+                            isDark ? "opacity-70 group-hover/about:opacity-100" : "opacity-0"
+                        )}
                     >
                         About Me
                     </MovingBorderButton>

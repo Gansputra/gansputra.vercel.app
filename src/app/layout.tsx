@@ -57,6 +57,8 @@ export const metadata: Metadata = {
 
 import { InitialLoader } from "@/components/layout/InitialLoader";
 
+import { AudioVisualizer } from "@/components/ui/AudioVisualizer";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -72,6 +74,7 @@ export default function RootLayout({
             <CustomCursor />
             <MouseGlow />
             <Navbar />
+            <AudioVisualizer />
             <main className="h-full w-full">
               {children}
             </main>
