@@ -82,6 +82,7 @@ export const Navbar = () => {
             icon: reducedMotion ? <ZapOff className="h-full w-full text-foreground/70" /> : <Zap className="h-full w-full text-foreground/70" />,
             href: "#",
             onClick: toggleReducedMotion,
+            desktopOnly: true,
         },
     ];
 

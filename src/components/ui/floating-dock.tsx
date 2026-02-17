@@ -13,12 +13,21 @@ import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import { useRef, useState } from "react";
 
+type DockItem = {
+    title: string;
+    icon: React.ReactNode;
+    href: string;
+    onClick?: () => void;
+    active?: boolean;
+    desktopOnly?: boolean;
+};
+
 export const FloatingDock = ({
     items,
     desktopClassName,
     mobileClassName,
 }: {
-    items: { title: string; icon: React.ReactNode; href: string; onClick?: () => void; active?: boolean }[];
+    items: DockItem[];
     desktopClassName?: string;
     mobileClassName?: string;
 }) => {
@@ -34,7 +43,7 @@ const FloatingDockMobile = ({
     items,
     className,
 }: {
-    items: { title: string; icon: React.ReactNode; href: string; onClick?: () => void; active?: boolean }[];
+    items: DockItem[];
     className?: string;
 }) => {
     const [open, setOpen] = useState(false);
@@ -46,7 +55,7 @@ const FloatingDockMobile = ({
                         layoutId="nav"
                         className="absolute left-full top-0 ml-4 flex flex-wrap gap-3 w-[65vw] max-w-[260px] p-2"
                     >
-                        {items.map((item, idx) => (
+                        {items.filter(item => !item.desktopOnly).map((item, idx) => (
                             <motion.div
                                 key={item.title}
                                 initial={{ opacity: 0, scale: 0.5, x: -20 }}
@@ -121,7 +130,7 @@ const FloatingDockDesktop = ({
     items,
     className,
 }: {
-    items: { title: string; icon: React.ReactNode; href: string; onClick?: () => void; active?: boolean }[];
+    items: DockItem[];
     className?: string;
 }) => {
     let mouseY = useMotionValue(Infinity);
