@@ -94,12 +94,12 @@ const GfxCard = ({ item, setSelectedImage, index, order }: { item: any, setSelec
                             {/* Vertical Scanner Line */}
                             <motion.div
                                 style={{ left: mouseX }}
-                                className="absolute top-0 bottom-0 w-[1px] bg-secondary/50 shadow-[0_0_15px_rgba(var(--secondary),0.5)]"
+                                className="absolute top-0 bottom-0 w-[1px] bg-primary/50 shadow-[0_0_15px_rgba(var(--primary),0.5)]"
                             />
                             {/* Horizontal Scanner Line */}
                             <motion.div
                                 style={{ top: mouseY }}
-                                className="absolute left-0 right-0 h-[1px] bg-secondary/50 shadow-[0_0_15px_rgba(var(--secondary),0.5)]"
+                                className="absolute left-0 right-0 h-[1px] bg-primary/50 shadow-[0_0_15px_rgba(var(--primary),0.5)]"
                             />
                         </motion.div>
                     )}
@@ -140,7 +140,7 @@ const GfxCard = ({ item, setSelectedImage, index, order }: { item: any, setSelec
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
                             className={cn(
-                                "p-3 md:p-4 rounded-full bg-secondary/20 border border-secondary/50 text-secondary transition-all duration-500",
+                                "p-3 md:p-4 rounded-full bg-primary/20 border border-primary/50 text-primary transition-all duration-500",
                                 !isMobile && "translate-y-4 group-hover:translate-y-0"
                             )}
                         >
@@ -150,14 +150,14 @@ const GfxCard = ({ item, setSelectedImage, index, order }: { item: any, setSelec
 
                     {/* Badge */}
                     <div className="absolute top-4 left-4 z-40">
-                        <span className="px-3 py-1 bg-card/80 backdrop-blur-md rounded-full text-[10px] font-bold text-secondary uppercase tracking-widest border border-secondary/30">
+                        <span className="px-3 py-1 bg-card/80 backdrop-blur-md rounded-full text-[10px] font-bold text-primary uppercase tracking-widest border border-primary/30">
                             {item.category}
                         </span>
                     </div>
                 </div>
 
                 <div className="p-6 h-[88px] flex items-center justify-center">
-                    <h3 className="text-base md:text-lg font-bold text-foreground group-hover:text-secondary transition-colors text-center leading-tight line-clamp-2">{item.title}</h3>
+                    <h3 className="text-base md:text-lg font-bold text-foreground group-hover:text-primary transition-colors text-center leading-tight line-clamp-2">{item.title}</h3>
                 </div>
             </Card>
         </motion.div>
@@ -198,7 +198,7 @@ export const GfxShowcase = () => {
     return (
         <div className="py-24 px-6 relative overflow-hidden">
             {/* Background element */}
-            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-secondary/5 rounded-full blur-[120px] -z-10" />
+            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] -z-10" />
 
             <div className="max-w-7xl mx-auto">
                 <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
@@ -209,13 +209,13 @@ export const GfxShowcase = () => {
                         className="w-full md:w-auto"
                     >
                         <div className="flex items-center gap-3 mb-4">
-                            <div className="p-2 bg-secondary/20 rounded-lg text-secondary">
+                            <div className="p-2 bg-primary/20 rounded-lg text-primary">
                                 <Palette size={20} />
                             </div>
-                            <span className="text-secondary font-bold tracking-widest uppercase text-xs">Visual Arts</span>
+                            <span className="text-primary font-bold tracking-widest uppercase text-xs">Visual Arts</span>
                         </div>
                         <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4 tracking-tighter">GFX Design</h2>
-                        <div className="w-20 h-1 bg-gradient-to-r from-secondary to-transparent rounded-full mb-6" />
+                        <div className="w-20 h-1 bg-gradient-to-r from-primary to-transparent rounded-full mb-6" />
                         <p className="text-muted-foreground max-w-lg">
                             Visual storytelling through static graphics. From branding to digital illustrations and concept art.
                         </p>

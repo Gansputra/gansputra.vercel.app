@@ -1,5 +1,6 @@
 "use client";
 
+import { useMusicTheme } from "@/context/MusicThemeContext";
 import { useActiveSection } from "@/context/ActiveSectionContext";
 import { AnimatePresence, motion } from "framer-motion";
 import { HeroSection } from "@/components/sections/HeroSection";
@@ -22,6 +23,7 @@ const sectionComponents: Record<string, React.ReactNode> = {
 
 export default function Home() {
   const { activeSection } = useActiveSection();
+  const { theme } = useMusicTheme();
 
   return (
     <div className="relative h-screen w-full overflow-hidden bg-background">
@@ -32,8 +34,8 @@ export default function Home() {
           backgroundColor="transparent"
           rangeY={200}
           particleCount={400}
-          baseHue={185}
-          rangeHue={55}
+          baseHue={theme.baseHue}
+          rangeHue={theme.rangeHue}
           showDust={true}
           containerClassName="h-full w-full"
         />

@@ -59,6 +59,8 @@ import { InitialLoader } from "@/components/layout/InitialLoader";
 
 import { AudioVisualizer } from "@/components/ui/AudioVisualizer";
 
+import { MusicThemeProvider } from "@/context/MusicThemeContext";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -70,15 +72,17 @@ export default function RootLayout({
         className={`${inter.variable} ${outfit.variable} font-sans bg-[#0a0a0a] text-white antialiased selection:bg-primary selection:text-black overflow-hidden h-screen w-screen`}
       >
         <Providers>
-          <InitialLoader>
-            <CustomCursor />
-            <MouseGlow />
-            <Navbar />
-            <AudioVisualizer />
-            <main className="h-full w-full">
-              {children}
-            </main>
-          </InitialLoader>
+          <MusicThemeProvider>
+            <InitialLoader>
+              <CustomCursor />
+              <MouseGlow />
+              <Navbar />
+              <AudioVisualizer />
+              <main className="h-full w-full">
+                {children}
+              </main>
+            </InitialLoader>
+          </MusicThemeProvider>
         </Providers>
       </body>
     </html>

@@ -3,12 +3,15 @@
 import React, { useEffect, useState } from "react";
 import { motion, useSpring, useMotionValue, AnimatePresence } from "framer-motion";
 import { useSettings } from "@/context/SettingsContext";
+import { useTheme } from "next-themes";
 
 export const CustomCursor = () => {
     const { reducedMotion } = useSettings();
+    const { resolvedTheme } = useTheme();
     const [isHovered, setIsHovered] = useState(false);
     const [isVisible, setIsVisible] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
+    const [mounted, setMounted] = useState(false);
 
     const cursorX = useMotionValue(-100);
     const cursorY = useMotionValue(-100);
@@ -18,6 +21,7 @@ export const CustomCursor = () => {
     const cursorYSpring = useSpring(cursorY, springConfig);
 
     useEffect(() => {
+        setMounted(true);
         const checkMobile = () => {
             // Only disable for small screens, ignore touch support for laptops
             setIsMobile(window.innerWidth < 1024);
@@ -65,7 +69,9 @@ export const CustomCursor = () => {
         };
     }, [isMobile, reducedMotion]);
 
-    if (isMobile || reducedMotion) return null;
+    if (!mounted || isMobile || reducedMotion) return null;
+
+    const cursorColor = resolvedTheme === 'dark' ? '#ffffff' : '#000000';
 
     return (
         <div className="fixed inset-0 pointer-events-none z-[9999]">
@@ -83,32 +89,35 @@ export const CustomCursor = () => {
                             rotate: isHovered ? 45 : 0
                         }}
                         exit={{ opacity: 0, scale: 0 }}
-                        className="relative flex items-center justify-center w-0 h-0 mix-blend-difference"
+                        className="relative flex items-center justify-center w-0 h-0"
                     >
                         {/* Vertical Line */}
                         <motion.div
                             animate={{
                                 height: isHovered ? 40 : 20,
-                                width: isHovered ? 2 : 1
+                                width: isHovered ? 2 : 1,
+                                backgroundColor: cursorColor
                             }}
-                            className="absolute bg-white rounded-full"
+                            className="absolute rounded-full"
                         />
                         {/* Horizontal Line */}
                         <motion.div
                             animate={{
                                 width: isHovered ? 40 : 20,
-                                height: isHovered ? 2 : 1
+                                height: isHovered ? 2 : 1,
+                                backgroundColor: cursorColor
                             }}
-                            className="absolute bg-white rounded-full"
+                            className="absolute rounded-full"
                         />
 
                         {/* Inner Dot for precision */}
                         <motion.div
                             animate={{
                                 scale: isHovered ? 0 : 1,
-                                opacity: isHovered ? 0 : 1
+                                opacity: isHovered ? 0 : 1,
+                                backgroundColor: cursorColor
                             }}
-                            className="absolute w-1 h-1 bg-white rounded-full"
+                            className="absolute w-1 h-1 rounded-full"
                         />
                     </motion.div>
                 )}
