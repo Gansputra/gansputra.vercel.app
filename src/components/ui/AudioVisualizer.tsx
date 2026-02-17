@@ -253,6 +253,25 @@ export const AudioVisualizer = () => {
                             </div>
 
                             <div className="p-4 flex flex-col gap-4">
+                                {/* Section Header */}
+                                <motion.div
+                                    initial={{ opacity: 0, x: -10 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ delay: 0.2, duration: 0.5 }}
+                                    className="flex items-center gap-2"
+                                >
+                                    <div className="h-[1px] w-4 bg-white/20" />
+                                    <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/40">
+                                        MY TOP 3 SONG
+                                    </span>
+                                    <motion.span
+                                        animate={{ opacity: [0.2, 1, 0.2] }}
+                                        transition={{ duration: 2, repeat: Infinity }}
+                                        className="h-1 w-1 rounded-full"
+                                        style={{ backgroundColor: currentTrack.theme.color }}
+                                    />
+                                </motion.div>
+
                                 <div className="flex items-center gap-3">
                                     {/* Spinning Disc Small */}
                                     <div className="relative w-10 h-10 flex-shrink-0">

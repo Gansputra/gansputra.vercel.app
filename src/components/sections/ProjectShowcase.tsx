@@ -10,6 +10,8 @@ import { ExternalLink, Github, Eye, ChevronLeft, ChevronRight, Terminal } from "
 import { Project } from "@/types/project";
 import { cn } from "@/lib/utils";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { Project3DGallery } from "@/components/ui/Project3DGallery";
+import { LayoutGrid, Box } from "lucide-react";
 
 const ProjectCard = ({ project, onPreview, index }: { project: Project, onPreview: (p: Project) => void, index: number }) => {
     const [mounted, setMounted] = useState(false);
@@ -142,6 +144,7 @@ export const ProjectShowcase = () => {
     const isMobile = mounted && isMobileQuery;
     const [selectedProject, setSelectedProject] = useState<Project | null>(null);
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [viewMode, setViewMode] = useState<"grid" | "3d">("grid");
 
     useEffect(() => {
         setMounted(true);
@@ -202,25 +205,75 @@ export const ProjectShowcase = () => {
                     initial={{ opacity: 0, y: -20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    className="mb-16 text-center md:text-left"
+                    className="mb-16"
                 >
-                    <h2 className="text-4xl font-bold text-foreground mb-4">Development Projects</h2>
-                    <p className="text-muted-foreground max-w-lg">
-                        Where code meets creativity. A selection of my professional and experimental engineering works.
-                    </p>
+                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                        <div>
+                            <h2 className="text-4xl font-bold text-foreground mb-4 font-outfit uppercase tracking-tighter">Development Projects</h2>
+                            <p className="text-muted-foreground max-w-lg">
+                                Where code meets creativity. A selection of my professional and experimental engineering works.
+                            </p>
+                        </div>
+
+                        {/* View Mode Toggle */}
+                        <div className="flex items-center p-1 bg-zinc-900/50 border border-white/5 rounded-xl self-start md:self-auto pointer-events-auto">
+                            <button
+                                onClick={() => setViewMode("grid")}
+                                className={cn(
+                                    "flex items-center gap-2 px-4 py-2 rounded-lg transition-all text-xs font-bold uppercase tracking-wider",
+                                    viewMode === "grid" ? "bg-primary text-black shadow-lg" : "text-white/40 hover:text-white"
+                                )}
+                            >
+                                <LayoutGrid size={14} />
+                                Grid
+                            </button>
+                            <button
+                                onClick={() => setViewMode("3d")}
+                                className={cn(
+                                    "flex items-center gap-2 px-4 py-2 rounded-lg transition-all text-xs font-bold uppercase tracking-wider",
+                                    viewMode === "3d" ? "bg-primary text-black shadow-lg" : "text-white/40 hover:text-white"
+                                )}
+                            >
+                                <Box size={14} />
+                                3D Expo
+                            </button>
+                        </div>
+                    </div>
                 </motion.div>
 
-                <motion.div
-                    variants={containerVariants}
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, amount: 0.1 }}
-                    className="grid grid-cols-1 md:grid-cols-2 gap-8"
-                >
-                    {projectData.map((project, index) => (
-                        <ProjectCard key={project.id} project={project} onPreview={setSelectedProject} index={index} />
-                    ))}
-                </motion.div>
+                <AnimatePresence mode="wait">
+                    {viewMode === "grid" ? (
+                        <motion.div
+                            key="grid-view"
+                            initial={{ opacity: 0, scale: 0.98 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.98 }}
+                            transition={{ duration: 0.4 }}
+                        >
+                            <motion.div
+                                variants={containerVariants}
+                                initial="hidden"
+                                whileInView="visible"
+                                viewport={{ once: true, amount: 0.1 }}
+                                className="grid grid-cols-1 md:grid-cols-2 gap-8"
+                            >
+                                {projectData.map((project, index) => (
+                                    <ProjectCard key={project.id} project={project} onPreview={setSelectedProject} index={index} />
+                                ))}
+                            </motion.div>
+                        </motion.div>
+                    ) : (
+                        <motion.div
+                            key="3d-view"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: 20 }}
+                            transition={{ duration: 0.5 }}
+                        >
+                            <Project3DGallery onPreview={setSelectedProject} />
+                        </motion.div>
+                    )}
+                </AnimatePresence>
 
                 {/* See More - GitHub Link */}
                 <motion.div
@@ -330,7 +383,7 @@ export const ProjectShowcase = () => {
                                     initial={{ opacity: 0, scale: 1.1 }}
                                     animate={{ opacity: 1, scale: 1 }}
                                     exit={{ opacity: 0, scale: 0.9 }}
-                                    transition={{ duration: 0.7, ease: [0.23, 1, 0.32, 1] }}
+                                    transition={{ duration: 0.7 }}
                                     className="w-full h-full object-cover object-top"
                                 />
                             </AnimatePresence>
