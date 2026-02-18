@@ -18,9 +18,10 @@ interface CyberGridProps {
     rangeRadius?: number;
     backgroundColor?: string;
     showDust?: boolean;
+    showGrid?: boolean;
 }
 
-export const Vortex = ({ children, className, containerClassName, ...props }: CyberGridProps) => {
+export const Vortex = ({ children, className, containerClassName, showGrid = true, ...props }: CyberGridProps) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const { theme } = useTheme();
     const themeRef = useRef(theme);
@@ -182,7 +183,7 @@ export const Vortex = ({ children, className, containerClassName, ...props }: Cy
 
             ctx.save();
 
-            if (isDark) {
+            if (isDark && showGrid) {
                 // Draw Perspective Grid
                 for (let i = -canvas.width; i <= canvas.width * 2; i += gridSpacing) {
                     // Vertical Lines

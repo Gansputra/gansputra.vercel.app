@@ -37,6 +37,7 @@ export default function Home() {
           baseHue={theme.baseHue}
           rangeHue={theme.rangeHue}
           showDust={true}
+          showGrid={activeSection !== 'hero'}
           containerClassName="h-full w-full"
         />
       </div>

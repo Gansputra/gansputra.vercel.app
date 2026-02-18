@@ -9,6 +9,7 @@ import { Button as MovingBorderButton } from "@/components/ui/moving-border";
 import { cn } from "@/lib/utils";
 
 import { useTheme } from "next-themes";
+import { HeroGlobe } from "@/components/ui/HeroGlobe";
 
 export const HeroSection = () => {
     const { theme } = useTheme();
@@ -42,9 +43,11 @@ export const HeroSection = () => {
     };
 
     return (
-        <div className="h-screen w-full flex flex-col items-center justify-center pt-20 relative">
+        <div className="h-screen w-full flex flex-col items-center justify-center pt-20 relative overflow-hidden">
+            <HeroGlobe />
+
             <motion.div
-                className="relative z-10 text-center px-6 mt-12 md:mt-0"
+                className="relative z-10 text-center px-6 mt-12 md:mt-0 pointer-events-none"
                 variants={containerVariants}
                 initial="hidden"
                 animate="visible"
@@ -63,17 +66,11 @@ export const HeroSection = () => {
                     <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-foreground to-secondary animate-gradient-x">DIGITAL</span>
                     <br /> REALITIES
                 </motion.h1>
-                <motion.p
-                    variants={itemVariants}
-                    className="text-foreground/40 text-base md:text-xl max-w-2xl mx-auto mb-12 leading-relaxed font-light"
-                >
-                    Merging backend logic with cinematic visual storytelling
-                    to create immersive web experiences.
-                </motion.p>
+
 
                 <motion.div
                     variants={itemVariants}
-                    className="flex flex-col sm:flex-row items-center justify-center gap-6"
+                    className="flex flex-col sm:flex-row items-center justify-center gap-6 pointer-events-auto"
                 >
                     <Button
                         size="lg"
@@ -81,7 +78,7 @@ export const HeroSection = () => {
                         onClick={() => setActiveSection('projects')}
                         className="group relative overflow-hidden"
                     >
-                        <span className="relative z-10">Explore Work</span>
+                        <span className="relative z-10">My Work</span>
                     </Button>
 
                     <MovingBorderButton
@@ -103,7 +100,7 @@ export const HeroSection = () => {
             </motion.div>
 
             {/* Bottom transition reveal */}
-            <div className="absolute bottom-12 left-1/2 -translate-x-1/2">
+            <div className="absolute bottom-12 left-1/2 -translate-x-1/2 z-20">
                 <motion.button
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -111,10 +108,8 @@ export const HeroSection = () => {
                     whileTap={{ scale: 0.9 }}
                     transition={{ delay: 1.5 }}
                     onClick={() => setActiveSection('amvs')}
-                    className="text-foreground/10 hover:text-primary transition-all group flex items-center gap-3 p-4"
+                    className="text-foreground/10 hover:text-primary transition-all group flex items-center gap-3 p-4 pointer-events-auto"
                 >
-                    <span className="text-[9px] uppercase tracking-[0.4em] font-bold group-hover:tracking-[0.6em] transition-all duration-500">Discover</span>
-                    <ChevronRight className="group-hover:translate-x-1 transition-transform duration-500" size={18} />
                 </motion.button>
             </div>
         </div>
