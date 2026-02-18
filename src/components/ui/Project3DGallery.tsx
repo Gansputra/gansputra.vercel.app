@@ -190,7 +190,10 @@ function Scene({ onPreview }: { onPreview: (p: Project) => void }) {
 
 export const Project3DGallery = ({ onPreview }: { onPreview: (p: Project) => void }) => {
     return (
-        <div className="w-full h-[700px] relative mt-10 rounded-[3rem] overflow-hidden border border-white/5 bg-black shadow-2xl">
+        <div
+            className="w-full h-[700px] relative mt-10 rounded-[3rem] overflow-hidden border border-white/5 bg-black shadow-2xl"
+            data-cursor="white"
+        >
             {/* Essential UI */}
             <div className="absolute top-10 left-10 z-10 pointer-events-none">
                 <div className="flex items-center gap-3">

@@ -224,7 +224,10 @@ export const AudioVisualizer = () => {
                 )}
             </AnimatePresence>
 
-            <div className="fixed bottom-6 right-6 md:bottom-10 md:right-10 z-[100] pointer-events-none flex flex-col items-end justify-end">
+            <div
+                className="fixed bottom-6 right-6 md:bottom-10 md:right-10 z-[100] pointer-events-none flex flex-col items-end justify-end"
+                data-cursor="white"
+            >
 
                 <AnimatePresence>
                     {/* --- THE DYNAMIC DOCK (Expanded Mode) --- */}

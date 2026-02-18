@@ -9,6 +9,7 @@ export const CustomCursor = () => {
     const { reducedMotion } = useSettings();
     const { resolvedTheme } = useTheme();
     const [isHovered, setIsHovered] = useState(false);
+    const [isWhite, setIsWhite] = useState(false);
     const [isVisible, setIsVisible] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
     const [mounted, setMounted] = useState(false);
@@ -44,7 +45,10 @@ export const CustomCursor = () => {
                 target.closest('button') ||
                 target.getAttribute('data-cursor') === 'hover';
 
+            const forceWhite = target.closest('[data-cursor="white"]') !== null;
+
             setIsHovered(!!isInteractive);
+            setIsWhite(forceWhite);
         };
 
         window.addEventListener("mousemove", moveCursor);
@@ -71,7 +75,7 @@ export const CustomCursor = () => {
 
     if (!mounted || isMobile || reducedMotion) return null;
 
-    const cursorColor = resolvedTheme === 'dark' ? '#ffffff' : '#000000';
+    const cursorColor = (resolvedTheme === 'dark' || isWhite) ? '#ffffff' : '#000000';
 
     return (
         <div className="fixed inset-0 pointer-events-none z-[9999]">

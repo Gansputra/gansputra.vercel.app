@@ -78,7 +78,7 @@ export const HeroSection = () => {
                         onClick={() => setActiveSection('projects')}
                         className="group relative overflow-hidden"
                     >
-                        <span className="relative z-10">My Work</span>
+                        <span className="relative z-10">ExploreMy Work</span>
                     </Button>
 
                     <MovingBorderButton
