@@ -10,7 +10,9 @@ type MusicTheme = {
 
 type MusicThemeContextType = {
     theme: MusicTheme;
+    analyzer: AnalyserNode | null;
     setTheme: (theme: MusicTheme) => void;
+    setAnalyzer: (analyzer: AnalyserNode | null) => void;
 };
 
 const defaultTheme: MusicTheme = {
@@ -21,14 +23,17 @@ const defaultTheme: MusicTheme = {
 
 const MusicThemeContext = createContext<MusicThemeContextType>({
     theme: defaultTheme,
+    analyzer: null,
     setTheme: () => { },
+    setAnalyzer: () => { },
 });
 
 export const MusicThemeProvider = ({ children }: { children: ReactNode }) => {
     const [theme, setTheme] = useState<MusicTheme>(defaultTheme);
+    const [analyzer, setAnalyzer] = useState<AnalyserNode | null>(null);
 
     return (
-        <MusicThemeContext.Provider value={{ theme, setTheme }}>
+        <MusicThemeContext.Provider value={{ theme, setTheme, analyzer, setAnalyzer }}>
             {children}
         </MusicThemeContext.Provider>
     );

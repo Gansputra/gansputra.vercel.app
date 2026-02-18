@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useMemo } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { PerspectiveCamera, Stars } from "@react-three/drei";
 import * as THREE from "three";
@@ -9,21 +9,54 @@ import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useTheme } from "next-themes";
 
 const BasicGridGlobe = () => {
-    const { theme: musicTheme } = useMusicTheme();
+    const { theme: musicTheme, analyzer } = useMusicTheme();
     const { theme: uiTheme } = useTheme();
     const meshRef = useRef<THREE.Mesh>(null);
+    const lightRef = useRef<THREE.PointLight>(null);
+    const materialRef = useRef<THREE.MeshBasicMaterial>(null);
 
     const [mounted, setMounted] = useState(false);
     const isMobile = useMediaQuery("(max-width: 1024px)");
     const isDark = uiTheme === "dark";
+
+    // Audio data buffer
+    const dataArray = useMemo(() => analyzer ? new Uint8Array(analyzer.frequencyBinCount) : null, [analyzer]);
 
     useEffect(() => {
         setMounted(true);
     }, []);
 
     useFrame((state, delta) => {
+        let bass = 0;
+        if (analyzer && dataArray) {
+            analyzer.getByteFrequencyData(dataArray);
+            // Average of first few bins (bass)
+            const bassBins = dataArray.slice(0, 10);
+            bass = bassBins.reduce((a: number, b: number) => a + b, 0) / bassBins.length;
+        }
+
+        const normalizedBass = bass / 255; // 0 to 1
+
         if (meshRef.current) {
-            meshRef.current.rotation.y += delta * 0.08;
+            // Pulsing scale based on bass
+            const targetScale = 1 + normalizedBass * 0.15;
+            meshRef.current.scale.lerp(new THREE.Vector3(targetScale, targetScale, targetScale), 0.1);
+
+            // Faster rotation when bass is high
+            const rotationSpeed = 0.08 + normalizedBass * 0.4;
+            meshRef.current.rotation.y += delta * rotationSpeed;
+        }
+
+        if (lightRef.current) {
+            // Glowing intensity based on bass
+            const baseIntensity = isDark ? 10 : 2;
+            lightRef.current.intensity = baseIntensity + normalizedBass * 50;
+        }
+
+        if (materialRef.current) {
+            // Subtle opacity pulse
+            const baseOpacity = isDark ? 0.3 : 0.6;
+            materialRef.current.opacity = baseOpacity + normalizedBass * 0.4;
         }
     });
 
@@ -34,7 +67,6 @@ const BasicGridGlobe = () => {
     const positionY = mounted ? (isMobile ? -3.5 : -11.5) : -3.5;
 
     const gridColor = isDark ? musicTheme.color : "#333333";
-    const gridOpacity = isDark ? 0.3 : 0.6;
     const markerColor = musicTheme.color;
 
     return (
@@ -43,10 +75,10 @@ const BasicGridGlobe = () => {
                 <sphereGeometry args={[radius, 40, 40]} />
 
                 <meshBasicMaterial
+                    ref={materialRef}
                     wireframe
                     color={gridColor}
                     transparent
-                    opacity={gridOpacity}
                 />
 
                 <group rotation={[-(0.78 * Math.PI / 180), (113.92 * Math.PI / 180), 0]}>
@@ -55,6 +87,7 @@ const BasicGridGlobe = () => {
                         <meshBasicMaterial color={markerColor} />
                     </mesh>
                     <pointLight
+                        ref={lightRef}
                         color={markerColor}
                         intensity={isDark ? 10 : 2}
                         distance={radius * 2}

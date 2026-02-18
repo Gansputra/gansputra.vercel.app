@@ -68,10 +68,12 @@ export const AudioVisualizer = () => {
     const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
     const [mounted, setMounted] = useState(false);
     const [progress, setProgress] = useState(0);
-    const { setTheme } = useMusicTheme();
+    const { setTheme, setAnalyzer } = useMusicTheme();
 
     const audioRef = useRef<HTMLAudioElement | null>(null);
     const contextRef = useRef<AudioContext | null>(null);
+    const analyzerRef = useRef<AnalyserNode | null>(null);
+    const sourceRef = useRef<MediaElementAudioSourceNode | null>(null);
 
     const currentTrack = PLAYLIST[currentTrackIndex];
 
@@ -152,9 +154,20 @@ export const AudioVisualizer = () => {
     };
 
     const initAudioContext = () => {
-        if (!contextRef.current) {
+        if (!contextRef.current && audioRef.current) {
             const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
-            contextRef.current = new AudioContextClass();
+            const context = new AudioContextClass();
+            contextRef.current = context;
+
+            const analyzer = context.createAnalyser();
+            analyzer.fftSize = 256;
+            analyzerRef.current = analyzer;
+            setAnalyzer(analyzer);
+
+            const source = context.createMediaElementSource(audioRef.current);
+            source.connect(analyzer);
+            analyzer.connect(context.destination);
+            sourceRef.current = source;
         }
     };
 
