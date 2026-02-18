@@ -2,20 +2,29 @@
 
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Play, Sparkles } from "lucide-react";
-import { useTheme } from "next-themes";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 interface SplashScreenProps {
     onComplete: () => void;
 }
 
+const GLITCH_LOGS = [
+    "LOADING_PROJECT_REPOS",
+    "FETCHING_3D_GALLERY",
+    "COMPILING_SKILL_MATRIX",
+    "DECRYPTING_CREATIVE_STORY",
+    "INITIALIZING_VFX_ENGINE",
+    "RENDER_ENV_PREVIEW",
+    "PORTFOLIO_HANDSHAKE_OK",
+    "READY_FOR_EXPLORATION"
+];
+
 export const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
     const [mounted, setMounted] = useState(false);
-    const [counter, setCounter] = useState(0);
-    const [isFinished, setIsFinished] = useState(false);
     const [isStarted, setIsStarted] = useState(false);
-    const { theme } = useTheme();
-    const isDark = mounted && theme === "dark";
+    const [logIndex, setLogIndex] = useState(0);
+    const [isCracking, setIsCracking] = useState(false);
+    const isMobile = useMediaQuery("(max-width: 768px)");
 
     useEffect(() => {
         setMounted(true);
@@ -23,237 +32,189 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
 
     useEffect(() => {
         if (!isStarted) return;
-
-        const timer = setInterval(() => {
-            setCounter((prev) => {
-                if (prev >= 100) {
-                    clearInterval(timer);
-                    setTimeout(() => setIsFinished(true), 500);
-                    return 100;
-                }
-                // Exactly 1 second per word (25 units * 40ms = 1000ms)
-                return Math.min(prev + 1, 100);
-            });
-        }, 40);
-
-        return () => clearInterval(timer);
+        const interval = setInterval(() => {
+            setLogIndex(prev => (prev + 1) % GLITCH_LOGS.length);
+        }, 100);
+        return () => clearInterval(interval);
     }, [isStarted]);
 
-    // Auto-complete after logo is shown if you want, 
-    // or keep the button. User asked to "stop" until play, 
-    // let's make the entry to the site smooth after loading.
-    useEffect(() => {
-        if (isFinished) {
-            const timeout = setTimeout(() => {
-                onComplete();
-            }, 2000); // Give time to admire the final logo
-            return () => clearTimeout(timeout);
-        }
-    }, [isFinished, onComplete]);
-
-    const words = ["CREATIVE", "DEVELOPER", "EDITOR", "PORTFOLIO"];
-
     const handleStart = () => {
+        setIsCracking(true);
         setTimeout(() => {
             setIsStarted(true);
-        }, 500);
+            setTimeout(onComplete, 3500);
+        }, 800);
     };
+
+    if (!mounted) return null;
 
     return (
         <motion.div
             initial={{ opacity: 1 }}
             exit={{
-                opacity: 0,
-                y: -40,
-                transition: { duration: 0.8, ease: [0.76, 0, 0.24, 1] }
+                scaleY: 0.005,
+                opacity: [1, 1, 0],
+                transition: { duration: 0.5, ease: "easeInOut" }
             }}
-            className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-background overflow-hidden select-none cursor-default"
+            className="fixed inset-0 z-[9999] flex items-center justify-center bg-black overflow-hidden select-none"
         >
-            {/* Ambient Background - Optimized with radial-gradient instead of blur filter */}
+            {/* CRT Scanlines & Noise Overlay */}
+            <div className="absolute inset-0 pointer-events-none z-50">
+                <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_4px,3px_100%]" />
+                <div className="absolute inset-0 opacity-[0.03] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
+            </div>
+
+            {/* Static Flicker Background */}
             <motion.div
-                animate={isStarted ? {
-                    scale: [1, 1.1, 1],
-                    opacity: [0.05, 0.15, 0.05],
-                } : {
-                    opacity: 0.03
-                }}
-                transition={{
-                    duration: 8,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                }}
-                style={{
-                    willChange: "transform, opacity",
-                    background: !mounted
-                        ? "radial-gradient(circle, rgba(0,191,207,0.1) 0%, rgba(5,5,5,0) 70%)"
-                        : isDark
-                            ? "radial-gradient(circle, rgba(0,191,207,0.15) 0%, rgba(5,5,5,0) 70%)"
-                            : "radial-gradient(circle, rgba(0,191,207,0.08) 0%, rgba(250,250,250,0) 70%)"
-                }}
-                className="absolute w-[800px] h-[800px] pointer-events-none"
+                animate={{ opacity: [0.05, 0.1, 0.05, 0.15, 0.1] }}
+                transition={{ duration: 0.2, repeat: Infinity }}
+                className="absolute inset-0 bg-primary/20"
             />
 
-            <AnimatePresence mode="wait">
-                {!isStarted ? (
-                    <motion.div
-                        key="start-trigger"
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.95 }}
-                        transition={{ duration: 0.5 }}
-                        className="relative z-10 flex flex-col items-center"
-                    >
+            <div className="relative z-10 w-full px-6 flex flex-col items-center">
+                <AnimatePresence mode="wait">
+                    {!isStarted ? (
                         <motion.div
-                            animate={{ opacity: [0.3, 0.6, 0.3] }}
-                            transition={{ duration: 3, repeat: Infinity }}
-                            className="flex items-center gap-2 mb-8"
+                            key="malfunction"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ x: [0, -20, 20, -10, 10, 0], opacity: 0 }}
+                            className="flex flex-col items-center gap-8"
                         >
-                            <Sparkles className="w-4 h-4 text-primary" />
-                            <span className="text-foreground/40 font-outfit tracking-[0.4em] text-[10px] uppercase">Experience Initializing</span>
-                        </motion.div>
-
-                        <button
-                            onClick={handleStart}
-                            className="group relative flex flex-col items-center gap-6 cursor-pointer"
-                        >
-                            <div className="relative">
-                                {/* Button Rings */}
-                                <div className="absolute inset-0 rounded-full border border-primary/20 scale-150 animate-ping group-hover:border-primary/50" />
-                                <div className="absolute inset-0 rounded-full border border-primary/10 scale-125 group-hover:scale-150 transition-transform duration-700" />
-
-                                <div className="relative w-22 h-22 flex items-center justify-center rounded-full bg-primary/5 border border-border group-hover:border-primary/50 group-hover:bg-primary/10 transition-all duration-500">
-                                    <Play className="w-7 h-7 text-foreground group-hover:text-primary fill-current transition-all duration-300" />
-                                </div>
+                            <div className="relative space-y-2 text-center">
+                                <motion.div
+                                    animate={{
+                                        x: [-2, 2, -1, 3, 0],
+                                        skewX: [0, 5, -5, 2, 0]
+                                    }}
+                                    transition={{ duration: 0.15, repeat: Infinity, repeatType: "mirror" }}
+                                    className="text-primary font-mono text-[10px] md:text-sm tracking-[0.5em] uppercase opacity-70"
+                                >
+                                    Initializing_Creative_Portfolio
+                                </motion.div>
+                                <h2 className="text-white font-black text-5xl md:text-7xl lg:text-8xl tracking-tighter italic uppercase leading-none">
+                                    PORTFOLIO <span className="text-primary glitch-text" data-text="GFX">DATABASE</span>
+                                </h2>
                             </div>
 
-                            <div className="overflow-hidden">
-                                <motion.span
+                            <motion.button
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                onClick={handleStart}
+                                className={`group relative px-10 py-4 bg-transparent border-2 border-primary overflow-hidden transition-all duration-75 ${isCracking ? "animate-pulse" : ""}`}
+                            >
+                                {/* RGB Split Hover Effect */}
+                                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100">
+                                    <span className="absolute translate-x-1 text-red-500 font-bold tracking-[0.3em] pointer-events-none">OVERRIDE</span>
+                                    <span className="absolute -translate-x-1 text-blue-500 font-bold tracking-[0.3em] pointer-events-none">OVERRIDE</span>
+                                </div>
+                                <span className="relative z-10 text-primary font-bold tracking-[0.3em] uppercase group-hover:text-white transition-colors">
+                                    {isCracking ? "CRACKING..." : "OVERRIDE"}
+                                </span>
+                            </motion.button>
+
+                            <div className="mt-4 font-mono text-[8px] md:text-[10px] text-white/30 flex gap-4">
+                                <span>ERR_CODE: 0xJSJS</span>
+                                <span>SEC_LVL: GANS_UNLIMITED</span>
+                            </div>
+                        </motion.div>
+                    ) : (
+                        <motion.div
+                            key="core-reveal"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            className="flex flex-col items-center w-full max-w-5xl"
+                        >
+                            {/* LOGS STREAM */}
+                            <div className="mb-12 h-6 overflow-hidden">
+                                <motion.div
+                                    key={logIndex}
                                     initial={{ y: 20, opacity: 0 }}
                                     animate={{ y: 0, opacity: 1 }}
-                                    transition={{ delay: 0.5 }}
-                                    className="text-foreground/60 font-outfit tracking-[0.2em] text-xs uppercase group-hover:text-primary transition-colors duration-300"
+                                    exit={{ y: -20, opacity: 0 }}
+                                    className="text-primary font-mono text-[10px] md:text-xs tracking-[0.5em] text-center"
                                 >
-                                    Press to Play
-                                </motion.span>
+                                    {">"} {GLITCH_LOGS[logIndex]}
+                                </motion.div>
                             </div>
-                        </button>
-                    </motion.div>
-                ) : (
-                    <motion.div
-                        key="loading-sequence"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        className="relative z-10 flex flex-col items-center w-full"
-                    >
-                        {/* Animated Text */}
-                        <div className={`mb-8 flex items-center justify-center w-full ${!isFinished ? "overflow-hidden h-[80px] md:h-[120px]" : "h-auto py-10"}`}>
-                            <AnimatePresence mode="wait">
-                                {!isFinished ? (
-                                    <motion.div
-                                        key={Math.min(Math.floor(counter / 25), words.length - 1)}
-                                        initial={{ opacity: 0 }}
-                                        animate={{
-                                            opacity: [0, 1, 0.8, 1],
-                                            x: [0, -3, 3, -1, 0],
-                                        }}
-                                        exit={{
-                                            opacity: 0,
-                                            x: 5
-                                        }}
-                                        transition={{ duration: 0.4 }}
-                                        style={{ willChange: "transform, opacity" }}
-                                        className="text-4xl md:text-6xl font-black font-outfit tracking-[0.2em] text-foreground relative px-4 text-center"
-                                    >
-                                        <span className="relative z-10">
-                                            {words[Math.min(Math.floor(counter / 25), words.length - 1)]}
-                                        </span>
-                                        {/* Glitch Layers */}
-                                        <motion.span
-                                            animate={{
-                                                x: [-2, 2, -2],
-                                                opacity: [0, 0.4, 0],
-                                            }}
-                                            transition={{ duration: 0.2, repeat: Infinity }}
-                                            className="absolute inset-0 text-[#00fff2] z-0 translate-x-1"
-                                        >
-                                            {words[Math.min(Math.floor(counter / 25), words.length - 1)]}
-                                        </motion.span>
-                                        <motion.span
-                                            animate={{
-                                                x: [2, -2, 2],
-                                                opacity: [0, 0.4, 0],
-                                            }}
-                                            transition={{ duration: 0.2, repeat: Infinity, delay: 0.1 }}
-                                            className="absolute inset-0 text-[#ff00c1] z-0 -translate-x-1"
-                                        >
-                                            {words[Math.min(Math.floor(counter / 25), words.length - 1)]}
-                                        </motion.span>
-                                    </motion.div>
-                                ) : (
-                                    <motion.div
-                                        initial={{ scale: 0.8, opacity: 0 }}
-                                        animate={{ scale: 1, opacity: 1 }}
-                                        transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
-                                        style={{ willChange: "transform, opacity" }}
-                                        className="text-7xl md:text-9xl lg:text-[12rem] font-black font-outfit tracking-tighter text-foreground text-center leading-none"
-                                    >
-                                        Gansputra
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
-                        </div>
 
-                        {!isFinished && (
-                            <div className="flex flex-col items-center">
-                                {/* Loading Bar Container */}
-                                <div className="w-[180px] md:w-[300px] h-[1px] bg-white/5 relative overflow-hidden rounded-full">
-                                    <motion.div
-                                        initial={{ width: 0 }}
-                                        animate={{ width: `${counter}%` }}
-                                        transition={{ ease: "linear" }}
-                                        className="h-full bg-primary"
-                                    />
-                                </div>
-
-                                {/* Counter */}
-                                <div className="mt-6 flex flex-col items-center gap-2">
-                                    <div className="flex items-center gap-3">
-                                        <motion.div
-                                            animate={{ opacity: [0.2, 1, 0.2] }}
-                                            transition={{ duration: 1.5, repeat: Infinity }}
-                                            className="w-1 h-1 rounded-full bg-primary"
-                                        />
-                                        <span className="font-mono text-[9px] tracking-[0.3em] text-foreground/20 uppercase">
-                                            Loading {counter}%
-                                        </span>
-                                    </div>
-                                </div>
+                            <div className="relative">
+                                {/* Chromatic Aberration Layers */}
+                                <motion.h1
+                                    animate={{
+                                        x: [-1, 1, -1],
+                                        opacity: [0.8, 1, 0.9]
+                                    }}
+                                    transition={{ duration: 0.1, repeat: Infinity }}
+                                    className="text-white font-black text-5xl md:text-9xl lg:text-[12rem] tracking-tighter uppercase leading-none mix-blend-screen relative z-10"
+                                >
+                                    GANSPUTRA
+                                </motion.h1>
+                                <motion.h1
+                                    animate={{
+                                        x: [2, -2, 2],
+                                        y: [1, -1, 1],
+                                    }}
+                                    transition={{ duration: 0.05, repeat: Infinity }}
+                                    className="absolute inset-0 text-primary font-black text-5xl md:text-9xl lg:text-[12rem] tracking-tighter uppercase leading-none opacity-40 -z-10"
+                                >
+                                    GANSPUTRA
+                                </motion.h1>
+                                <motion.h1
+                                    animate={{
+                                        x: [-3, 3, -2],
+                                        y: [-2, 2, -1],
+                                    }}
+                                    transition={{ duration: 0.08, repeat: Infinity, delay: 0.02 }}
+                                    className="absolute inset-0 text-[#00fff2] font-black text-5xl md:text-9xl lg:text-[12rem] tracking-tighter uppercase leading-none opacity-40 -z-10"
+                                >
+                                    GANSPUTRA
+                                </motion.h1>
                             </div>
-                        )}
-                    </motion.div>
+
+                            <motion.div
+                                animate={{ opacity: [0, 1, 0.5, 1] }}
+                                transition={{ duration: 0.3, repeat: Infinity, repeatDelay: 1 }}
+                                className="mt-8 px-6 py-2 border border-primary/40 bg-primary/5 backdrop-blur-sm"
+                            >
+                                <p className="text-primary font-mono text-[9px] md:text-xs tracking-widest uppercase italic">
+                                    Identity Verification: SUCCESSFUL
+                                </p>
+                            </motion.div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            </div>
+
+            {/* Random Glitch Blocks */}
+            <AnimatePresence>
+                {isStarted && (
+                    <>
+                        <motion.div
+                            animate={{
+                                top: ["10%", "80%", "30%"],
+                                left: ["5%", "60%", "10%"],
+                                width: [50, 200, 100],
+                                height: [10, 5, 20],
+                                opacity: [0, 0.2, 0]
+                            }}
+                            transition={{ duration: 0.5, repeat: Infinity }}
+                            className="fixed bg-white z-[60]"
+                        />
+                        <motion.div
+                            animate={{
+                                bottom: ["20%", "70%", "40%"],
+                                right: ["10%", "50%", "20%"],
+                                width: [100, 40, 150],
+                                height: [2, 10, 4],
+                                opacity: [0, 0.3, 0]
+                            }}
+                            transition={{ duration: 0.7, repeat: Infinity, delay: 0.2 }}
+                            className="fixed bg-primary z-[60]"
+                        />
+                    </>
                 )}
             </AnimatePresence>
-
-            {/* Background Grain/Noise - Simplified */}
-            <div className="absolute inset-0 opacity-[0.015] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
-
-            {/* Decorative Lines - Optimized with scaleY */}
-            <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                {[...Array(5)].map((_, i) => (
-                    <motion.div
-                        key={i}
-                        initial={{ scaleY: 0, opacity: 0 }}
-                        animate={{ scaleY: 1, opacity: isStarted ? 0.03 : 0.01 }}
-                        transition={{ duration: 1.5, delay: i * 0.1 }}
-                        style={{
-                            originY: 0,
-                            willChange: "transform, opacity",
-                            left: `${(i + 1) * 20}%`
-                        }}
-                        className="absolute top-0 w-[1px] h-full bg-foreground"
-                    />
-                ))}
-            </div>
         </motion.div>
     );
 };
