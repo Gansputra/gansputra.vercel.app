@@ -51,7 +51,7 @@ export const HeroSection = () => {
             >
                 <motion.h2
                     variants={itemVariants}
-                    className="text-secondary font-medium tracking-[0.4em] uppercase text-[10px] md:text-xs mb-8 opacity-70"
+                    className="text-secondary font-medium tracking-[0.2em] uppercase text-[15px] md:text-xs mb-8 opacity-90"
                 >
                     Creative Developer & Editor
                 </motion.h2>

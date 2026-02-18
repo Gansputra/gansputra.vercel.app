@@ -99,12 +99,23 @@ const BasicGridGlobe = () => {
     );
 };
 
+import { motion } from "framer-motion";
+
 export const HeroGlobe = () => {
     const { theme: uiTheme } = useTheme();
     const isDark = uiTheme === "dark";
 
     return (
-        <div className="w-full h-full absolute inset-0 z-0">
+        <motion.div
+            initial={{ y: 100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{
+                duration: 1.2,
+                delay: 0.2,
+                ease: [0.23, 1, 0.32, 1]
+            }}
+            className="w-full h-full absolute inset-0 z-0"
+        >
             <Canvas dpr={[1, 2]}>
                 <PerspectiveCamera makeDefault position={[0, 0, 25]} fov={50} />
                 <BasicGridGlobe />
@@ -113,6 +124,6 @@ export const HeroGlobe = () => {
 
             <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-background via-background/50 to-transparent pointer-events-none" />
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom,transparent_20%,var(--background)_90%)] pointer-events-none" />
-        </div>
+        </motion.div>
     );
 };
