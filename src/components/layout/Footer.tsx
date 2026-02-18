@@ -21,7 +21,7 @@ export const Footer = () => {
                     <h4 className="font-semibold text-foreground uppercase text-xs tracking-widest">Connect</h4>
                     <div className="flex gap-4">
                         {socialLinks.map((link) => {
-                            const IconComp = Icons[link.iconName as keyof typeof Icons] as React.ElementType;
+                            const IconComp = Icons[link.iconName as keyof typeof Icons] as React.ComponentType<{ size?: number }>;
                             return (
                                 <a
                                     key={link.platform}
