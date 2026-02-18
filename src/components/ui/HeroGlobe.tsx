@@ -8,7 +8,7 @@ import { useMusicTheme } from "@/context/MusicThemeContext";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useTheme } from "next-themes";
 
-const BasicGridGlobe = () => {
+const BasicGridGlobe = ({ isHeroActive }: { isHeroActive: boolean }) => {
     const { theme: musicTheme, analyzer } = useMusicTheme();
     const { theme: uiTheme } = useTheme();
     const meshRef = useRef<THREE.Mesh>(null);
@@ -19,6 +19,9 @@ const BasicGridGlobe = () => {
     const isMobile = useMediaQuery("(max-width: 1024px)");
     const isDark = uiTheme === "dark";
 
+    // Reusable objects for performance
+    const targetScaleVec = useMemo(() => new THREE.Vector3(), []);
+
     // Audio data buffer
     const dataArray = useMemo(() => analyzer ? new Uint8Array(analyzer.frequencyBinCount) : null, [analyzer]);
 
@@ -27,34 +30,39 @@ const BasicGridGlobe = () => {
     }, []);
 
     useFrame((state, delta) => {
+        // PERFORMANCE: If not in hero, only do basic rotation, skip expensive audio visual crunching
+        if (!isHeroActive) {
+            if (meshRef.current) {
+                meshRef.current.rotation.y += delta * 0.08;
+            }
+            return;
+        }
+
         let bass = 0;
         if (analyzer && dataArray) {
             analyzer.getByteFrequencyData(dataArray);
             // Average of first few bins (bass)
             const bassBins = dataArray.slice(0, 10);
-            bass = bassBins.reduce((a: number, b: number) => a + b, 0) / bassBins.length;
+            bass = bassBins.reduce((a: number, b: number = 0) => a + b, 0) / bassBins.length;
         }
 
         const normalizedBass = bass / 255; // 0 to 1
 
         if (meshRef.current) {
-            // Pulsing scale based on bass
             const targetScale = 1 + normalizedBass * 0.15;
-            meshRef.current.scale.lerp(new THREE.Vector3(targetScale, targetScale, targetScale), 0.1);
+            targetScaleVec.set(targetScale, targetScale, targetScale);
+            meshRef.current.scale.lerp(targetScaleVec, 0.1);
 
-            // Faster rotation when bass is high
             const rotationSpeed = 0.08 + normalizedBass * 0.4;
             meshRef.current.rotation.y += delta * rotationSpeed;
         }
 
         if (lightRef.current) {
-            // Glowing intensity based on bass
             const baseIntensity = isDark ? 10 : 2;
             lightRef.current.intensity = baseIntensity + normalizedBass * 50;
         }
 
         if (materialRef.current) {
-            // Subtle opacity pulse
             const baseOpacity = isDark ? 0.3 : 0.6;
             materialRef.current.opacity = baseOpacity + normalizedBass * 0.4;
         }
@@ -101,7 +109,7 @@ const BasicGridGlobe = () => {
 
 import { motion } from "framer-motion";
 
-export const HeroGlobe = () => {
+export const HeroGlobe = ({ isHeroActive = true }: { isHeroActive?: boolean }) => {
     const { theme: uiTheme } = useTheme();
     const isDark = uiTheme === "dark";
 
@@ -118,7 +126,7 @@ export const HeroGlobe = () => {
         >
             <Canvas dpr={[1, 2]}>
                 <PerspectiveCamera makeDefault position={[0, 0, 25]} fov={50} />
-                <BasicGridGlobe />
+                <BasicGridGlobe isHeroActive={isHeroActive} />
                 {isDark && <Stars radius={150} depth={50} count={1500} factor={4} saturation={0} fade speed={1} />}
             </Canvas>
 

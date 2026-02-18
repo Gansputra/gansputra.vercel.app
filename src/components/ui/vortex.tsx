@@ -84,13 +84,23 @@ export const Vortex = ({ children, className, containerClassName, ...props }: Cy
 
         const draw = () => {
             if (!ctx || !canvas) return;
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            const isDark = themeRef.current === "dark";
-            const isTransparent = propsRef.current.backgroundColor === "transparent";
+            // PERFORMANCE: Pause animation when tab is inactive
+            if (document.hidden) {
+                animationFrameId = requestAnimationFrame(draw);
+                return;
+            }
+
+            const now = Date.now();
+            const currentTheme = themeRef.current;
+            const currentProps = propsRef.current;
+            const isDark = currentTheme === "dark";
+            const isTransparent = currentProps.backgroundColor === "transparent";
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
             auroraTime.current += 0.005;
 
-            // Draw a global background gradient for depth - Only if NOT transparent
+            // PERFORMANCE: Draw background once per frame
             if (!isTransparent) {
                 if (isDark) {
                     const bgGradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
@@ -100,20 +110,20 @@ export const Vortex = ({ children, className, containerClassName, ...props }: Cy
                     ctx.fillStyle = bgGradient;
                     ctx.fillRect(0, 0, canvas.width, canvas.height);
                 } else {
-                    // Option B: Liquid Aurora for Light Mode
                     ctx.fillStyle = "#ffffff";
                     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-                    const aurora1X = canvas.width * (0.5 + Math.cos(auroraTime.current) * 0.2);
-                    const aurora1Y = canvas.height * (0.3 + Math.sin(auroraTime.current * 0.8) * 0.1);
+                    const at = auroraTime.current;
+                    const aurora1X = canvas.width * (0.5 + Math.cos(at) * 0.2);
+                    const aurora1Y = canvas.height * (0.3 + Math.sin(at * 0.8) * 0.1);
                     const g1 = ctx.createRadialGradient(aurora1X, aurora1Y, 0, aurora1X, aurora1Y, canvas.width * 0.6);
                     g1.addColorStop(0, "rgba(0, 191, 207, 0.08)");
                     g1.addColorStop(1, "rgba(255, 255, 255, 0)");
                     ctx.fillStyle = g1;
                     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-                    const aurora2X = canvas.width * (0.3 + Math.sin(auroraTime.current * 0.5) * 0.2);
-                    const aurora2Y = canvas.height * (0.6 + Math.cos(auroraTime.current * 0.7) * 0.1);
+                    const aurora2X = canvas.width * (0.3 + Math.sin(at * 0.5) * 0.2);
+                    const aurora2Y = canvas.height * (0.6 + Math.cos(at * 0.7) * 0.1);
                     const g2 = ctx.createRadialGradient(aurora2X, aurora2Y, 0, aurora2X, aurora2Y, canvas.width * 0.5);
                     g2.addColorStop(0, "rgba(168, 85, 247, 0.05)");
                     g2.addColorStop(1, "rgba(255, 255, 255, 0)");
@@ -122,15 +132,14 @@ export const Vortex = ({ children, className, containerClassName, ...props }: Cy
                 }
             }
 
-            const bgColorCenter = isDark ? "#050505" : "#fafafa";
-            const bgAlpha = isDark ? "rgba(5, 5, 5, 0)" : "rgba(250, 250, 250, 0)";
-            const primaryColor = "rgba(0, 191, 207, 1)";
-
             const horizon = canvas.height * 0.45;
 
-            // Draw Ethereal Dust (Option A) in Light Mode
-            if (!isDark && propsRef.current.showDust) {
-                dustParticles.current.forEach(p => {
+            // PERFORMANCE: Use classic for-loops for better performance in physics loops
+            if (!isDark && currentProps.showDust) {
+                const particles = dustParticles.current;
+                const pLen = particles.length;
+                for (let i = 0; i < pLen; i++) {
+                    const p = particles[i];
                     p.y += p.vy;
                     p.x += p.vx;
                     if (p.y < -10) p.y = canvas.height + 10;
@@ -141,33 +150,33 @@ export const Vortex = ({ children, className, containerClassName, ...props }: Cy
                     ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
                     ctx.fillStyle = `rgba(0, 191, 207, ${p.opacity * 0.4})`;
                     ctx.fill();
-                });
+                }
             }
 
-            // Draw and Update Stars (Parallax Drift)
-            stars.forEach(star => {
-                // Update position
-                star.y += star.speed;
-                // Periodic horizontal drift
-                star.x += Math.sin(Date.now() * 0.0005 + star.burst) * 0.05;
+            if (isDark) {
+                const starArr = stars;
+                const sLen = starArr.length;
+                const starTime = now * 0.0005;
+                const flickerTime = now * 0.001;
 
-                // Reset star if it goes too low (near horizon)
-                if (star.y > horizon) {
-                    star.y = -10;
-                    star.x = Math.random() * canvas.width;
-                }
+                for (let i = 0; i < sLen; i++) {
+                    const star = starArr[i];
+                    star.y += star.speed;
+                    star.x += Math.sin(starTime + star.burst) * 0.05;
 
-                const flicker = Math.sin(Date.now() * 0.001 + star.burst) * 0.3 + 0.7;
-                ctx.beginPath();
-                // ONLY stars in dark mode
-                if (isDark) {
+                    if (star.y > horizon) {
+                        star.y = -10;
+                        star.x = Math.random() * canvas.width;
+                    }
+
+                    const flicker = Math.sin(flickerTime + star.burst) * 0.3 + 0.7;
+                    ctx.beginPath();
                     ctx.fillStyle = `rgba(255, 255, 255, ${flicker * 0.4})`;
                     ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
                     ctx.fill();
                 }
-            });
+            }
 
-            // Add a subtle atmospheric nebula/glow at the horizon
             const nebula = ctx.createRadialGradient(
                 canvas.width / 2, horizon, 0,
                 canvas.width / 2, horizon, canvas.width * 0.8
@@ -183,10 +192,6 @@ export const Vortex = ({ children, className, containerClassName, ...props }: Cy
 
             ctx.fillStyle = nebula;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            const gridSpacing = 40;
-            offset += isDark ? 0.8 : 0.4; // Slower movement in light mode for "calm" feel
-            if (offset >= gridSpacing) offset = 0;
 
             animationFrameId = requestAnimationFrame(draw);
         };

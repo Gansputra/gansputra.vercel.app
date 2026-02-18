@@ -34,7 +34,7 @@ export default function Home() {
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
         {/* The 3D Universe Stack */}
         <div className="absolute inset-0 z-[-1]">
-          <HeroGlobe />
+          <HeroGlobe isHeroActive={activeSection === 'hero'} />
         </div>
 
         {/* Section-specific background dimming */}
