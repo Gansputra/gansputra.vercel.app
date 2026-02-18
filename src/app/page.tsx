@@ -11,6 +11,8 @@ import { AboutSection } from "@/components/sections/AboutSection";
 import { ContactSection } from "@/components/sections/ContactSection";
 
 import { Vortex } from "@/components/ui/vortex";
+import { HeroGlobe } from "@/components/ui/HeroGlobe";
+import { cn } from "@/lib/utils";
 
 const sectionComponents: Record<string, React.ReactNode> = {
   hero: <HeroSection />,
@@ -29,16 +31,28 @@ export default function Home() {
     <div className="relative h-screen w-full overflow-hidden bg-background">
       <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-secondary/10 opacity-0 dark:opacity-100 transition-opacity duration-500" />
 
-      <div className="absolute inset-0 z-0">
+      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+        {/* The 3D Universe Stack */}
+        <div className="absolute inset-0 z-[-1]">
+          <HeroGlobe />
+        </div>
+
+        {/* Section-specific background dimming */}
+        <div
+          className={cn(
+            "absolute inset-0 z-0 transition-all duration-1000 ease-in-out",
+            activeSection === 'hero' ? "opacity-0" : "bg-background/60 backdrop-blur-[2px]"
+          )}
+        />
+
+        {/* Vortex Particles Overlay */}
         <Vortex
           backgroundColor="transparent"
-          rangeY={200}
           particleCount={400}
           baseHue={theme.baseHue}
           rangeHue={theme.rangeHue}
           showDust={true}
-          showGrid={activeSection !== 'hero'}
-          containerClassName="h-full w-full"
+          containerClassName="absolute inset-0 z-10"
         />
       </div>
 

@@ -9,7 +9,6 @@ import { Button as MovingBorderButton } from "@/components/ui/moving-border";
 import { cn } from "@/lib/utils";
 
 import { useTheme } from "next-themes";
-import { HeroGlobe } from "@/components/ui/HeroGlobe";
 
 export const HeroSection = () => {
     const { theme } = useTheme();
@@ -44,8 +43,6 @@ export const HeroSection = () => {
 
     return (
         <div className="h-screen w-full flex flex-col items-center justify-center pt-20 relative overflow-hidden">
-            <HeroGlobe />
-
             <motion.div
                 className="relative z-10 text-center px-6 mt-12 md:mt-0 pointer-events-none"
                 variants={containerVariants}

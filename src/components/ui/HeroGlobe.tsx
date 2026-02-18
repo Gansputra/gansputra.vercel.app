@@ -63,8 +63,8 @@ const BasicGridGlobe = () => {
     const initialRotationY = -(113.92 * Math.PI / 180) - Math.PI / 2;
     const initialRotationX = (15 * Math.PI / 180);
 
-    const radius = mounted ? (isMobile ? 4 : 12) : 4;
-    const positionY = mounted ? (isMobile ? -3.5 : -11.5) : -3.5;
+    const radius = mounted ? (isMobile ? 5 : 25) : 5;
+    const positionY = mounted ? (isMobile ? -4 : -22) : -4;
 
     const gridColor = isDark ? musicTheme.color : "#333333";
     const markerColor = musicTheme.color;
@@ -106,7 +106,7 @@ export const HeroGlobe = () => {
     return (
         <div className="w-full h-full absolute inset-0 z-0">
             <Canvas dpr={[1, 2]}>
-                <PerspectiveCamera makeDefault position={[0, 0, 7.5]} fov={50} />
+                <PerspectiveCamera makeDefault position={[0, 0, 25]} fov={50} />
                 <BasicGridGlobe />
                 {isDark && <Stars radius={150} depth={50} count={1500} factor={4} saturation={0} fade speed={1} />}
             </Canvas>

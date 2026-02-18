@@ -369,95 +369,110 @@ export const ProjectShowcase = () => {
             <Modal
                 isOpen={!!selectedProject}
                 onClose={() => setSelectedProject(null)}
-                className="max-w-[90vw] md:max-w-6xl h-[80vh] bg-background/95 border border-border overflow-hidden shadow-[0_0_100px_rgba(0,0,0,0.8)] rounded-3xl p-0"
+                className="max-w-[95vw] md:max-w-6xl h-[85vh] bg-background border border-border overflow-hidden shadow-2xl rounded-[2rem] md:rounded-[3rem] p-0"
             >
                 {selectedProject && (
-                    <div className="relative w-full h-full group">
-                        {/* Edge-to-Edge Image Container */}
-                        <div className="absolute inset-0 w-full h-full bg-black">
-                            <AnimatePresence mode="wait">
-                                <motion.img
+                    <div className="relative w-full h-full group flex flex-col">
+                        {/* Image Showcase Container */}
+                        <div className="relative flex-1 bg-muted overflow-hidden">
+                            <AnimatePresence mode="popLayout" initial={false} custom={currentIndex}>
+                                <motion.div
                                     key={currentIndex}
-                                    src={images[currentIndex]}
-                                    alt={`${selectedProject.title} preview ${currentIndex + 1}`}
-                                    initial={{ opacity: 0, scale: 1.1 }}
-                                    animate={{ opacity: 1, scale: 1 }}
-                                    exit={{ opacity: 0, scale: 0.9 }}
-                                    transition={{ duration: 0.7 }}
-                                    className="w-full h-full object-cover object-top"
-                                />
+                                    initial={{ x: "100%", opacity: 0 }}
+                                    animate={{ x: 0, opacity: 1 }}
+                                    exit={{ x: "-100%", opacity: 0 }}
+                                    transition={{
+                                        type: "spring",
+                                        stiffness: 300,
+                                        damping: 30,
+                                        opacity: { duration: 0.4 }
+                                    }}
+                                    className="absolute inset-0 w-full h-full"
+                                >
+                                    <img
+                                        src={images[currentIndex]}
+                                        alt={`${selectedProject.title} preview ${currentIndex + 1}`}
+                                        className="w-full h-full object-contain md:object-cover bg-black/5"
+                                    />
+                                </motion.div>
                             </AnimatePresence>
 
-                            {/* Modern Gradient Overlays for Readability */}
-                            <div className="absolute inset-x-0 top-0 h-48 bg-gradient-to-b from-background/80 via-background/40 to-transparent z-10" />
-                            <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-background/60 to-transparent z-10" />
+                            {/* Navigational Overlays (Faint Gradients) */}
+                            <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-background/20 to-transparent pointer-events-none z-10" />
+                            <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-background/20 to-transparent pointer-events-none z-10" />
+
+                            {/* Navigation Arrows */}
+                            {images.length > 1 && (
+                                <>
+                                    <button
+                                        onClick={(e) => { e.stopPropagation(); handlePrev(); }}
+                                        className="absolute left-4 top-1/2 -translate-y-1/2 p-4 rounded-full bg-background/50 hover:bg-primary hover:text-primary-foreground border border-border backdrop-blur-md z-30 transition-all shadow-xl group-hover:scale-110 active:scale-95 text-foreground"
+                                    >
+                                        <ChevronLeft size={24} />
+                                    </button>
+                                    <button
+                                        onClick={(e) => { e.stopPropagation(); handleNext(); }}
+                                        className="absolute right-4 top-1/2 -translate-y-1/2 p-4 rounded-full bg-background/50 hover:bg-primary hover:text-primary-foreground border border-border backdrop-blur-md z-30 transition-all shadow-xl group-hover:scale-110 active:scale-95 text-foreground"
+                                    >
+                                        <ChevronRight size={24} />
+                                    </button>
+                                </>
+                            )}
                         </div>
 
-                        {/* Floating Glass Info Header */}
-                        <motion.div
-                            className="absolute top-4 left-4 right-4 md:top-8 md:left-10 md:right-10 z-20"
-                        >
-                            <div className="glass-morphism border border-border p-5 md:p-8 rounded-[1.5rem] md:rounded-[2.5rem] flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 md:gap-8 backdrop-blur-3xl bg-card shadow-2xl">
-                                <div className="flex-1 min-w-0">
-                                    <div className="flex items-center gap-3 md:gap-5 mb-2">
-                                        <h3 className="text-xl md:text-3xl lg:text-4xl font-black text-foreground tracking-tighter uppercase italic leading-tight truncate md:whitespace-normal md:overflow-visible">
+                        {/* Flat Premium Info Section (Bottom Attached) */}
+                        <div className="bg-background border-t border-border p-6 md:p-10 relative z-20">
+                            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                                <div className="space-y-3 flex-1">
+                                    <div className="flex items-center gap-4">
+                                        <h3 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground uppercase italic">
                                             {selectedProject.title}
                                         </h3>
-                                        <motion.a
-                                            whileHover={{ scale: 1.1 }}
-                                            whileTap={{ scale: 0.9 }}
-                                            href={selectedProject.repoLink}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="w-9 h-9 md:w-11 md:h-11 flex items-center justify-center bg-primary/10 hover:bg-primary border border-primary/20 text-primary hover:text-black rounded-full transition-all shrink-0 shadow-lg shadow-black/20"
-                                        >
-                                            <Github size={18} />
-                                        </motion.a>
+                                        <div className="flex gap-2">
+                                            {selectedProject.repoLink && (
+                                                <motion.a
+                                                    whileHover={{ scale: 1.1, y: -2 }}
+                                                    whileTap={{ scale: 0.9 }}
+                                                    href={selectedProject.repoLink}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="w-10 h-10 flex items-center justify-center rounded-full bg-muted border border-border hover:border-primary/50 text-foreground transition-colors"
+                                                >
+                                                    <Github size={18} />
+                                                </motion.a>
+                                            )}
+                                        </div>
                                     </div>
-                                    <p className="text-foreground/60 text-xs md:text-sm lg:text-base max-w-2xl line-clamp-2 md:line-clamp-none font-medium leading-relaxed">
+                                    <p className="text-muted-foreground text-sm md:text-base max-w-3xl leading-relaxed">
                                         {selectedProject.description}
                                     </p>
                                 </div>
 
-                                <div className="flex flex-wrap gap-1.5 md:gap-2 lg:justify-end shrink-0 max-w-full lg:max-w-[300px]">
+                                <div className="flex flex-wrap gap-2 md:justify-end shrink-0">
                                     {selectedProject.stack.map(tech => (
-                                        <Badge key={tech} variant="primary" className="bg-primary/5 border-primary/20 text-[9px] md:text-[10px] px-2 py-0.5 whitespace-nowrap">
+                                        <Badge key={tech} variant="outline" className="bg-primary/5 border-primary/20 text-primary uppercase text-[10px] font-bold px-3 py-1">
                                             {tech}
                                         </Badge>
                                     ))}
                                 </div>
                             </div>
-                        </motion.div>
 
-                        {/* Immersive Controls */}
-                        {images.length > 1 && (
-                            <>
-                                <button
-                                    onClick={(e) => { e.stopPropagation(); handlePrev(); }}
-                                    className="absolute left-6 top-1/2 -translate-y-1/2 p-4 rounded-full bg-white/5 hover:bg-primary hover:text-black transition-all border border-white/10 backdrop-blur-xl z-30 opacity-0 group-hover:opacity-100 ring-4 ring-black/20"
-                                >
-                                    <ChevronLeft size={32} />
-                                </button>
-                                <button
-                                    onClick={(e) => { e.stopPropagation(); handleNext(); }}
-                                    className="absolute right-6 top-1/2 -translate-y-1/2 p-4 rounded-full bg-white/5 hover:bg-primary hover:text-black transition-all border border-white/10 backdrop-blur-xl z-30 opacity-0 group-hover:opacity-100 ring-4 ring-black/20"
-                                >
-                                    <ChevronRight size={32} />
-                                </button>
-
-                                {/* Dot Indicators at Bottom */}
-                                <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3 z-30 px-6 py-3 bg-card/40 backdrop-blur-md rounded-full border border-border">
+                            {/* Progress Dots (Inside Info Section for Better Layout) */}
+                            {images.length > 1 && (
+                                <div className="flex justify-center gap-2 mt-8">
                                     {images.map((_, idx) => (
                                         <button
                                             key={idx}
                                             onClick={(e) => { e.stopPropagation(); setCurrentIndex(idx); }}
-                                            className={`h-1.5 rounded-full transition-all duration-500 ${currentIndex === idx ? "bg-primary w-8 shadow-[0_0_10px_rgba(var(--primary),0.8)]" : "bg-foreground/20 w-3 hover:bg-foreground/40"
-                                                }`}
+                                            className={cn(
+                                                "h-1.5 rounded-full transition-all duration-500",
+                                                currentIndex === idx ? "bg-primary w-8" : "bg-muted-foreground/20 w-3 hover:bg-muted-foreground/40"
+                                            )}
                                         />
                                     ))}
                                 </div>
-                            </>
-                        )}
+                            )}
+                        </div>
                     </div>
                 )}
             </Modal>
