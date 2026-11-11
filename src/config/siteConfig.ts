@@ -7,6 +7,7 @@ export const siteConfig = {
     links: {
         github: "https://github.com/gansputra",
         instagram: "https://instagram.com/gans.putra_",
+        whatsapp: "62895425495500",
     },
     keywords: ["Next.js", "React", "Tailwind CSS", "TypeScript", "AMV", "Portfolio"],
 };

@@ -1,75 +1,111 @@
 "use client";
 
+import React, { useEffect } from "react";
 import { useMusicTheme } from "@/context/MusicThemeContext";
 import { useActiveSection } from "@/context/ActiveSectionContext";
-import { AnimatePresence, motion } from "framer-motion";
 import { HeroSection } from "@/components/sections/HeroSection";
 import { AmvShowcase } from "@/components/sections/AmvShowcase";
 import { GfxShowcase } from "@/components/sections/GfxShowcase";
 import { ProjectShowcase } from "@/components/sections/ProjectShowcase";
 import { AboutSection } from "@/components/sections/AboutSection";
 import { ContactSection } from "@/components/sections/ContactSection";
+import { Footer } from "@/components/layout/Footer";
 
 import { Vortex } from "@/components/ui/vortex";
 import { HeroGlobe } from "@/components/ui/HeroGlobe";
 import { cn } from "@/lib/utils";
 
-const sectionComponents: Record<string, React.ReactNode> = {
-  hero: <HeroSection />,
-  amvs: <AmvShowcase />,
-  gfx: <GfxShowcase />,
-  projects: <ProjectShowcase />,
-  about: <AboutSection />,
-  contact: <ContactSection />,
-};
-
 export default function Home() {
-  const { activeSection } = useActiveSection();
+  const { activeSection, setActiveSection } = useActiveSection();
   const { theme } = useMusicTheme();
 
-  return (
-    <div className="relative h-screen w-full overflow-hidden bg-background">
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-secondary/10 opacity-0 dark:opacity-100 transition-opacity duration-500" />
+  // ScrollSpy using IntersectionObserver for continuous vertical scroll
+  useEffect(() => {
+    const sectionIds = ["hero", "amvs", "gfx", "projects", "about", "contact"];
+    const observers: IntersectionObserver[] = [];
 
-      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-        {/* The 3D Universe Stack */}
-        <div className="absolute inset-0 z-[-1]">
-          <HeroGlobe isHeroActive={activeSection === 'hero'} />
+    sectionIds.forEach((id) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              setActiveSection(id);
+            }
+          });
+        },
+        { threshold: 0.25, rootMargin: "-10% 0px -40% 0px" }
+      );
+
+      observer.observe(el);
+      observers.push(observer);
+    });
+
+    return () => {
+      observers.forEach((obs) => obs.disconnect());
+    };
+  }, [setActiveSection]);
+
+  return (
+    <div className="relative min-h-screen w-full bg-background text-foreground overflow-x-hidden selection:bg-primary selection:text-black">
+      {/* Background Layer: 3D Universe + Dynamic Ambient Glow */}
+      <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+        {/* The 3D Universe Stack (high perf: pauses heavy computation when scrolled past hero) */}
+        <div className="absolute inset-0 z-0 opacity-80 transition-opacity duration-1000">
+          <HeroGlobe isHeroActive={activeSection === "hero"} />
         </div>
 
-        {/* Section-specific background dimming */}
+        {/* Ambient Dark Gradient Vignette for Depth */}
         <div
           className={cn(
-            "absolute inset-0 z-0 transition-all duration-1000 ease-in-out",
-            activeSection === 'hero' ? "opacity-0" : "bg-background/60 backdrop-blur-[2px]"
+            "absolute inset-0 z-[1] transition-all duration-1000 ease-in-out pointer-events-none",
+            activeSection === "hero"
+              ? "opacity-30"
+              : "bg-background/80 backdrop-blur-[3px]"
           )}
         />
 
-        {/* Vortex Particles Overlay */}
+        {/* Optimized Vortex Particles Overlay */}
         <Vortex
           backgroundColor="transparent"
-          particleCount={400}
+          particleCount={200}
           baseHue={theme.baseHue}
           rangeHue={theme.rangeHue}
           showDust={true}
-          containerClassName="absolute inset-0 z-10"
+          containerClassName="absolute inset-0 z-[2] opacity-50"
         />
       </div>
 
-      <AnimatePresence mode="wait" initial={false}>
-        <motion.div
-          key={activeSection}
-          initial={{ opacity: 0, x: 20, filter: "blur(20px)" }}
-          animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
-          exit={{ opacity: 0, x: -20, filter: "blur(20px)" }}
-          transition={{ duration: 0.7, ease: [0.23, 1, 0.32, 1] }}
-          className="h-full w-full overflow-y-auto no-scrollbar scroll-smooth relative z-10"
-        >
-          <div className="min-h-full w-full flex flex-col">
-            {sectionComponents[activeSection] || <HeroSection />}
-          </div>
-        </motion.div>
-      </AnimatePresence>
+      {/* Main Content Flow */}
+      <div className="relative z-10 flex flex-col w-full">
+        <section id="hero" className="relative min-h-screen flex items-center justify-center">
+          <HeroSection />
+        </section>
+
+        <section id="amvs" className="relative scroll-mt-24">
+          <AmvShowcase />
+        </section>
+
+        <section id="gfx" className="relative scroll-mt-24">
+          <GfxShowcase />
+        </section>
+
+        <section id="projects" className="relative scroll-mt-24">
+          <ProjectShowcase />
+        </section>
+
+        <section id="about" className="relative scroll-mt-24">
+          <AboutSection />
+        </section>
+
+        <section id="contact" className="relative scroll-mt-24">
+          <ContactSection />
+        </section>
+
+        <Footer />
+      </div>
     </div>
   );
 }

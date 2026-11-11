@@ -6,176 +6,204 @@ import { User, Code, Palette, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export const AboutSection = () => {
-    const skills = [
-        { icon: <Code size={20} />, title: "Fullstack Dev", desc: "Crafting scalable architectures with Next.js & Node." },
-        { icon: <Palette size={20} />, title: "Creative Design", desc: "Blending aesthetics with functional UX patterns." },
-        { icon: <Zap size={20} />, title: "High Performance", desc: "Optimizing for speed and smooth 60FPS motion." },
-    ];
+  const skills = [
+    {
+      icon: <Code size={20} />,
+      title: "Fullstack Architecture",
+      desc: "Engineering high-performance web applications with Next.js, React, TypeScript, and modern backend logic.",
+    },
+    {
+      icon: <Palette size={20} />,
+      title: "Cinematic Motion & AMV",
+      desc: "3+ years of After Effects video storytelling, flow synchronization, complex VFX, and color grading.",
+    },
+    {
+      icon: <Zap size={20} />,
+      title: "Creative Art & Graphic Identity",
+      desc: "Designing bold anime posters, typography, and visual assets tailored for creators and brands.",
+    },
+  ];
 
-    const stats = [
-        { label: "Editing Experience", value: "3+", years: "2023 — 2026", color: "text-primary" },
-        { label: "Coding Journey", value: "1+", years: "2025 — 2026", color: "text-secondary" },
-        { label: "Design Projects", value: "3+", years: "2023 — 2026", color: "text-foreground" },
-    ];
+  const stats = [
+    { label: "AMV & Video Editing", value: "3+ Years", timeline: "2023 — Present", color: "text-primary" },
+    { label: "Software Engineering", value: "1+ Years", timeline: "2025 — Present", color: "text-secondary" },
+    { label: "Digital Art & GFX", value: "3+ Years", timeline: "2023 — Present", color: "text-foreground" },
+  ];
 
-    const [currentStat, setCurrentStat] = useState(0);
+  const [currentStat, setCurrentStat] = useState(0);
 
-    useEffect(() => {
-        const timer = setInterval(() => {
-            setCurrentStat((prev) => (prev + 1) % stats.length);
-        }, 4000);
-        return () => clearInterval(timer);
-    }, []);
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentStat((prev) => (prev + 1) % stats.length);
+    }, 3800);
+    return () => clearInterval(timer);
+  }, [stats.length]);
 
-    const containerVariants: Variants = {
-        hidden: { opacity: 0 },
-        visible: {
-            opacity: 1,
-            transition: {
-                staggerChildren: 0.2,
-                delayChildren: 0.1
-            }
-        }
-    };
+  const containerVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15,
+      },
+    },
+  };
 
-    const itemVariants: Variants = {
-        hidden: { opacity: 0, x: -20 },
-        visible: {
-            opacity: 1,
-            x: 0,
-            transition: { duration: 0.6, ease: "easeOut" }
-        }
-    };
+  const itemVariants: Variants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
+    },
+  };
 
-    return (
-        <div className="py-24 px-6 overflow-hidden">
-            <div className="max-w-7xl mx-auto">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 1, ease: "easeOut" }}
-                        viewport={{ once: true }}
-                        className="relative group p-4"
-                    >
-                        {/* Static Outer Ring */}
-                        <div className="absolute inset-0 bg-gradient-to-tr from-primary via-transparent to-secondary rounded-full opacity-20 group-hover:opacity-40 blur-2xl transition-opacity duration-1000" />
+  return (
+    <div className="py-24 px-6 relative overflow-hidden">
+      <div className="max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          {/* Left: Avatar with Ambient Halo & Floating Badges */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            viewport={{ once: true }}
+            className="relative flex items-center justify-center p-4"
+          >
+            {/* Ambient Multi-Hue Ring */}
+            <div className="absolute inset-4 bg-gradient-to-tr from-primary/30 via-secondary/20 to-primary/10 rounded-full blur-3xl opacity-70 animate-pulse pointer-events-none" />
 
-                        <div className="aspect-square rounded-full overflow-hidden glass-morphism p-2 flex items-center justify-center relative border border-border z-10 backdrop-blur-3xl shadow-2xl">
-                            <div className="w-full h-full rounded-full flex items-center justify-center overflow-hidden relative bg-card/80">
-                                <motion.img
-                                    src="/profile.png"
-                                    alt="Profile"
-                                    whileHover={{ scale: 1.05 }}
-                                    className="w-full h-full object-cover md:grayscale md:group-hover:grayscale-0 transition-all duration-1000 scale-110 relative z-10"
-                                    onLoad={(e) => {
-                                        const target = e.currentTarget as HTMLImageElement;
-                                        target.parentElement?.querySelector('.placeholder-bg')?.classList.add('opacity-0');
-                                    }}
-                                />
-                                <div className="placeholder-bg absolute inset-0 flex items-center justify-center bg-gradient-to-br from-primary/10 to-secondary/10 transition-opacity duration-700">
-                                    <User size={120} className="text-foreground/5 animate-pulse" />
-                                </div>
-                            </div>
-                        </div>
+            <div className="relative w-full max-w-[380px] sm:max-w-[420px] aspect-square rounded-full p-3 bg-card/60 backdrop-blur-2xl border border-border/80 shadow-2xl flex items-center justify-center">
+              <div className="w-full h-full rounded-full overflow-hidden relative bg-black/40 border border-white/10 group">
+                <motion.img
+                  src="/profile.png"
+                  alt="Gansputra Profile"
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ duration: 0.6 }}
+                  className="w-full h-full object-cover scale-105"
+                />
+              </div>
 
-                        {/* Floating Tech Elements */}
-                        <motion.div
-                            animate={{ y: [0, -10, 0] }}
-                            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                            className="absolute -top-4 right-10 p-4 bg-card/80 backdrop-blur-xl rounded-2xl border border-border shadow-neon z-20 hidden md:block"
-                        >
-                            <Code className="text-primary" size={24} />
-                        </motion.div>
-                        <motion.div
-                            animate={{ y: [0, 10, 0] }}
-                            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                            className="absolute -bottom-4 left-10 p-4 bg-card/80 backdrop-blur-xl rounded-2xl border border-border shadow-neon z-20 hidden md:block"
-                        >
-                            <Palette className="text-secondary" size={24} />
-                        </motion.div>
-                    </motion.div>
+              {/* Floating Code Badge */}
+              <motion.div
+                animate={{ y: [0, -8, 0] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute -top-3 right-6 px-4 py-2 bg-card/90 backdrop-blur-xl rounded-2xl border border-border shadow-neon flex items-center gap-2"
+              >
+                <Code className="text-primary" size={18} />
+                <span className="text-xs font-mono font-bold uppercase tracking-wider text-foreground">Developer</span>
+              </motion.div>
 
-                    <motion.div
-                        variants={containerVariants}
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true, amount: 0.3 }}
-                    >
-                        <motion.h2 variants={itemVariants} className="text-4xl md:text-5xl font-bold text-foreground mb-6 tracking-tight">
-                            Behind the Lens <br />& the Code
-                        </motion.h2>
-                        <motion.p variants={itemVariants} className="text-foreground/60 text-lg mb-8 leading-relaxed max-w-xl">
-                            I'm Gansputra, a multidisciplinary creative bridging the gap between
-                            backend logic and cinematic visuals. My journey started with a passion
-                            for storytelling through video editing, which evolved into a career
-                            building complex web applications.
-                        </motion.p>
-
-                        {/* Experience Stats Carousel */}
-                        <motion.div
-                            variants={itemVariants}
-                            className="mb-12 flex items-center gap-6 px-8 py-6 glass-morphism rounded-3xl border border-border relative overflow-hidden group/stats shadow-xl"
-                        >
-                            <div className={cn(
-                                "absolute top-0 left-0 w-1 h-full transition-colors duration-700",
-                                stats[currentStat].color.replace('text-', 'bg-')
-                            )} />
-
-                            <div className="w-14 h-14 rounded-2xl bg-muted flex items-center justify-center text-primary group-hover/stats:scale-110 transition-transform duration-500">
-                                <Zap size={24} />
-                            </div>
-
-                            <div className="flex-1">
-                                <AnimatePresence mode="wait">
-                                    <motion.div
-                                        key={currentStat}
-                                        initial={{ opacity: 0, x: 20 }}
-                                        animate={{ opacity: 1, x: 0 }}
-                                        exit={{ opacity: 0, x: -20 }}
-                                        transition={{ duration: 0.5, ease: "easeInOut" }}
-                                        className="flex flex-col md:flex-row md:items-center justify-between gap-4"
-                                    >
-                                        <div className="flex items-center gap-4">
-                                            <span className={cn("text-4xl font-black tracking-tighter", stats[currentStat].color)}>
-                                                {stats[currentStat].value}
-                                            </span>
-                                            <div className="h-8 w-[1px] bg-border hidden md:block" />
-                                            <span className="text-foreground font-bold uppercase tracking-widest text-xs leading-tight">
-                                                {stats[currentStat].label}
-                                            </span>
-                                        </div>
-
-                                        <div className="flex flex-col md:items-end">
-                                            <span className="text-foreground/40 text-[10px] font-bold uppercase tracking-[0.2em]">Timeline</span>
-                                            <span className="text-foreground/80 font-mono text-sm">{stats[currentStat].years}</span>
-                                        </div>
-                                    </motion.div>
-                                </AnimatePresence>
-                            </div>
-                        </motion.div>
-
-                        <div className="space-y-6">
-                            {skills.map((skill, i) => (
-                                <motion.div
-                                    key={i}
-                                    variants={itemVariants}
-                                    whileHover={{ x: 10 }}
-                                    className="flex gap-4 p-4 rounded-2xl transition-all duration-300 hover:bg-card/60 group border border-transparent hover:border-border"
-                                >
-                                    <div className="p-3 bg-muted rounded-xl text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all shadow-lg">
-                                        {skill.icon}
-                                    </div>
-                                    <div>
-                                        <h4 className="font-bold text-foreground mb-1 group-hover:text-primary transition-colors">{skill.title}</h4>
-                                        <p className="text-sm text-muted-foreground">{skill.desc}</p>
-                                    </div>
-                                </motion.div>
-                            ))}
-                        </div>
-                    </motion.div>
-                </div>
+              {/* Floating Motion Badge */}
+              <motion.div
+                animate={{ y: [0, 8, 0] }}
+                transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                className="absolute -bottom-3 left-6 px-4 py-2 bg-card/90 backdrop-blur-xl rounded-2xl border border-border shadow-neon flex items-center gap-2"
+              >
+                <Palette className="text-secondary" size={18} />
+                <span className="text-xs font-mono font-bold uppercase tracking-wider text-foreground">Motion Artist</span>
+              </motion.div>
             </div>
+          </motion.div>
+
+          {/* Right: Bio & Experience Metrics */}
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+            className="flex flex-col"
+          >
+            <motion.div variants={itemVariants} className="mb-4">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-mono font-semibold uppercase tracking-wider">
+                <User size={14} />
+                <span>Biography & Vision</span>
+              </div>
+            </motion.div>
+
+            <motion.h2
+              variants={itemVariants}
+              className="text-3xl sm:text-4xl md:text-5xl font-black text-foreground mb-6 tracking-tighter uppercase leading-tight"
+            >
+              Behind the Lens <br />& the Code
+            </motion.h2>
+
+            <motion.p
+              variants={itemVariants}
+              className="text-muted-foreground text-base sm:text-lg leading-relaxed mb-8 max-w-xl"
+            >
+              I&apos;m <span className="text-foreground font-semibold">Gansputra</span>, a multidisciplinary creative bridging software engineering with cinematic digital art. My journey began with a passion for video storytelling and kinetic editing, which evolved into building responsive, scalably architected web experiences.
+            </motion.p>
+
+            {/* Rotating Stats Bento Card */}
+            <motion.div
+              variants={itemVariants}
+              className="mb-8 p-6 rounded-3xl bg-card/80 border border-border/80 shadow-xl backdrop-blur-xl relative overflow-hidden"
+            >
+              <div className="flex items-center gap-5">
+                <div className="w-14 h-14 rounded-2xl bg-primary/10 border border-primary/25 flex items-center justify-center text-primary flex-shrink-0">
+                  <Zap size={24} />
+                </div>
+
+                <div className="flex-1">
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={currentStat}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.4 }}
+                      className="flex flex-col sm:flex-row sm:items-center justify-between gap-2"
+                    >
+                      <div>
+                        <div className={cn("text-2xl sm:text-3xl font-black tracking-tight", stats[currentStat].color)}>
+                          {stats[currentStat].value}
+                        </div>
+                        <div className="text-xs font-mono uppercase tracking-widest text-muted-foreground font-semibold">
+                          {stats[currentStat].label}
+                        </div>
+                      </div>
+
+                      <div className="sm:text-right">
+                        <span className="text-[10px] font-mono text-muted-foreground/60 uppercase tracking-widest block">
+                          Timeline
+                        </span>
+                        <span className="text-xs font-mono font-medium text-foreground">
+                          {stats[currentStat].timeline}
+                        </span>
+                      </div>
+                    </motion.div>
+                  </AnimatePresence>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Core Competencies List */}
+            <div className="space-y-4">
+              {skills.map((skill, i) => (
+                <motion.div
+                  key={i}
+                  variants={itemVariants}
+                  whileHover={{ x: 6 }}
+                  className="flex items-start gap-4 p-4 rounded-2xl bg-card/40 hover:bg-card/80 border border-border/50 hover:border-primary/40 transition-all duration-300"
+                >
+                  <div className="p-3 bg-muted rounded-xl text-primary flex-shrink-0 mt-0.5">
+                    {skill.icon}
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-foreground text-sm sm:text-base mb-1">
+                      {skill.title}
+                    </h4>
+                    <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                      {skill.desc}
+                    </p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
         </div>
-    );
+      </div>
+    </div>
+  );
 };

@@ -3,7 +3,6 @@ import { Inter, Outfit } from "next/font/google";
 import "./globals.css";
 import { siteConfig } from "@/config/siteConfig";
 import { Navbar } from "@/components/layout/Navbar";
-import { Footer } from "@/components/layout/Footer";
 import { Providers } from "@/components/layout/Providers";
 import { CustomCursor } from "@/components/ui/CustomCursor";
 import { MouseGlow } from "@/components/ui/MouseGlow";
@@ -67,9 +66,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="scroll-smooth overflow-x-hidden">
+    <html lang="en" className="scroll-smooth overflow-x-hidden" suppressHydrationWarning>
       <body
-        className={`${inter.variable} ${outfit.variable} font-sans bg-[#0a0a0a] text-white antialiased selection:bg-primary selection:text-black overflow-hidden h-screen w-screen`}
+        className={`${inter.variable} ${outfit.variable} font-sans bg-[#0a0a0a] text-white antialiased selection:bg-primary selection:text-black overflow-x-hidden min-h-screen w-full relative`}
       >
         <Providers>
           <MusicThemeProvider>
@@ -78,7 +77,7 @@ export default function RootLayout({
               <MouseGlow />
               <Navbar />
               <AudioVisualizer />
-              <main className="h-full w-full">
+              <main className="relative w-full min-h-screen">
                 {children}
               </main>
             </InitialLoader>

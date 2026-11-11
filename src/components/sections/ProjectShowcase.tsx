@@ -6,476 +6,385 @@ import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Modal } from "@/components/ui/Modal";
 import { projectData } from "@/data/projectData";
-import { ExternalLink, Github, Eye, ChevronLeft, ChevronRight, Terminal } from "lucide-react";
+import {
+  ExternalLink,
+  Github,
+  Eye,
+  ChevronLeft,
+  ChevronRight,
+  Code2,
+  Sparkles,
+  LayoutGrid,
+  Box,
+} from "lucide-react";
 import { Project } from "@/types/project";
 import { cn } from "@/lib/utils";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { Project3DGallery } from "@/components/ui/Project3DGallery";
-import { LayoutGrid, Box } from "lucide-react";
 
-const ProjectCard = ({ project, onPreview, index }: { project: Project, onPreview: (p: Project) => void, index: number }) => {
-    const [mounted, setMounted] = useState(false);
-    const [isHovered, setIsHovered] = useState(false);
-    const isMobileQuery = useMediaQuery("(max-width: 1024px)");
-    const isMobile = mounted && isMobileQuery;
-
-    useEffect(() => {
-        setMounted(true);
-    }, []);
-
-    return (
-        <motion.div
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-            whileHover={isMobile ? {} : { y: -5 }}
-            transition={{ duration: 0.3 }}
-            className="h-full"
+const ProjectCard = ({
+  project,
+  onPreview,
+  index,
+}: {
+  project: Project;
+  onPreview: (p: Project) => void;
+  index: number;
+}) => {
+  return (
+    <motion.div
+      whileHover={{ y: -6 }}
+      transition={{ duration: 0.3 }}
+      className="h-full flex flex-col"
+    >
+      <div className="h-full rounded-3xl bg-card/75 border border-border/70 hover:border-primary/50 transition-all duration-500 overflow-hidden shadow-xl hover:shadow-2xl flex flex-col group backdrop-blur-xl">
+        {/* Project Image Preview / Mockup Frame */}
+        <div
+          className="relative aspect-video w-full overflow-hidden bg-muted/40 cursor-pointer"
+          onClick={() => onPreview(project)}
         >
-            <Card className="h-full flex flex-col justify-between group relative overflow-hidden" glow>
-                {/* Metallic Shine Effect (Mobile only) */}
-                {isMobile && (
-                    <motion.div
-                        initial={{ left: "-150%", skewX: -25 }}
-                        animate={{ left: "150%" }}
-                        transition={{
-                            repeat: Infinity,
-                            duration: 3,
-                            repeatDelay: (index % 5) + 2,
-                            ease: "easeInOut"
-                        }}
-                        className="absolute top-[-50%] bottom-[-50%] w-32 bg-gradient-to-r from-transparent via-primary/10 to-transparent z-10 pointer-events-none blur-sm"
-                    />
-                )}
+          {/* Top fake browser dots bar */}
+          <div className="absolute top-0 left-0 right-0 z-20 px-4 py-2 bg-background/60 backdrop-blur-md flex items-center gap-1.5 border-b border-border/40">
+            <div className="w-2.5 h-2.5 rounded-full bg-red-500/70" />
+            <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/70" />
+            <div className="w-2.5 h-2.5 rounded-full bg-green-500/70" />
+            <div className="ml-2 text-[10px] font-mono text-muted-foreground/60 truncate">
+              {project.title.toLowerCase().replace(/\s+/g, "-")}.dev
+            </div>
+          </div>
 
-                {/* Code-Flow Terminal (Desktop only) */}
-                {!isMobile && (
-                    <AnimatePresence>
-                        {isHovered && (
-                            <motion.div
-                                initial={{ opacity: 0, scale: 0.9, y: 10 }}
-                                animate={{ opacity: 1, scale: 1, y: 0 }}
-                                exit={{ opacity: 0, scale: 0.9, y: 10 }}
-                                className="absolute top-4 right-16 z-20 pointer-events-none"
-                            >
-                                <div className="bg-card/95 border border-primary/30 rounded-lg p-3 shadow-2xl backdrop-blur-xl min-w-[140px]">
-                                    <div className="flex items-center gap-2 mb-2 border-b border-primary/20 pb-1">
-                                        <Terminal size={12} className="text-primary" />
-                                        <span className="text-[10px] font-mono text-primary/70 uppercase">Process Log</span>
-                                    </div>
-                                    <div className="space-y-1 font-mono text-[9px]">
-                                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }} className="text-muted-foreground">{">"} initializing_stack</motion.div>
-                                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} className="text-primary/60">{">"} load: {project.stack[0]}</motion.div>
-                                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="text-muted-foreground">{">"} status: <span className="text-green-500">READY</span></motion.div>
-                                    </div>
-                                </div>
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
-                )}
+          <img
+            src={project.previewImage}
+            alt={project.title}
+            className="w-full h-full object-cover pt-6 group-hover:scale-105 transition-transform duration-700"
+          />
 
-                <div className="flex flex-col h-full relative z-10">
-                    <div className="flex justify-between items-center mb-6">
-                        <h3 className={cn(
-                            "text-2xl font-bold text-foreground transition-all duration-500",
-                            !isMobile && isHovered && "text-primary translate-x-1"
-                        )}>
-                            {project.title}
-                        </h3>
-                        <div className="flex items-center gap-1">
-                            {project.repoLink && (
-                                <motion.a
-                                    whileHover={{ scale: 1.2 }}
-                                    whileTap={{ scale: 0.9 }}
-                                    href={project.repoLink}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-foreground/40 hover:text-foreground transition-all p-2 flex items-center justify-center"
-                                >
-                                    <Github size={20} />
-                                </motion.a>
-                            )}
-                            <motion.button
-                                whileHover={{ scale: 1.2 }}
-                                whileTap={{ scale: 0.9 }}
-                                onClick={() => onPreview(project)}
-                                className="text-foreground/40 hover:text-primary transition-all p-2 cursor-pointer flex items-center justify-center"
-                                title="View Previews"
-                            >
-                                <Eye size={20} />
-                            </motion.button>
-                        </div>
-                    </div>
+          {/* Hover Overlay with Action */}
+          <div className="absolute inset-0 bg-background/50 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-3 z-30 pt-6">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onPreview(project);
+              }}
+              className="px-4 py-2 rounded-full bg-primary text-primary-foreground font-semibold text-xs flex items-center gap-2 shadow-neon hover:scale-105 transition-transform cursor-pointer"
+            >
+              <Eye size={14} />
+              <span>Preview Gallery</span>
+            </button>
+            {project.repoLink && (
+              <a
+                href={project.repoLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="p-2 rounded-full bg-card text-foreground hover:text-primary border border-border/80 shadow-md hover:scale-105 transition-transform"
+                title="View Source"
+              >
+                <Github size={16} />
+              </a>
+            )}
+          </div>
+        </div>
 
-                    <div className="relative mb-8">
-                        <p className="text-foreground/60 leading-relaxed flex-grow min-h-[80px]">
-                            {!isMobile && isHovered ? (
-                                <motion.span
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1 }}
-                                    transition={{ duration: 0.5 }}
-                                >
-                                    {project.description}
-                                    <motion.span
-                                        animate={{ opacity: [0, 1, 0] }}
-                                        transition={{ repeat: Infinity, duration: 0.8 }}
-                                        className="inline-block w-1 h-4 bg-primary ml-1 translate-y-0.5"
-                                    />
-                                </motion.span>
-                            ) : project.description}
-                        </p>
-                    </div>
+        {/* Project Meta Information */}
+        <div className="p-6 md:p-8 flex flex-col flex-grow justify-between">
+          <div>
+            <div className="flex items-center justify-between gap-4 mb-3">
+              <h3 className="text-xl md:text-2xl font-bold text-foreground group-hover:text-primary transition-colors">
+                {project.title}
+              </h3>
+              {project.repoLink && (
+                <a
+                  href={project.repoLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-muted-foreground hover:text-foreground transition-colors p-1"
+                  title="GitHub Repository"
+                >
+                  <Github size={18} />
+                </a>
+              )}
+            </div>
 
-                    <div className="flex flex-wrap gap-2 mt-auto">
-                        {project.stack.map((tech) => (
-                            <Badge key={tech} variant="primary">
-                                {tech}
-                            </Badge>
-                        ))}
-                    </div>
-                </div>
-            </Card>
-        </motion.div>
-    );
+            <p className="text-sm md:text-base text-muted-foreground leading-relaxed mb-6">
+              {project.description}
+            </p>
+          </div>
+
+          <div className="pt-4 border-t border-border/50 flex flex-wrap items-center justify-between gap-3">
+            {/* Tech Badges */}
+            <div className="flex flex-wrap gap-1.5">
+              {project.stack.map((tech) => (
+                <span
+                  key={tech}
+                  className="px-2.5 py-1 rounded-full text-[11px] font-mono font-medium bg-muted text-muted-foreground border border-border/50 uppercase"
+                >
+                  {tech}
+                </span>
+              ))}
+            </div>
+
+            <button
+              onClick={() => onPreview(project)}
+              className="text-xs font-semibold text-primary hover:underline flex items-center gap-1 cursor-pointer"
+            >
+              <span>Screenshots</span>
+              <ExternalLink size={12} />
+            </button>
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
 };
 
 export const ProjectShowcase = () => {
-    const [mounted, setMounted] = useState(false);
-    const isMobileQuery = useMediaQuery("(max-width: 1024px)");
-    const isMobile = mounted && isMobileQuery;
-    const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-    const [currentIndex, setCurrentIndex] = useState(0);
-    const [viewMode, setViewMode] = useState<"grid" | "3d">("grid");
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [viewMode, setViewMode] = useState<"grid" | "3d">("grid");
 
-    useEffect(() => {
-        setMounted(true);
-    }, []);
+  const images =
+    selectedProject?.gallery && selectedProject.gallery.length > 0
+      ? selectedProject.gallery
+      : selectedProject
+      ? [selectedProject.previewImage]
+      : [];
 
-    const images = selectedProject?.gallery && selectedProject.gallery.length > 0
-        ? selectedProject.gallery
-        : selectedProject ? [selectedProject.previewImage] : [];
+  useEffect(() => {
+    if (!selectedProject || images.length <= 1) return;
 
-    useEffect(() => {
-        if (!selectedProject || images.length <= 1) return;
+    const timer = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % images.length);
+    }, 3500);
 
-        const timer = setInterval(() => {
-            setCurrentIndex((prev) => (prev + 1) % images.length);
-        }, 3000);
+    return () => clearInterval(timer);
+  }, [selectedProject, images.length]);
 
-        return () => clearInterval(timer);
-    }, [selectedProject, images.length]);
+  const handlePrev = () => {
+    setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
+  };
 
-    const handlePrev = () => {
-        setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
-    };
+  const handleNext = () => {
+    setCurrentIndex((prev) => (prev + 1) % images.length);
+  };
 
-    const handleNext = () => {
-        setCurrentIndex((prev) => (prev + 1) % images.length);
-    };
+  useEffect(() => {
+    if (!selectedProject) {
+      setCurrentIndex(0);
+    }
+  }, [selectedProject]);
 
-    useEffect(() => {
-        if (!selectedProject) {
-            setCurrentIndex(0);
-        }
-    }, [selectedProject]);
+  const containerVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15,
+      },
+    },
+  };
 
-    const containerVariants: Variants = {
-        hidden: { opacity: 0 },
-        visible: {
-            opacity: 1,
-            transition: {
-                staggerChildren: 0.15
-            }
-        }
-    };
-
-    const cardVariants: Variants = {
-        hidden: { opacity: 0, scale: 0.95, y: 30 },
-        visible: {
-            opacity: 1,
-            scale: 1,
-            y: 0,
-            transition: { duration: 0.7, ease: "easeOut" }
-        }
-    };
-
-    return (
-        <div className="py-24 px-6 overflow-hidden">
-            <div className="max-w-7xl mx-auto">
-                <motion.div
-                    initial={{ opacity: 0, y: -20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    className="mb-16"
-                >
-                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-                        <div>
-                            <h2 className="text-4xl font-bold text-foreground mb-4 font-outfit uppercase tracking-tighter">Development Projects</h2>
-                            <p className="text-muted-foreground max-w-lg">
-                                Where code meets creativity. A selection of my professional and experimental engineering works.
-                            </p>
-                        </div>
-
-                        {/* View Mode Toggle */}
-                        <div className="flex items-center p-1 bg-zinc-900/50 border border-white/5 rounded-xl self-start md:self-auto pointer-events-auto">
-                            <button
-                                onClick={() => setViewMode("grid")}
-                                className={cn(
-                                    "flex items-center gap-2 px-4 py-2 rounded-lg transition-all text-xs font-bold uppercase tracking-wider",
-                                    viewMode === "grid" ? "bg-primary text-black shadow-lg" : "text-white/40 hover:text-white"
-                                )}
-                            >
-                                <LayoutGrid size={14} />
-                                Grid
-                            </button>
-                            <button
-                                onClick={() => setViewMode("3d")}
-                                className={cn(
-                                    "flex items-center gap-2 px-4 py-2 rounded-lg transition-all text-xs font-bold uppercase tracking-wider",
-                                    viewMode === "3d" ? "bg-primary text-black shadow-lg" : "text-white/40 hover:text-white"
-                                )}
-                            >
-                                <Box size={14} />
-                                3D Expo
-                            </button>
-                        </div>
-                    </div>
-                </motion.div>
-
-                <AnimatePresence mode="wait">
-                    {viewMode === "grid" ? (
-                        <motion.div
-                            key="grid-view"
-                            initial={{ opacity: 0, scale: 0.98 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            exit={{ opacity: 0, scale: 0.98 }}
-                            transition={{ duration: 0.4 }}
-                        >
-                            <motion.div
-                                variants={containerVariants}
-                                initial="hidden"
-                                whileInView="visible"
-                                viewport={{ once: true, amount: 0.1 }}
-                                className="grid grid-cols-1 md:grid-cols-2 gap-8"
-                            >
-                                {projectData.map((project, index) => (
-                                    <ProjectCard key={project.id} project={project} onPreview={setSelectedProject} index={index} />
-                                ))}
-                            </motion.div>
-                        </motion.div>
-                    ) : (
-                        <motion.div
-                            key="3d-view"
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: 20 }}
-                            transition={{ duration: 0.5 }}
-                        >
-                            <Project3DGallery onPreview={setSelectedProject} />
-                        </motion.div>
-                    )}
-                </AnimatePresence>
-
-                {/* See More - GitHub Link */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.5 }}
-                    viewport={{ once: true }}
-                    className="mt-16 flex justify-center"
-                >
-                    <motion.a
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        href="https://github.com/gansputra"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={cn(
-                            "group relative flex items-center gap-3 px-8 py-4 border rounded-full transition-all duration-500 shadow-lg overflow-hidden",
-                            "bg-primary border-primary text-primary-foreground md:bg-primary/10 md:border-primary/20 md:text-foreground md:dark:text-white md:hover:bg-primary md:hover:text-primary-foreground md:hover:shadow-primary/40"
-                        )}
-                    >
-                        {/* 1. Outer Glow (Must be outside overflow-hidden) */}
-                        <div className="md:hidden">
-                            <motion.div
-                                animate={{
-                                    opacity: [0.3, 0.6, 0.3],
-                                    scale: [0.95, 1.15, 0.95]
-                                }}
-                                transition={{
-                                    duration: 3,
-                                    repeat: Infinity,
-                                    ease: "easeInOut"
-                                }}
-                                style={{ willChange: "transform, opacity" }}
-                                className="absolute -inset-3 bg-primary blur-2xl -z-10 rounded-full"
-                            />
-                        </div>
-
-                        {/* 2. Inner Clipped Effects (Liquid & Shine) */}
-                        <div className="absolute inset-0 overflow-hidden rounded-full pointer-events-none">
-                            {/* Liquid Flow (Mobile Only) */}
-                            <motion.div
-                                animate={{
-                                    backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"]
-                                }}
-                                transition={{
-                                    duration: 4,
-                                    repeat: Infinity,
-                                    ease: "linear"
-                                }}
-                                style={{
-                                    background: "linear-gradient(270deg, var(--primary), #00f2ff, #008fa3)",
-                                    backgroundSize: "200% 200%",
-                                    willChange: "background-position"
-                                }}
-                                className="absolute inset-0 opacity-60 z-0 md:hidden"
-                            />
-
-                            {/* Glazing Shine Loop (Mobile) */}
-                            <motion.div
-                                initial={{ x: "-150%", skewX: -25 }}
-                                animate={{ x: "250%" }}
-                                transition={{
-                                    duration: 2,
-                                    repeat: Infinity,
-                                    repeatDelay: 1.5,
-                                    ease: "linear"
-                                }}
-                                style={{ willChange: "transform" }}
-                                className="absolute inset-y-0 w-1/2 bg-white/30 z-10 block md:hidden"
-                            />
-
-                            {/* Desktop Hover Shine */}
-                            <motion.div
-                                initial={{ x: "-150%", skewX: -25 }}
-                                whileHover={{ x: "250%" }}
-                                transition={{ duration: 0.7 }}
-                                style={{ willChange: "transform" }}
-                                className="absolute inset-y-0 w-1/2 bg-white/10 z-10 hidden md:block"
-                            />
-                        </div>
-
-                        <div className="relative z-20 flex items-center gap-3">
-                            <div className="bg-primary p-2 rounded-full group-hover:bg-white group-hover:text-primary transition-colors md:bg-transparent md:text-primary-foreground">
-                                <Github size={20} />
-                            </div>
-                            <span className="font-bold tracking-wider uppercase text-sm">See More on GitHub</span>
-                        </div>
-                    </motion.a>
-                </motion.div>
+  return (
+    <div className="py-24 px-6 relative overflow-hidden">
+      <div className="max-w-7xl mx-auto">
+        {/* Section Header */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mb-14"
+        >
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-mono font-semibold uppercase tracking-wider mb-4">
+                <Code2 size={14} />
+                <span>Selected Works</span>
+              </div>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-foreground tracking-tighter uppercase">
+                Featured Projects
+              </h2>
+              <p className="text-muted-foreground max-w-lg mt-3 text-sm md:text-base leading-relaxed">
+                Scalable web applications, APIs, and functional software engineered with modern web technologies.
+              </p>
             </div>
 
-            {/* Project Preview Modal */}
-            <Modal
-                isOpen={!!selectedProject}
-                onClose={() => setSelectedProject(null)}
-                className="max-w-[95vw] md:max-w-6xl h-[85vh] bg-background border border-border overflow-hidden shadow-2xl rounded-[2rem] md:rounded-[3rem] p-0"
-            >
-                {selectedProject && (
-                    <div className="relative w-full h-full group flex flex-col">
-                        {/* Image Showcase Container */}
-                        <div className="relative flex-1 bg-muted overflow-hidden">
-                            <AnimatePresence mode="popLayout" initial={false} custom={currentIndex}>
-                                <motion.div
-                                    key={currentIndex}
-                                    initial={{ x: "100%", opacity: 0 }}
-                                    animate={{ x: 0, opacity: 1 }}
-                                    exit={{ x: "-100%", opacity: 0 }}
-                                    transition={{
-                                        type: "spring",
-                                        stiffness: 300,
-                                        damping: 30,
-                                        opacity: { duration: 0.4 }
-                                    }}
-                                    className="absolute inset-0 w-full h-full"
-                                >
-                                    <img
-                                        src={images[currentIndex]}
-                                        alt={`${selectedProject.title} preview ${currentIndex + 1}`}
-                                        className="w-full h-full object-contain md:object-cover bg-black/5"
-                                    />
-                                </motion.div>
-                            </AnimatePresence>
-
-                            {/* Navigational Overlays (Faint Gradients) */}
-                            <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-background/20 to-transparent pointer-events-none z-10" />
-                            <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-background/20 to-transparent pointer-events-none z-10" />
-
-                            {/* Navigation Arrows */}
-                            {images.length > 1 && (
-                                <>
-                                    <button
-                                        onClick={(e) => { e.stopPropagation(); handlePrev(); }}
-                                        className="absolute left-4 top-1/2 -translate-y-1/2 p-4 rounded-full bg-background/50 hover:bg-primary hover:text-primary-foreground border border-border backdrop-blur-md z-30 transition-all shadow-xl group-hover:scale-110 active:scale-95 text-foreground"
-                                    >
-                                        <ChevronLeft size={24} />
-                                    </button>
-                                    <button
-                                        onClick={(e) => { e.stopPropagation(); handleNext(); }}
-                                        className="absolute right-4 top-1/2 -translate-y-1/2 p-4 rounded-full bg-background/50 hover:bg-primary hover:text-primary-foreground border border-border backdrop-blur-md z-30 transition-all shadow-xl group-hover:scale-110 active:scale-95 text-foreground"
-                                    >
-                                        <ChevronRight size={24} />
-                                    </button>
-                                </>
-                            )}
-                        </div>
-
-                        {/* Flat Premium Info Section (Bottom Attached) */}
-                        <div className="bg-background border-t border-border p-6 md:p-10 relative z-20">
-                            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-                                <div className="space-y-3 flex-1">
-                                    <div className="flex items-center gap-4">
-                                        <h3 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground uppercase italic">
-                                            {selectedProject.title}
-                                        </h3>
-                                        <div className="flex gap-2">
-                                            {selectedProject.repoLink && (
-                                                <motion.a
-                                                    whileHover={{ scale: 1.1, y: -2 }}
-                                                    whileTap={{ scale: 0.9 }}
-                                                    href={selectedProject.repoLink}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="w-10 h-10 flex items-center justify-center rounded-full bg-muted border border-border hover:border-primary/50 text-foreground transition-colors"
-                                                >
-                                                    <Github size={18} />
-                                                </motion.a>
-                                            )}
-                                        </div>
-                                    </div>
-                                    <p className="text-muted-foreground text-sm md:text-base max-w-3xl leading-relaxed">
-                                        {selectedProject.description}
-                                    </p>
-                                </div>
-
-                                <div className="flex flex-wrap gap-2 md:justify-end shrink-0">
-                                    {selectedProject.stack.map(tech => (
-                                        <Badge key={tech} variant="outline" className="bg-primary/5 border-primary/20 text-primary uppercase text-[10px] font-bold px-3 py-1">
-                                            {tech}
-                                        </Badge>
-                                    ))}
-                                </div>
-                            </div>
-
-                            {/* Progress Dots (Inside Info Section for Better Layout) */}
-                            {images.length > 1 && (
-                                <div className="flex justify-center gap-2 mt-8">
-                                    {images.map((_, idx) => (
-                                        <button
-                                            key={idx}
-                                            onClick={(e) => { e.stopPropagation(); setCurrentIndex(idx); }}
-                                            className={cn(
-                                                "h-1.5 rounded-full transition-all duration-500",
-                                                currentIndex === idx ? "bg-primary w-8" : "bg-muted-foreground/20 w-3 hover:bg-muted-foreground/40"
-                                            )}
-                                        />
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-                    </div>
+            {/* View Mode Toggle: Grid vs 3D */}
+            <div className="flex items-center p-1 bg-card/80 border border-border/70 rounded-2xl self-start md:self-auto backdrop-blur-md shadow-md">
+              <button
+                onClick={() => setViewMode("grid")}
+                className={cn(
+                  "flex items-center gap-2 px-4 py-2 rounded-xl transition-all text-xs font-bold uppercase tracking-wider cursor-pointer",
+                  viewMode === "grid"
+                    ? "bg-primary text-primary-foreground shadow-neon"
+                    : "text-muted-foreground hover:text-foreground"
                 )}
-            </Modal>
-        </div>
-    );
+              >
+                <LayoutGrid size={14} />
+                <span>Grid</span>
+              </button>
+              <button
+                onClick={() => setViewMode("3d")}
+                className={cn(
+                  "flex items-center gap-2 px-4 py-2 rounded-xl transition-all text-xs font-bold uppercase tracking-wider cursor-pointer",
+                  viewMode === "3d"
+                    ? "bg-primary text-primary-foreground shadow-neon"
+                    : "text-muted-foreground hover:text-foreground"
+                )}
+              >
+                <Box size={14} />
+                <span>3D Expo</span>
+              </button>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* View Mode Content */}
+        <AnimatePresence mode="wait">
+          {viewMode === "grid" ? (
+            <motion.div
+              key="grid-view"
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.98 }}
+              transition={{ duration: 0.4 }}
+            >
+              <motion.div
+                variants={containerVariants}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, amount: 0.1 }}
+                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+              >
+                {projectData.map((project, index) => (
+                  <ProjectCard
+                    key={project.id}
+                    project={project}
+                    onPreview={setSelectedProject}
+                    index={index}
+                  />
+                ))}
+              </motion.div>
+            </motion.div>
+          ) : (
+            <motion.div
+              key="3d-view"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{ duration: 0.5 }}
+            >
+              <Project3DGallery onPreview={setSelectedProject} />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* See More on GitHub */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          viewport={{ once: true }}
+          className="mt-16 flex justify-center"
+        >
+          <a
+            href="https://github.com/gansputra"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group inline-flex items-center gap-3 px-8 py-3.5 rounded-full bg-card/80 border border-border/80 hover:border-primary/50 text-foreground hover:text-primary transition-all duration-300 shadow-xl backdrop-blur-xl"
+          >
+            <Github size={18} className="group-hover:rotate-12 transition-transform" />
+            <span className="text-xs font-mono font-semibold uppercase tracking-widest">
+              More Repositories on GitHub
+            </span>
+            <ExternalLink size={14} className="group-hover:translate-x-0.5 transition-transform" />
+          </a>
+        </motion.div>
+      </div>
+
+      {/* High-Resolution Project Modal */}
+      <Modal
+        isOpen={!!selectedProject}
+        onClose={() => setSelectedProject(null)}
+        className="max-w-4xl p-0 bg-card border border-border/80 overflow-hidden rounded-3xl"
+      >
+        {selectedProject && (
+          <div className="flex flex-col">
+            {/* Gallery Image Display */}
+            <div className="relative aspect-video w-full bg-black flex items-center justify-center overflow-hidden">
+              <AnimatePresence mode="wait">
+                <motion.img
+                  key={currentIndex}
+                  src={images[currentIndex]}
+                  alt={selectedProject.title}
+                  initial={{ opacity: 0, scale: 0.98 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.98 }}
+                  transition={{ duration: 0.4 }}
+                  className="w-full h-full object-contain"
+                />
+              </AnimatePresence>
+
+              {images.length > 1 && (
+                <>
+                  <button
+                    onClick={handlePrev}
+                    className="absolute left-4 top-1/2 -translate-y-1/2 p-2.5 rounded-full bg-black/60 text-white hover:bg-primary hover:text-primary-foreground backdrop-blur-md transition-all cursor-pointer"
+                    aria-label="Previous image"
+                  >
+                    <ChevronLeft size={20} />
+                  </button>
+                  <button
+                    onClick={handleNext}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 p-2.5 rounded-full bg-black/60 text-white hover:bg-primary hover:text-primary-foreground backdrop-blur-md transition-all cursor-pointer"
+                    aria-label="Next image"
+                  >
+                    <ChevronRight size={20} />
+                  </button>
+                </>
+              )}
+
+              {images.length > 1 && (
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/60 backdrop-blur-md">
+                  {images.map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setCurrentIndex(i)}
+                      className={cn(
+                        "w-2 h-2 rounded-full transition-all cursor-pointer",
+                        i === currentIndex ? "w-6 bg-primary" : "bg-white/40"
+                      )}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Modal Info Footer */}
+            <div className="p-6 md:p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h3 className="text-2xl font-bold text-foreground mb-1">
+                  {selectedProject.title}
+                </h3>
+                <p className="text-sm text-muted-foreground">
+                  {selectedProject.description}
+                </p>
+              </div>
+
+              {selectedProject.repoLink && (
+                <a
+                  href={selectedProject.repoLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full bg-primary text-primary-foreground font-semibold text-xs shadow-neon hover:scale-105 transition-transform"
+                >
+                  <Github size={16} />
+                  <span>View Repository</span>
+                </a>
+              )}
+            </div>
+          </div>
+        )}
+      </Modal>
+    </div>
+  );
 };
